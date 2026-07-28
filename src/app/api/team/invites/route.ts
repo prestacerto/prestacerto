@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { TEAM_SEAT_LIMIT } from "@/lib/supabase/queries";
+import { sendTeamInviteEmail } from "@/lib/email/resend";
 
 export async function POST(request: NextRequest) {
   const user = await getAuthenticatedUser();
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     const { data: team } = await supabase
       .from("teams")
-      .select("id")
+      .select("id, name")
       .eq("owner_id", user.id)
       .maybeSingle();
 
@@ -58,7 +59,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json(invite, { status: 201 });
+    const inviter = await getProfile();
+    const { sent } = await sendTeamInviteEmail({
+      to: email,
+      teamName: team.name,
+      inviterName: inviter?.full_name ?? "Alguém",
+      inviteUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/invite/${invite.token}`,
+    });
+
+    return NextResponse.json({ ...invite, emailSent: sent }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create invite" }, { status: 500 });
   }

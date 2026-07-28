@@ -10,6 +10,7 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
 - **Supabase** — autenticação (e-mail/senha + Google), Postgres, RLS
 - **Mercado Pago** — split payment: o pagamento vai direto pra conta do
   freelancer, a PrestaCerto nunca recebe nem retém o valor
+- **Resend** — envio dos e-mails de convite de equipe
 
 ## O que já funciona
 
@@ -24,14 +25,13 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
 - Cliente marca o projeto como concluído; as duas partes se avaliam
   (1-5 estrelas + comentário), a nota do perfil é recalculada automaticamente
 - Badge de verificado nos perfis com plano Pro/Business
-- Plano Business: criar equipe, convidar até 5 pessoas (link de convite —
-  sem envio automático de e-mail, ainda não há provedor de e-mail configurado)
+- Plano Business: criar equipe, convidar até 5 pessoas por e-mail (via Resend,
+  com o link de convite disponível como alternativa se preferir mandar por
+  outro canal)
 
 ## O que fica pra depois
 
 - Cobrança real da assinatura (Pro/Business) — hoje só mostra o preço
-- Envio automático de e-mail nos convites de equipe (precisa de um provedor
-  como Resend/SendGrid)
 - Refresh automático do `access_token` do Mercado Pago quando expira (~180
   dias — passado isso o freelancer precisa reconectar)
 - Agregador de "Vagas externas" — página placeholder por enquanto
@@ -64,6 +64,19 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
    webhook atualiza o status) não foi testado de ponta a ponta com uma conta
    real — o código segue a documentação oficial do Mercado Pago, mas rode o
    fluxo completo no modo de teste antes de aceitar pagamentos reais.
+
+## Configurando o Resend (convites de equipe por e-mail)
+
+1. Crie uma conta em [resend.com](https://resend.com).
+2. Em **Domains**, adicione `prestacerto.com.br` (ou o domínio que for usar)
+   e configure os registros DNS (SPF/DKIM) que eles indicarem — sem isso os
+   e-mails caem em spam ou nem saem. Enquanto o domínio não está verificado,
+   dá pra testar com o remetente `onboarding@resend.dev`.
+3. Em **API Keys**, gere uma chave.
+4. Preencha `RESEND_API_KEY` e `RESEND_FROM_EMAIL` no `.env.local`.
+5. Sem essa chave configurada, os convites continuam funcionando
+   normalmente — só não sai o e-mail automático, e o link fica disponível
+   pra copiar em `/dashboard/team`.
 
 ## Rodando localmente
 

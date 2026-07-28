@@ -29,6 +29,12 @@ export function SiteFooter() {
             <p className="mt-2 max-w-xs text-sm text-slate-500">
               A plataforma de freelancers com modelo justo por assinatura.
             </p>
+            <a
+              href="mailto:contato@prestacerto.com.br"
+              className="mt-3 inline-block text-sm text-slate-500 hover:text-slate-900"
+            >
+              contato@prestacerto.com.br
+            </a>
           </div>
 
           {columns.map((column) => (

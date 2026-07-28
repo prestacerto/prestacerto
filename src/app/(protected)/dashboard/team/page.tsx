@@ -104,8 +104,8 @@ export default async function DashboardTeamPage() {
             </p>
           )}
           <p className="text-xs text-slate-400">
-            Não enviamos e-mail automaticamente — copie o link gerado e mande você mesmo
-            (WhatsApp, e-mail, onde preferir).
+            Enviamos um convite por e-mail automaticamente. Se preferir mandar por
+            WhatsApp ou outro canal, o link também fica disponível abaixo.
           </p>
 
           {pendingInvites.length > 0 && (

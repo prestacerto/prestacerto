@@ -31,8 +31,13 @@ export function InviteMemberForm({ disabled }: { disabled?: boolean }) {
       return;
     }
 
+    const { emailSent } = await res.json();
     setEmail("");
-    toast.success("Convite criado — copie o link abaixo e envie pra pessoa.");
+    toast.success(
+      emailSent
+        ? "Convite enviado por e-mail!"
+        : "Convite criado — copie o link abaixo e envie pra pessoa."
+    );
     router.refresh();
   }
 
