@@ -6,6 +6,8 @@ export type Role = "freelancer" | "client" | "both";
 export type Plan = "free" | "pro" | "business";
 export type ProjectStatus = "open" | "in_progress" | "closed" | "cancelled";
 export type ProposalStatus = "pending" | "accepted" | "rejected" | "withdrawn";
+export type PaymentStatus = "pending" | "approved" | "rejected" | "in_process" | "refunded";
+export type TeamInviteStatus = "pending" | "accepted" | "revoked";
 
 export interface Profile {
   id: string;
@@ -18,6 +20,9 @@ export interface Profile {
   contact_email: string | null;
   contact_phone: string | null;
   plan: Plan;
+  rating: number | null;
+  rating_count: number;
+  team_id: string | null;
   created_at: string;
 }
 
@@ -80,4 +85,56 @@ export interface Message {
   body: string;
   created_at: string;
   read_at: string | null;
+}
+
+export interface Review {
+  id: string;
+  project_id: string;
+  author_id: string;
+  target_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface MpConnection {
+  freelancer_id: string;
+  mp_user_id: string;
+  access_token: string;
+  refresh_token: string;
+  public_key: string | null;
+  expires_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Payment {
+  id: string;
+  proposal_id: string;
+  project_id: string;
+  client_id: string;
+  freelancer_id: string;
+  amount: number;
+  status: PaymentStatus;
+  mp_preference_id: string | null;
+  mp_payment_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Team {
+  id: string;
+  owner_id: string;
+  name: string;
+  created_at: string;
+}
+
+export interface TeamInvite {
+  id: string;
+  team_id: string;
+  email: string;
+  token: string;
+  status: TeamInviteStatus;
+  invited_by: string;
+  created_at: string;
 }

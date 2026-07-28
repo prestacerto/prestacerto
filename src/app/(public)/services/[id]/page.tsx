@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
-import { getServiceById } from "@/lib/supabase/queries";
-import { Star } from "lucide-react";
+import { ReviewList } from "@/components/review-list";
+import { getServiceById, getReviewsForProfile } from "@/lib/supabase/queries";
+import { Star, BadgeCheck } from "lucide-react";
 
 interface ServiceDetailPageProps {
   params: Promise<{ id: string }>;
@@ -17,6 +19,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
   }
 
   const freelancer = service.freelancer;
+  const reviews = freelancer ? await getReviewsForProfile(freelancer.id) : [];
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
@@ -25,16 +28,24 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           {freelancer?.full_name?.charAt(0) ?? "?"}
         </span>
         <div>
-          <p className="font-semibold text-slate-900">{freelancer?.full_name}</p>
+          <p className="flex items-center gap-1.5 font-semibold text-slate-900">
+            {freelancer?.full_name}
+            {freelancer?.plan && freelancer.plan !== "free" && (
+              <BadgeCheck
+                className="size-4 text-blue-600"
+                aria-label="Freelancer verificado"
+              />
+            )}
+          </p>
           <p className="text-sm text-slate-500">
             {[freelancer?.city, freelancer?.state].filter(Boolean).join(", ")}
           </p>
         </div>
-        {service.rating != null && (
+        {freelancer?.rating != null && (
           <span className="ml-auto flex items-center gap-1 text-sm font-medium text-slate-700">
             <Star className="size-4 fill-amber-400 text-amber-400" />
-            {service.rating.toFixed(1)}
-            <span className="text-xs text-slate-400">({service.rating_count})</span>
+            {freelancer.rating.toFixed(1)}
+            <span className="text-xs text-slate-400">({freelancer.rating_count})</span>
           </span>
         )}
       </div>
@@ -79,6 +90,13 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           Falar com {freelancer?.full_name?.split(" ")[0] ?? "freelancer"}
         </LinkButton>
       </div>
+
+      <Card className="mt-8 p-5">
+        <h2 className="font-semibold text-slate-900">Avaliações ({reviews.length})</h2>
+        <div className="mt-4">
+          <ReviewList reviews={reviews} />
+        </div>
+      </Card>
     </div>
   );
 }

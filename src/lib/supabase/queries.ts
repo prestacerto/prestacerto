@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import type { Category } from "@/lib/supabase/types";
 
 // Helpers de leitura pública, com fallback resiliente: se o Supabase ainda
@@ -74,7 +75,7 @@ export async function getServiceById(id: string) {
     const { data, error } = await supabase
       .from("services")
       .select(
-        "*, freelancer:profiles!services_freelancer_id_fkey(id, full_name, city, state, bio, avatar_url)"
+        "*, freelancer:profiles!services_freelancer_id_fkey(id, full_name, city, state, bio, avatar_url, plan, rating, rating_count)"
       )
       .eq("id", id)
       .single();
@@ -83,6 +84,46 @@ export async function getServiceById(id: string) {
   } catch (error) {
     console.error("getServiceById falhou:", error);
     return null;
+  }
+}
+
+export interface ReviewWithAuthor {
+  id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  author: { full_name: string } | null;
+}
+
+export async function getReviewsForProfile(profileId: string): Promise<ReviewWithAuthor[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("id, rating, comment, created_at, author:profiles!reviews_author_id_fkey(full_name)")
+      .eq("target_id", profileId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as unknown as ReviewWithAuthor[];
+  } catch (error) {
+    console.error("getReviewsForProfile falhou:", error);
+    return [];
+  }
+}
+
+export async function getMyReviewForProject(projectId: string, userId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("reviews")
+      .select("id")
+      .eq("project_id", projectId)
+      .eq("author_id", userId)
+      .maybeSingle();
+    return Boolean(data);
+  } catch (error) {
+    console.error("getMyReviewForProject falhou:", error);
+    return false;
   }
 }
 
@@ -133,6 +174,223 @@ export async function listOpenProjects(params: {
   } catch (error) {
     console.error("listOpenProjects falhou:", error);
     return [];
+  }
+}
+
+export async function getMyProjects(userId: string) {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("id, title, status, category_id, created_at, proposals(count)")
+      .eq("client_id", userId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map((project) => ({
+      ...project,
+      proposal_count: Array.isArray(project.proposals)
+        ? (project.proposals[0]?.count ?? 0)
+        : 0,
+    }));
+  } catch (error) {
+    console.error("getMyProjects falhou:", error);
+    return [];
+  }
+}
+
+export interface ProposalWithProject {
+  id: string;
+  message: string;
+  proposed_price: number | null;
+  status: string;
+  created_at: string;
+  project: {
+    id: string;
+    title: string;
+    status: string;
+  } | null;
+}
+
+export async function getMyProposals(userId: string): Promise<ProposalWithProject[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("proposals")
+      .select("id, message, proposed_price, status, created_at, project:projects(id, title, status)")
+      .eq("freelancer_id", userId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as unknown as ProposalWithProject[];
+  } catch (error) {
+    console.error("getMyProposals falhou:", error);
+    return [];
+  }
+}
+
+export interface ProposalWithFreelancer {
+  id: string;
+  message: string;
+  proposed_price: number | null;
+  status: string;
+  created_at: string;
+  freelancer: {
+    id: string;
+    full_name: string;
+    city: string | null;
+    rating: number | null;
+    rating_count: number;
+  } | null;
+}
+
+export async function getProposalsForProject(
+  projectId: string
+): Promise<ProposalWithFreelancer[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("proposals")
+      .select(
+        "id, message, proposed_price, status, created_at, freelancer:profiles!proposals_freelancer_id_fkey(id, full_name, city, rating, rating_count)"
+      )
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as unknown as ProposalWithFreelancer[];
+  } catch (error) {
+    console.error("getProposalsForProject falhou:", error);
+    return [];
+  }
+}
+
+export async function getAcceptedProposal(projectId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("proposals")
+      .select("id, freelancer_id, proposed_price")
+      .eq("project_id", projectId)
+      .eq("status", "accepted")
+      .maybeSingle();
+    return data;
+  } catch (error) {
+    console.error("getAcceptedProposal falhou:", error);
+    return null;
+  }
+}
+
+export async function getPaymentForProject(projectId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("payments")
+      .select("id, status, amount")
+      .eq("project_id", projectId)
+      .maybeSingle();
+    return data;
+  } catch (error) {
+    console.error("getPaymentForProject falhou:", error);
+    return null;
+  }
+}
+
+// Service client de propósito: o CLIENTE do projeto precisa saber se o
+// freelancer já conectou o Mercado Pago (só um booleano, sem expor token)
+// pra decidir se mostra o botão de pagar ou "aguardando conexão" — e a RLS
+// de mp_connections só deixa o próprio freelancer ler a própria linha.
+export async function hasMpConnection(freelancerId: string) {
+  try {
+    const supabase = createServiceClient();
+    const { data } = await supabase
+      .from("mp_connections")
+      .select("freelancer_id")
+      .eq("freelancer_id", freelancerId)
+      .maybeSingle();
+    return Boolean(data);
+  } catch (error) {
+    console.error("hasMpConnection falhou:", error);
+    return false;
+  }
+}
+
+export const TEAM_SEAT_LIMIT = 5;
+
+export async function getTeamForOwner(ownerId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("teams")
+      .select("*")
+      .eq("owner_id", ownerId)
+      .maybeSingle();
+    return data;
+  } catch (error) {
+    console.error("getTeamForOwner falhou:", error);
+    return null;
+  }
+}
+
+export async function getTeamMembers(teamId: string) {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id, full_name, city, state")
+      .eq("team_id", teamId);
+    if (error) throw error;
+    return data ?? [];
+  } catch (error) {
+    console.error("getTeamMembers falhou:", error);
+    return [];
+  }
+}
+
+export async function getTeamInvites(teamId: string) {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("team_invites")
+      .select("*")
+      .eq("team_id", teamId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  } catch (error) {
+    console.error("getTeamInvites falhou:", error);
+    return [];
+  }
+}
+
+// Público de propósito (service client): quem recebeu o link do convite
+// ainda não tem necessariamente conta/sessão pra passar pela RLS.
+export async function getInviteByToken(token: string) {
+  try {
+    const supabase = createServiceClient();
+    const { data } = await supabase
+      .from("team_invites")
+      .select("*, team:teams(id, name)")
+      .eq("token", token)
+      .eq("status", "pending")
+      .maybeSingle();
+    return data;
+  } catch (error) {
+    console.error("getInviteByToken falhou:", error);
+    return null;
+  }
+}
+
+export async function hasSubmittedProposal(projectId: string, userId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("proposals")
+      .select("id")
+      .eq("project_id", projectId)
+      .eq("freelancer_id", userId)
+      .maybeSingle();
+    return Boolean(data);
+  } catch (error) {
+    console.error("hasSubmittedProposal falhou:", error);
+    return false;
   }
 }
 
