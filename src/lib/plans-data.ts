@@ -40,7 +40,6 @@ export const PLANS: PlanDefinition[] = [
       "Suporte prioritário",
     ],
     popular: true,
-    comingSoon: true,
   },
   {
     id: "business",
@@ -53,6 +52,5 @@ export const PLANS: PlanDefinition[] = [
       "Projetos privados",
       "Gerente de conta dedicado",
     ],
-    comingSoon: true,
   },
 ];
