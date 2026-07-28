@@ -166,6 +166,13 @@ export default async function Home() {
               </div>
             ))}
           </div>
+
+          <div className="mt-10 text-center">
+            <LinkButton href="/como-funciona" variant="ghost" size="sm">
+              Ver o passo a passo completo
+              <ArrowRight className="size-4" />
+            </LinkButton>
+          </div>
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { MessageSquare } from "lucide-react";
+import Link from "next/link";
+import { MessageSquare, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AcceptProposalButton } from "@/components/accept-proposal-button";
@@ -89,11 +90,18 @@ export default async function DashboardProjectDetailPage({
                     </div>
                   </div>
                   <p className="mt-3 text-sm text-slate-600">{proposal.message}</p>
-                  {project.status === "open" && proposal.status === "pending" && (
-                    <div className="mt-3">
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    {project.status === "open" && proposal.status === "pending" && (
                       <AcceptProposalButton proposalId={proposal.id} />
-                    </div>
-                  )}
+                    )}
+                    <Link
+                      href={`/dashboard/messages/${proposal.id}`}
+                      className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                    >
+                      <MessageCircle className="size-4" />
+                      Conversar
+                    </Link>
+                  </div>
                 </Card>
               </li>
             ))}

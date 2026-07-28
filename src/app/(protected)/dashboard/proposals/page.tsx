@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Send } from "lucide-react";
+import { Send, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
@@ -42,29 +42,39 @@ export default async function DashboardProposalsPage() {
       ) : (
         <div className="mt-6 space-y-3">
           {proposals.map((proposal) => (
-            <Link
+            <Card
               key={proposal.id}
-              href={proposal.project ? `/projects/${proposal.project.id}` : "#"}
+              className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
             >
-              <Card className="flex flex-col gap-2 p-5 transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <Badge variant="secondary">
-                    {statusLabel[proposal.status] ?? proposal.status}
-                  </Badge>
-                  <h3 className="mt-2 font-semibold text-slate-900">
-                    {proposal.project?.title ?? "Projeto removido"}
-                  </h3>
-                  <p className="mt-1 line-clamp-1 text-sm text-slate-500">
-                    {proposal.message}
-                  </p>
-                </div>
+              <Link
+                href={proposal.project ? `/projects/${proposal.project.id}` : "#"}
+                className="min-w-0 flex-1"
+              >
+                <Badge variant="secondary">
+                  {statusLabel[proposal.status] ?? proposal.status}
+                </Badge>
+                <h3 className="mt-2 font-semibold text-slate-900 hover:underline">
+                  {proposal.project?.title ?? "Projeto removido"}
+                </h3>
+                <p className="mt-1 line-clamp-1 text-sm text-slate-500">
+                  {proposal.message}
+                </p>
+              </Link>
+              <div className="flex shrink-0 items-center gap-4">
                 {proposal.proposed_price != null && (
                   <span className="font-semibold text-slate-900">
                     R$ {proposal.proposed_price}
                   </span>
                 )}
-              </Card>
-            </Link>
+                <Link
+                  href={`/dashboard/messages/${proposal.id}`}
+                  className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                >
+                  <MessageCircle className="size-4" />
+                  Conversar
+                </Link>
+              </div>
+            </Card>
           ))}
         </div>
       )}

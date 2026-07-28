@@ -6,7 +6,9 @@ const columns = [
     links: [
       { href: "/services", label: "Buscar serviços" },
       { href: "/projects", label: "Projetos abertos" },
+      { href: "/como-funciona", label: "Como funciona" },
       { href: "/plans", label: "Planos" },
+      { href: "/ajuda", label: "Central de ajuda" },
     ],
   },
   {

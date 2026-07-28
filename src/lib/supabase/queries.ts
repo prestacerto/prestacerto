@@ -378,6 +378,62 @@ export async function getInviteByToken(token: string) {
   }
 }
 
+export interface MessageWithSender {
+  id: string;
+  proposal_id: string;
+  sender_id: string;
+  body: string;
+  created_at: string;
+  sender: { full_name: string } | null;
+}
+
+export async function getMessagesForProposal(proposalId: string): Promise<MessageWithSender[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("messages")
+      .select("id, proposal_id, sender_id, body, created_at, sender:profiles!messages_sender_id_fkey(full_name)")
+      .eq("proposal_id", proposalId)
+      .order("created_at", { ascending: true });
+    if (error) throw error;
+    return (data ?? []) as unknown as MessageWithSender[];
+  } catch (error) {
+    console.error("getMessagesForProposal falhou:", error);
+    return [];
+  }
+}
+
+export interface ProposalThreadInfo {
+  id: string;
+  freelancer_id: string;
+  project: {
+    id: string;
+    title: string;
+    client_id: string;
+  } | null;
+  freelancer: { full_name: string } | null;
+}
+
+export async function getProposalThreadInfo(
+  proposalId: string
+): Promise<ProposalThreadInfo | null> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("proposals")
+      .select(
+        "id, freelancer_id, project:projects(id, title, client_id), freelancer:profiles!proposals_freelancer_id_fkey(full_name)"
+      )
+      .eq("id", proposalId)
+      .single();
+    if (error) throw error;
+    return data as unknown as ProposalThreadInfo;
+  } catch (error) {
+    console.error("getProposalThreadInfo falhou:", error);
+    return null;
+  }
+}
+
 export async function hasSubmittedProposal(projectId: string, userId: string) {
   try {
     const supabase = await createClient();
