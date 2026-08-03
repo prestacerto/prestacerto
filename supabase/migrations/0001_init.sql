@@ -150,6 +150,55 @@ on projects for update
 using (client_id = auth.uid());
 
 -- ============================================================
+-- proposals — freelancer propõe pra um projeto
+-- ============================================================
+create table proposals (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references projects(id) on delete cascade,
+  freelancer_id uuid not null references profiles(id) on delete cascade,
+  message text not null,
+  proposed_price numeric(10, 2),
+  status text not null default 'pending' check (status in ('pending', 'accepted', 'rejected', 'withdrawn')),
+  created_at timestamptz not null default now(),
+  unique (project_id, freelancer_id)
+);
+
+alter table proposals enable row level security;
+
+create policy "freelancer vê e cria suas próprias propostas"
+on proposals for select
+using (freelancer_id = auth.uid());
+
+create policy "cliente vê propostas dos seus projetos"
+on proposals for select
+using (
+  exists (
+    select 1 from projects
+    where projects.id = proposals.project_id
+      and projects.client_id = auth.uid()
+  )
+);
+
+create policy "freelancer cria proposta em seu nome"
+on proposals for insert
+with check (freelancer_id = auth.uid());
+
+create policy "freelancer retira sua própria proposta"
+on proposals for update
+using (freelancer_id = auth.uid())
+with check (freelancer_id = auth.uid());
+
+create policy "só o dono do projeto aceita/rejeita proposta"
+on proposals for update
+using (
+  exists (
+    select 1 from projects
+    where projects.id = proposals.project_id
+      and projects.client_id = auth.uid()
+  )
+);
+
+-- ============================================================
 -- project_contacts — separada de `projects` de propósito.
 -- É a peça-chave da revelação condicional de contato:
 -- o SELECT público em `projects` nunca faz join com esta tabela,
@@ -201,55 +250,6 @@ using (
   exists (
     select 1 from projects
     where projects.id = project_contacts.project_id
-      and projects.client_id = auth.uid()
-  )
-);
-
--- ============================================================
--- proposals — freelancer propõe pra um projeto
--- ============================================================
-create table proposals (
-  id uuid primary key default gen_random_uuid(),
-  project_id uuid not null references projects(id) on delete cascade,
-  freelancer_id uuid not null references profiles(id) on delete cascade,
-  message text not null,
-  proposed_price numeric(10, 2),
-  status text not null default 'pending' check (status in ('pending', 'accepted', 'rejected', 'withdrawn')),
-  created_at timestamptz not null default now(),
-  unique (project_id, freelancer_id)
-);
-
-alter table proposals enable row level security;
-
-create policy "freelancer vê e cria suas próprias propostas"
-on proposals for select
-using (freelancer_id = auth.uid());
-
-create policy "cliente vê propostas dos seus projetos"
-on proposals for select
-using (
-  exists (
-    select 1 from projects
-    where projects.id = proposals.project_id
-      and projects.client_id = auth.uid()
-  )
-);
-
-create policy "freelancer cria proposta em seu nome"
-on proposals for insert
-with check (freelancer_id = auth.uid());
-
-create policy "freelancer retira sua própria proposta"
-on proposals for update
-using (freelancer_id = auth.uid())
-with check (freelancer_id = auth.uid());
-
-create policy "só o dono do projeto aceita/rejeita proposta"
-on proposals for update
-using (
-  exists (
-    select 1 from projects
-    where projects.id = proposals.project_id
       and projects.client_id = auth.uid()
   )
 );
