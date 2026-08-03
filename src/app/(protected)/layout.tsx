@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Briefcase, Send, Users } from "lucide-react";
+import { LayoutDashboard, Briefcase, Send, Users, Wrench } from "lucide-react";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 
 const navItems = [
   { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard },
+  { href: "/dashboard/services", label: "Meus serviços", icon: Wrench },
   { href: "/dashboard/projects", label: "Meus projetos", icon: Briefcase },
   { href: "/dashboard/proposals", label: "Minhas propostas", icon: Send },
 ];

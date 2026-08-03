@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Briefcase, Send, Star, ArrowRight } from "lucide-react";
+import { Briefcase, Send, Star, ArrowRight, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
-import { getMyProjects, getMyProposals } from "@/lib/supabase/queries";
+import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -11,14 +11,16 @@ export default async function DashboardPage() {
   const user = await getAuthenticatedUser();
   if (!user) return null;
 
-  const [profile, projects, proposals] = await Promise.all([
+  const [profile, projects, proposals, services] = await Promise.all([
     getProfile(),
     getMyProjects(user.id),
     getMyProposals(user.id),
+    getMyServices(user.id),
   ]);
 
   const openProjects = projects.filter((p) => p.status === "open").length;
   const pendingProposals = proposals.filter((p) => p.status === "pending").length;
+  const activeServices = services.filter((s) => s.is_active).length;
 
   return (
     <div>
@@ -29,7 +31,20 @@ export default async function DashboardPage() {
         Aqui está um resumo da sua conta na PrestaCerto.
       </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-slate-500">
+              <Wrench className="size-4" />
+              Meus serviços
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold text-slate-900">{services.length}</p>
+            <p className="text-sm text-slate-500">{activeServices} ativos</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-slate-500">

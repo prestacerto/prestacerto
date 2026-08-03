@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { getUserEmailById } from "@/lib/supabase/admin";
+import { sendProjectCompletedEmail } from "@/lib/email/resend";
 
 interface CompleteProjectParams {
   id: string;
@@ -21,7 +23,7 @@ export async function POST(
 
     const { data: project, error: fetchError } = await supabase
       .from("projects")
-      .select("client_id, status")
+      .select("title, client_id, status")
       .eq("id", params.id)
       .single();
 
@@ -50,6 +52,23 @@ export async function POST(
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 400 });
+    }
+
+    const { data: acceptedProposal } = await supabase
+      .from("proposals")
+      .select("id, freelancer_id")
+      .eq("project_id", params.id)
+      .eq("status", "accepted")
+      .maybeSingle();
+
+    if (acceptedProposal) {
+      const freelancerEmail = await getUserEmailById(acceptedProposal.freelancer_id);
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+      await sendProjectCompletedEmail({
+        to: freelancerEmail,
+        projectTitle: project.title,
+        reviewUrl: `${siteUrl}/projects/${params.id}`,
+      });
     }
 
     return NextResponse.json({ success: true });

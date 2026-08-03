@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { LinkButton } from "@/components/link-button";
+import { PlanCta } from "@/components/plan-cta";
 import { PLANS } from "@/lib/plans-data";
 import { cn } from "@/lib/utils";
 
@@ -74,21 +74,7 @@ export function PlansSection() {
             ))}
           </ul>
 
-          <LinkButton
-            href={plan.id === "free" ? "/register" : "/plans"}
-            className={cn(
-              "mt-6",
-              plan.popular
-                ? "bg-white text-blue-700 hover:bg-blue-50"
-                : "bg-slate-900 hover:bg-slate-800"
-            )}
-          >
-            {plan.comingSoon
-              ? "Avise-me"
-              : plan.id === "free"
-                ? "Começar grátis"
-                : `Assinar ${plan.name}`}
-          </LinkButton>
+          <PlanCta plan={plan} wrapperClassName="mt-6" />
         </div>
       ))}
     </div>

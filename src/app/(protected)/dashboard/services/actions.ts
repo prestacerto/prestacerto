@@ -56,8 +56,8 @@ export async function createServiceAction(formData: FormData) {
   }
 
   revalidatePath("/services");
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath("/dashboard/services");
+  redirect("/dashboard/services");
 }
 
 export async function updateServiceAction(serviceId: string, formData: FormData) {
@@ -96,8 +96,8 @@ export async function updateServiceAction(serviceId: string, formData: FormData)
   }
 
   revalidatePath("/services");
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath("/dashboard/services");
+  redirect("/dashboard/services");
 }
 
 export async function deleteServiceAction(serviceId: string) {
@@ -109,5 +109,18 @@ export async function deleteServiceAction(serviceId: string) {
   await supabase.from("services").delete().eq("id", serviceId);
 
   revalidatePath("/services");
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/services");
+  redirect("/dashboard/services");
+}
+
+export async function toggleServiceActiveAction(serviceId: string, isActive: boolean) {
+  const user = await getAuthenticatedUser();
+  if (!user) redirect("/login");
+
+  const supabase = await createClient();
+  // RLS garante que só o dono (`freelancer_id = auth.uid()`) consegue alterar.
+  await supabase.from("services").update({ is_active: isActive }).eq("id", serviceId);
+
+  revalidatePath("/services");
+  revalidatePath("/dashboard/services");
 }

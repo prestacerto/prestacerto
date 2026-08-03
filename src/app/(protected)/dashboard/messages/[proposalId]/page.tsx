@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { MessageThread } from "@/components/message-thread";
+import { ContactReveal } from "@/components/contact-reveal";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { getProposalThreadInfo, getMessagesForProposal } from "@/lib/supabase/queries";
 
@@ -39,6 +40,12 @@ export default async function ProposalMessagesPage({ params }: MessagesPageProps
 
       <h1 className="mt-3 text-2xl font-bold text-slate-900">{thread.project.title}</h1>
       <p className="mt-1 text-sm text-slate-500">Conversa com {otherPartyName}</p>
+
+      {isFreelancer && thread.status === "accepted" && (
+        <div className="mt-6">
+          <ContactReveal projectId={thread.project.id} />
+        </div>
+      )}
 
       <Card className="mt-6 p-4">
         <MessageThread

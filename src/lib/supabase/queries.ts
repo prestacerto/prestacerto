@@ -69,6 +69,22 @@ export async function listServices(params: {
   }
 }
 
+export async function getMyServices(freelancerId: string) {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .eq("freelancer_id", freelancerId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  } catch (error) {
+    console.error("getMyServices falhou:", error);
+    return [];
+  }
+}
+
 export async function getServiceById(id: string) {
   try {
     const supabase = await createClient();
@@ -406,6 +422,7 @@ export async function getMessagesForProposal(proposalId: string): Promise<Messag
 export interface ProposalThreadInfo {
   id: string;
   freelancer_id: string;
+  status: string;
   project: {
     id: string;
     title: string;
@@ -422,7 +439,7 @@ export async function getProposalThreadInfo(
     const { data, error } = await supabase
       .from("proposals")
       .select(
-        "id, freelancer_id, project:projects(id, title, client_id), freelancer:profiles!proposals_freelancer_id_fkey(full_name)"
+        "id, freelancer_id, status, project:projects(id, title, client_id), freelancer:profiles!proposals_freelancer_id_fkey(full_name)"
       )
       .eq("id", proposalId)
       .single();

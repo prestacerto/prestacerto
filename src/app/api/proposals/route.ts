@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
+import { getUserEmailById } from "@/lib/supabase/admin";
+import { sendNewProposalEmail } from "@/lib/email/resend";
 
 export async function POST(request: NextRequest) {
   const user = await getAuthenticatedUser();
@@ -25,6 +27,22 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    const [{ data: project }, profile] = await Promise.all([
+      supabase.from("projects").select("title, client_id").eq("id", body.projectId).single(),
+      getProfile(),
+    ]);
+
+    if (project) {
+      const clientEmail = await getUserEmailById(project.client_id);
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+      await sendNewProposalEmail({
+        to: clientEmail,
+        projectTitle: project.title,
+        freelancerName: profile?.full_name ?? "Um freelancer",
+        projectUrl: `${siteUrl}/dashboard/projects/${body.projectId}`,
+      });
     }
 
     return NextResponse.json(data, { status: 201 });

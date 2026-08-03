@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { getUserEmailById } from "@/lib/supabase/admin";
+import { sendProposalAcceptedEmail } from "@/lib/email/resend";
 
 interface AcceptProposalParams {
   id: string;
@@ -22,7 +24,7 @@ export async function POST(
     // Busca a proposta e confirma que o usuário é o dono do projeto
     const { data: proposal, error: fetchError } = await supabase
       .from("proposals")
-      .select("project_id")
+      .select("project_id, freelancer_id")
       .eq("id", params.id)
       .single();
 
@@ -33,7 +35,7 @@ export async function POST(
     // Confirma que o usuário é o dono do projeto (a RLS vai garantir, mas valida primeiro)
     const { data: project } = await supabase
       .from("projects")
-      .select("client_id, status")
+      .select("title, client_id, status")
       .eq("id", proposal.project_id)
       .single();
 
@@ -74,6 +76,14 @@ export async function POST(
       .from("projects")
       .update({ status: "in_progress" })
       .eq("id", proposal.project_id);
+
+    const freelancerEmail = await getUserEmailById(proposal.freelancer_id);
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+    await sendProposalAcceptedEmail({
+      to: freelancerEmail,
+      projectTitle: project.title,
+      threadUrl: `${siteUrl}/dashboard/messages/${params.id}`,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

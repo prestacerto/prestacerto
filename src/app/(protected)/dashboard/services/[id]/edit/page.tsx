@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { getCategories, getServiceById } from "@/lib/supabase/queries";
-import { updateServiceAction } from "@/app/(protected)/dashboard/services/actions";
+import {
+  updateServiceAction,
+  deleteServiceAction,
+} from "@/app/(protected)/dashboard/services/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,10 +25,18 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
   }
 
   const updateWithId = updateServiceAction.bind(null, id);
+  const deleteWithId = deleteServiceAction.bind(null, id);
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-900">Editar serviço</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold text-slate-900">Editar serviço</h1>
+        <form action={deleteWithId}>
+          <Button type="submit" nativeButton variant="ghost" size="sm">
+            Excluir serviço
+          </Button>
+        </form>
+      </div>
 
       <form action={updateWithId} className="mt-8 space-y-5">
         <div className="space-y-1.5">
