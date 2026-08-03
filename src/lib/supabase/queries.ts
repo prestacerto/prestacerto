@@ -299,7 +299,7 @@ export async function getPaymentForProject(projectId: string) {
     const supabase = await createClient();
     const { data } = await supabase
       .from("payments")
-      .select("id, status, amount")
+      .select("id, status, amount, capture_deadline")
       .eq("project_id", projectId)
       .maybeSingle();
     return data;

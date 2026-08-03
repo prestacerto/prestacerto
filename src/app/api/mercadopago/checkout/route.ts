@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { createSplitPreference } from "@/lib/payments/mercadopago";
+import { createHeldOrder, CAPTURE_WINDOW_DAYS } from "@/lib/payments/mercadopago";
+import { decryptSecret } from "@/lib/crypto/token-cipher";
 
+// Cria uma cobrança RETIDA: o cartão do cliente é autorizado, mas o dinheiro
+// fica reservado no Mercado Pago — não cai pro freelancer ainda. Só é
+// liberado quando o cliente confirma a entrega (ver /api/projects/[id]/complete).
 export async function POST(request: NextRequest) {
   const user = await getAuthenticatedUser();
   if (!user) {
@@ -13,6 +17,16 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const projectId = body.projectId as string;
+    const card = body.card as {
+      token: string;
+      payment_method_id: string;
+      issuer_id?: string;
+      installments: number;
+    };
+
+    if (!card?.token || !card?.payment_method_id) {
+      return NextResponse.json({ error: "Dados do cartão incompletos." }, { status: 400 });
+    }
 
     const supabase = await createClient();
 
@@ -87,19 +101,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const preference = await createSplitPreference({
-      sellerAccessToken: connection.access_token,
-      title: project.title,
+    const sellerAccessToken = decryptSecret(connection.access_token);
+
+    const order = await createHeldOrder({
+      sellerAccessToken,
       amount: proposal.proposed_price,
       externalReference: payment.id,
+      payerEmail: user.email ?? "",
+      card,
     });
+
+    const isHeld = order.status === "action_required" || order.status_detail === "waiting_capture";
+    const captureDeadline = new Date(
+      Date.now() + CAPTURE_WINDOW_DAYS * 24 * 60 * 60 * 1000
+    ).toISOString();
 
     await serviceClient
       .from("payments")
-      .update({ mp_preference_id: preference.id })
+      .update({
+        mp_order_id: order.id,
+        status: isHeld ? "authorized" : "pending",
+        authorized_at: isHeld ? new Date().toISOString() : null,
+        capture_deadline: isHeld ? captureDeadline : null,
+      })
       .eq("id", payment.id);
 
-    return NextResponse.json({ url: preference.init_point });
+    if (!isHeld) {
+      return NextResponse.json(
+        {
+          error:
+            "O pagamento não ficou retido como esperado — não prosseguir sem confirmar isso com o suporte do Mercado Pago.",
+          orderStatus: order.status,
+        },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({ success: true, orderId: order.id });
   } catch (err) {
     console.error("mercadopago checkout falhou:", err);
     return NextResponse.json(

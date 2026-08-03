@@ -26,7 +26,7 @@ export async function POST(
 
     const { data: invite } = await serviceClient
       .from("team_invites")
-      .select("id, team_id, status")
+      .select("id, team_id, status, email")
       .eq("token", params.id)
       .maybeSingle();
 
@@ -34,6 +34,16 @@ export async function POST(
       return NextResponse.json(
         { error: "Convite inválido ou já utilizado." },
         { status: 404 }
+      );
+    }
+
+    // O token por si só não basta: sem isso, qualquer pessoa com o link do
+    // convite (encaminhado, printado, vazado) entraria na equipe de outro
+    // usuário — o convite só vale pra quem foi de fato convidado.
+    if (invite.email !== user.email?.toLowerCase()) {
+      return NextResponse.json(
+        { error: "Este convite foi enviado para outro e-mail." },
+        { status: 403 }
       );
     }
 

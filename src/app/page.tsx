@@ -7,25 +7,21 @@ import { getCategories, listServices } from "@/lib/supabase/queries";
 
 const steps = [
   {
-    emoji: "👤",
     step: "PASSO 1",
     title: "Crie seu perfil",
     description: "Cadastre seus serviços, habilidades e portfólio em minutos.",
   },
   {
-    emoji: "🔍",
     step: "PASSO 2",
     title: "Encontre oportunidades",
     description: "Navegue por projetos abertos ou seja encontrado por clientes.",
   },
   {
-    emoji: "🤝",
     step: "PASSO 3",
     title: "Feche o negócio",
     description: "Envie propostas, negocie diretamente e combine o pagamento.",
   },
   {
-    emoji: "💰",
     step: "PASSO 4",
     title: "Receba 100%",
     description: "O dinheiro vai direto do cliente pra você. Sem desconto.",
@@ -48,9 +44,7 @@ export default async function Home() {
           <h1 className="mt-6 text-5xl font-black leading-tight tracking-tight text-white sm:text-6xl">
             Contrate freelancers sem
             <br />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              pagar comissão nenhuma.
-            </span>
+            <span className="text-blue-400">pagar comissão nenhuma.</span>
           </h1>
 
           <p className="mt-6 max-w-xl text-lg text-slate-300">
@@ -151,10 +145,7 @@ export default async function Home() {
           <div className="mt-12 grid gap-8 text-left sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((item) => (
               <div key={item.step}>
-                <span className="flex size-11 items-center justify-center rounded-lg bg-blue-50 text-xl">
-                  {item.emoji}
-                </span>
-                <p className="mt-4 text-xs font-semibold tracking-wide text-blue-600">
+                <p className="text-xs font-semibold tracking-wide text-blue-600">
                   {item.step}
                 </p>
                 <p className="mt-2 text-lg font-semibold text-slate-900">

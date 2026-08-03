@@ -26,12 +26,17 @@ partir do fim do ciclo já pago.`,
   {
     title: "4. Pagamento entre cliente e freelancer",
     body: `O pagamento por um projeto é combinado diretamente entre cliente e
-freelancer e processado pelo Mercado Pago através de split payment: o valor
-pago pelo cliente vai direto para a conta do freelancer no Mercado Pago. A
-PrestaCerto não recebe, não retém e não tem acesso ao dinheiro em nenhum
-momento dessa transação, e não é responsável por disputas de pagamento,
-estornos ou chargebacks — esses casos são tratados diretamente pelo Mercado
-Pago, conforme os termos e as políticas de proteção ao comprador/vendedor da
+freelancer e processado pelo Mercado Pago através de split payment com
+retenção: ao pagar, o valor fica reservado pelo Mercado Pago (não é
+transferido de imediato) até o cliente confirmar que o serviço foi entregue.
+Após a confirmação, o valor é liberado integralmente para a conta do
+freelancer no Mercado Pago. Se o cliente não confirmar a entrega em até 5
+dias corridos, a retenção expira automaticamente e o valor retorna para o
+cliente. Em nenhum momento a PrestaCerto recebe, retém ou tem acesso ao
+dinheiro — quem retém e libera é o próprio Mercado Pago, sob autorização. A
+PrestaCerto não é responsável por disputas de pagamento, estornos ou
+chargebacks — esses casos são tratados diretamente pelo Mercado Pago,
+conforme os termos e as políticas de proteção ao comprador/vendedor da
 própria plataforma de pagamento.`,
   },
   {

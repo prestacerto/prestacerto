@@ -6,7 +6,7 @@ import { LinkButton } from "@/components/link-button";
 import { ProposalForm } from "@/components/proposal-form";
 import { ReviewForm } from "@/components/review-form";
 import { ConnectMpButton } from "@/components/connect-mp-button";
-import { PayButton } from "@/components/pay-button";
+import { HeldPaymentForm } from "@/components/held-payment-form";
 import {
   getProjectById,
   hasSubmittedProposal,
@@ -19,9 +19,10 @@ import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 const paymentStatusLabel: Record<string, string> = {
   pending: "Pagamento pendente",
-  approved: "Pagamento aprovado",
+  authorized: "Pagamento retido — aguardando você confirmar a entrega",
+  approved: "Pagamento liberado pro freelancer",
   rejected: "Pagamento recusado",
-  in_process: "Pagamento em análise",
+  expired: "Retenção expirou — dinheiro devolvido pro cliente",
   refunded: "Pagamento reembolsado",
 };
 
@@ -151,14 +152,25 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         <Card className="mt-6 p-5">
           <h2 className="font-semibold text-slate-900">Pagamento</h2>
           <p className="mt-1 text-sm text-slate-500">
-            O pagamento é processado pelo Mercado Pago e cai direto na conta do
-            freelancer — a PrestaCerto não recebe nem retém o valor.
+            O pagamento é processado pelo Mercado Pago e fica retido até você
+            confirmar que o serviço foi entregue — só então cai na conta do
+            freelancer. A PrestaCerto nunca chega a receber ou guardar o
+            dinheiro.
           </p>
 
           {payment && (
-            <Badge variant="secondary" className="mt-3">
-              {paymentStatusLabel[payment.status] ?? payment.status} · R$ {payment.amount}
-            </Badge>
+            <div className="mt-3 space-y-1">
+              <Badge variant="secondary">
+                {paymentStatusLabel[payment.status] ?? payment.status} · R$ {payment.amount}
+              </Badge>
+              {payment.status === "authorized" && payment.capture_deadline && (
+                <p className="text-xs text-amber-600">
+                  Confirme a entrega até{" "}
+                  {new Date(payment.capture_deadline).toLocaleDateString("pt-BR")} — depois
+                  disso o Mercado Pago cancela a retenção e devolve o valor.
+                </p>
+              )}
+            </div>
           )}
 
           {isAcceptedFreelancer && !freelancerHasMpConnection && (
@@ -171,17 +183,36 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           )}
 
           {isOwner &&
-            (!payment || payment.status === "pending" || payment.status === "rejected") && (
+            user &&
+            (!payment ||
+              payment.status === "pending" ||
+              payment.status === "rejected" ||
+              payment.status === "expired") &&
+            acceptedProposal?.proposed_price && (
               <div className="mt-4">
                 {!freelancerHasMpConnection ? (
                   <p className="text-sm text-slate-500">
                     Aguardando o freelancer conectar a conta Mercado Pago para receber.
                   </p>
                 ) : (
-                  <PayButton projectId={project.id} />
+                  <HeldPaymentForm
+                    projectId={project.id}
+                    amount={acceptedProposal.proposed_price}
+                    payerEmail={user.email ?? ""}
+                  />
                 )}
               </div>
             )}
+
+          {isOwner && payment?.status === "authorized" && (
+            <p className="mt-4 text-sm text-slate-600">
+              Confirme a entrega no{" "}
+              <Link href="/dashboard/projects" className="text-blue-600 hover:underline">
+                seu dashboard
+              </Link>{" "}
+              pra liberar o pagamento retido pro freelancer.
+            </p>
+          )}
         </Card>
       )}
 

@@ -119,6 +119,29 @@ export async function sendPaymentApprovedEmail(params: {
   });
 }
 
+export async function sendCaptureReminderEmail(params: {
+  to: string | null;
+  projectTitle: string;
+  amount: number;
+  projectUrl: string;
+  hoursLeft: number;
+}) {
+  return sendNotification({
+    to: params.to,
+    subject: `Confirme a entrega — o prazo acaba em breve ("${params.projectTitle}")`,
+    html: wrapEmail(
+      `<p>O pagamento de <strong>R$ ${params.amount}</strong> pelo projeto
+      <strong>${params.projectTitle}</strong> está retido, aguardando sua confirmação.</p>
+      <p>Faltam cerca de <strong>${params.hoursLeft} horas</strong> — se você não confirmar
+      a entrega até lá, o Mercado Pago cancela a retenção automaticamente e devolve o
+      valor pra você (o freelancer não recebe).</p>
+      <p>Se o serviço já foi entregue, confirme agora pra liberar o pagamento.</p>`,
+      params.projectUrl,
+      "Confirmar entrega"
+    ),
+  });
+}
+
 export async function sendProjectCompletedEmail(params: {
   to: string | null;
   projectTitle: string;

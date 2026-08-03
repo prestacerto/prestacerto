@@ -44,8 +44,9 @@ export default async function DashboardProjectDetailPage({
         <Card className="mt-6 p-5">
           <p className="font-medium text-slate-900">Projeto em andamento</p>
           <p className="mt-1 text-sm text-slate-500">
-            Quando o freelancer entregar o combinado, marque como concluído pra
-            liberar a avaliação.
+            Quando o freelancer entregar o combinado, marque como concluído.
+            Se houver um pagamento retido, ele é liberado pro freelancer nesse
+            momento — e a avaliação é destravada pros dois lados.
           </p>
           <div className="mt-4">
             <CompleteProjectButton projectId={project.id} />

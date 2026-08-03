@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { exchangeCodeForToken } from "@/lib/payments/mercadopago";
+import { encryptSecret } from "@/lib/crypto/token-cipher";
 
 export async function GET(request: NextRequest) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
@@ -35,8 +36,8 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.from("mp_connections").upsert({
       freelancer_id: user.id,
       mp_user_id: String(token.user_id),
-      access_token: token.access_token,
-      refresh_token: token.refresh_token,
+      access_token: encryptSecret(token.access_token),
+      refresh_token: encryptSecret(token.refresh_token),
       public_key: token.public_key ?? null,
       expires_at: new Date(Date.now() + token.expires_in * 1000).toISOString(),
     });

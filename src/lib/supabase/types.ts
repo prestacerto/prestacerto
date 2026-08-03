@@ -6,7 +6,13 @@ export type Role = "freelancer" | "client" | "both";
 export type Plan = "free" | "pro" | "business";
 export type ProjectStatus = "open" | "in_progress" | "closed" | "cancelled";
 export type ProposalStatus = "pending" | "accepted" | "rejected" | "withdrawn";
-export type PaymentStatus = "pending" | "approved" | "rejected" | "in_process" | "refunded";
+export type PaymentStatus =
+  | "pending"
+  | "authorized"
+  | "approved"
+  | "rejected"
+  | "expired"
+  | "refunded";
 export type TeamInviteStatus = "pending" | "accepted" | "revoked";
 
 export interface Profile {
@@ -118,6 +124,10 @@ export interface Payment {
   status: PaymentStatus;
   mp_preference_id: string | null;
   mp_payment_id: string | null;
+  mp_order_id: string | null;
+  authorized_at: string | null;
+  capture_deadline: string | null;
+  reminder_sent_at: string | null;
   created_at: string;
   updated_at: string;
 }
