@@ -89,7 +89,39 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16 sm:px-6">
+      <section className="bg-white px-4 py-14 sm:px-6">
+        <div className="mx-auto max-w-5xl text-center">
+          <h2 className="text-3xl font-bold text-slate-900">Como funciona</h2>
+          <p className="mt-2 text-slate-500">
+            Simples, direto e sem burocracia.
+          </p>
+
+          <div className="mt-10 grid gap-8 text-left sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((item) => (
+              <div key={item.step}>
+                <p className="text-xs font-semibold tracking-wide text-blue-600">
+                  {item.step}
+                </p>
+                <p className="mt-2 text-lg font-semibold text-slate-900">
+                  {item.title}
+                </p>
+                <p className="mt-2 text-sm text-slate-500">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <LinkButton href="/como-funciona" variant="ghost" size="sm">
+              Ver o passo a passo completo
+              <ArrowRight className="size-4" />
+            </LinkButton>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-slate-50 px-4 py-14 sm:px-6">
         <div className="mx-auto max-w-6xl">
           <div className="flex items-end justify-between">
             <div>
@@ -109,7 +141,7 @@ export default async function Home() {
       </section>
 
       {services.length > 0 && (
-        <section className="bg-slate-50 px-4 py-16 sm:px-6">
+        <section className="bg-white px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <div className="flex items-end justify-between">
               <div>
@@ -135,39 +167,7 @@ export default async function Home() {
         </section>
       )}
 
-      <section className="bg-white px-4 py-20 sm:px-6">
-        <div className="mx-auto max-w-5xl text-center">
-          <h2 className="text-3xl font-bold text-slate-900">Como funciona</h2>
-          <p className="mt-2 text-slate-500">
-            Simples, direto e sem burocracia.
-          </p>
-
-          <div className="mt-12 grid gap-8 text-left sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((item) => (
-              <div key={item.step}>
-                <p className="text-xs font-semibold tracking-wide text-blue-600">
-                  {item.step}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-slate-900">
-                  {item.title}
-                </p>
-                <p className="mt-2 text-sm text-slate-500">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <LinkButton href="/como-funciona" variant="ghost" size="sm">
-              Ver o passo a passo completo
-              <ArrowRight className="size-4" />
-            </LinkButton>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#101828] px-4 py-20 sm:px-6">
+      <section className="bg-[#101828] px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
