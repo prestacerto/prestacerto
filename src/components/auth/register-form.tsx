@@ -14,10 +14,12 @@ import { Label } from "@/components/ui/label";
 import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 import { cn } from "@/lib/utils";
 
+const DEFAULT_PASSWORD = "PrestaCerto@123";
+
 const registerSchema = z.object({
   fullName: z.string().min(2, "Informe seu nome"),
   email: z.string().email("Informe um e-mail válido"),
-  password: z.string().min(6, "A senha precisa ter pelo menos 6 caracteres"),
+  password: z.string().optional().default(DEFAULT_PASSWORD),
 });
 
 type RegisterValues = z.infer<typeof registerSchema>;
@@ -129,8 +131,16 @@ export function RegisterForm() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="password">Senha</Label>
-          <Input id="password" type="password" {...register("password")} />
+          <Label htmlFor="password">Senha (opcional)</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Deixe em branco para usar a padrão"
+            {...register("password")}
+          />
+          <p className="text-xs text-slate-500">
+            💡 Padrão: <code className="bg-slate-100 px-1 rounded">PrestaCerto@123</code>
+          </p>
           {errors.password && (
             <p className="text-xs text-red-600">{errors.password.message}</p>
           )}
