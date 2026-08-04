@@ -8,22 +8,22 @@ import { getCategories, listServices } from "@/lib/supabase/queries";
 const steps = [
   {
     step: "PASSO 1",
-    title: "Crie seu perfil",
+    title: "👤 Crie seu perfil",
     description: "Cadastre seus serviços, habilidades e portfólio em minutos.",
   },
   {
     step: "PASSO 2",
-    title: "Encontre oportunidades",
+    title: "🔍 Encontre oportunidades",
     description: "Navegue por projetos abertos ou seja encontrado por clientes.",
   },
   {
     step: "PASSO 3",
-    title: "Feche o negócio",
+    title: "🤝 Feche o negócio",
     description: "Envie propostas, negocie diretamente e combine o pagamento.",
   },
   {
     step: "PASSO 4",
-    title: "Receba 100%",
+    title: "💰 Receba 100%",
     description: "O dinheiro vai direto do cliente pra você. Sem desconto.",
   },
 ];
