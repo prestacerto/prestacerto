@@ -8,8 +8,11 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
 - **Next.js 16** (App Router, Turbopack, `proxy.ts` — o antigo Middleware)
 - **Tailwind CSS 4 + shadcn/ui (Base UI)** para o visual
 - **Supabase** — autenticação (e-mail/senha + Google), Postgres, RLS
-- **Mercado Pago** — split payment: o pagamento vai direto pra conta do
-  freelancer, a PrestaCerto nunca recebe nem retém o valor
+- **Mercado Pago** — split payment com **retenção**: o cliente paga e o
+  valor fica reservado pelo próprio Mercado Pago (não pela PrestaCerto) até
+  o cliente confirmar a entrega; só então cai na conta do freelancer. Se
+  ninguém confirmar em 5 dias, a retenção expira e o valor volta pro
+  cliente. A PrestaCerto nunca chega a receber ou guardar o dinheiro.
 - **Resend** — e-mails transacionais (convite de equipe, notificações,
   contato)
 
@@ -27,10 +30,14 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
   freelancer — não é realtime, atualiza ao recarregar a página
 - Revelação de contato: assim que a proposta é aceita, o freelancer vê o
   e-mail/telefone que o cliente informou ao publicar o projeto
-- Pagamento protegido via Mercado Pago (split payment): freelancer conecta a
-  própria conta MP, cliente paga pelo checkout, dinheiro cai direto pra ele
-- Cliente marca o projeto como concluído; as duas partes se avaliam
-  (1-5 estrelas + comentário), a nota do perfil é recalculada automaticamente
+- Pagamento retido via Mercado Pago: freelancer conecta a própria conta MP,
+  cliente paga com cartão dentro do site (Card Payment Brick), o valor fica
+  reservado até o cliente confirmar a entrega — só então é liberado pro
+  freelancer. Se ninguém confirmar em 5 dias, a retenção expira sozinha e o
+  valor volta pro cliente (com lembrete por e-mail perto do prazo)
+- Cliente marca o projeto como concluído (isso libera o pagamento retido);
+  as duas partes se avaliam (1-5 estrelas + comentário), a nota do perfil é
+  recalculada automaticamente
 - Badge de verificado nos perfis com plano Pro/Business
 - Plano Business: criar equipe, convidar até 5 pessoas por e-mail
 - Notificações por e-mail (via Resend, best-effort — se falhar, a ação
@@ -38,6 +45,11 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
   aceita, nova mensagem no chat, pagamento aprovado, projeto concluído
 - Botões "Assinar Pro/Business" capturam interesse em `plan_interest_leads`
   (não há cobrança automática ainda — ver abaixo)
+- Monetização à la carte, ainda como placeholder (grava no banco mas não
+  cobra de verdade — ver `TODO` em cada rota): destacar projeto
+  (`/api/monetization/highlight`), selo de verificado
+  (`/api/monetization/verify`) e antecipação de recebimento
+  (`/api/monetization/early-payment`)
 
 ## O que fica pra depois
 
@@ -52,8 +64,8 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
 ## Configurando o Supabase
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
-2. **SQL Editor → New query**: rode `supabase/migrations/0001_init.sql` e
-   depois `supabase/migrations/0002_reviews_payments_teams.sql`, nessa ordem.
+2. **SQL Editor → New query**: rode as migrations em `supabase/migrations/`
+   em ordem numérica (0001 → 0004).
 3. Em **Authentication → Providers**, confirme "Email" habilitado (e
    Google, se for usar o login social).
 4. Em **Project Settings → API**, copie a **Project URL**, a **anon public
@@ -62,20 +74,36 @@ projeto. Next.js 16 (App Router) + Supabase + Mercado Pago.
 
 ## Configurando o Mercado Pago
 
+O pagamento usa retenção (captura manual): o cliente autoriza o cartão, o
+valor fica reservado pelo Mercado Pago, e só é capturado (liberado pro
+freelancer) quando o cliente confirma a entrega —
+ver `src/lib/payments/mercadopago.ts` pros detalhes e limitações conhecidas.
+
 1. Crie uma aplicação em
-   [mercadopago.com.br/developers/panel/app](https://www.mercadopago.com.br/developers/panel/app)
-   e ative **Checkout Pro**.
+   [mercadopago.com.br/developers/panel/app](https://www.mercadopago.com.br/developers/panel/app).
 2. Copie **Client ID** e **Client Secret** (credenciais de teste pra testar
-   sem dinheiro real, de produção quando for pra valer).
+   sem dinheiro real, de produção quando for pra valer) e a **Public Key**
+   da aplicação.
 3. Em **Webhooks → Configurar notificações**, cole
-   `https://SEU-DOMINIO/api/mercadopago/webhook`, marque o evento `payment`
-   e copie a chave secreta gerada.
-4. Preencha `MERCADOPAGO_CLIENT_ID`, `MERCADOPAGO_CLIENT_SECRET` e
-   `MERCADOPAGO_WEBHOOK_SECRET` no `.env.local`.
-5. **Importante:** esse fluxo (conectar conta → aceitar proposta → pagar →
-   webhook atualiza o status) não foi testado de ponta a ponta com uma conta
-   real — o código segue a documentação oficial do Mercado Pago, mas rode o
-   fluxo completo no modo de teste antes de aceitar pagamentos reais.
+   `https://SEU-DOMINIO/api/mercadopago/webhook` e copie a chave secreta
+   gerada — **obrigatória em produção** (sem ela o webhook recusa qualquer
+   notificação, ver `route.ts`).
+4. Preencha no `.env.local`: `MERCADOPAGO_CLIENT_ID`,
+   `MERCADOPAGO_CLIENT_SECRET`, `MERCADOPAGO_WEBHOOK_SECRET`,
+   `NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY` (a public key da aplicação, usada no
+   navegador pro formulário de cartão) e `MP_TOKEN_ENCRYPTION_KEY` (gere com
+   `openssl rand -base64 32` — criptografa o token de cada freelancer
+   conectado).
+5. **Importante, antes de aceitar cartão real:** o campo que ativa a
+   retenção (`capture_mode: "manual"` na API de Orders) veio da
+   documentação pública do Mercado Pago, não foi confirmado contra o
+   sandbox deles. Rode uma transação de teste e confirme que o pagamento
+   fica com status retido (não aprovado direto) antes de ligar isso pra
+   usuário real.
+6. Pro lembrete automático de retenção prestes a expirar
+   (`/api/cron/payment-reminders`, configurado em `vercel.json`), defina
+   `CRON_SECRET` no `.env.local` — é o valor que a Vercel Cron manda no
+   header `Authorization` quando dispara.
 
 ## Configurando o Resend (e-mails transacionais)
 
@@ -107,11 +135,18 @@ Abra [http://localhost:3000](http://localhost:3000).
 
 1. Suba o código pra um repositório e importe na [Vercel](https://vercel.com).
 2. Adicione todas as variáveis do `.env.local` no projeto da Vercel — troque
-   `NEXT_PUBLIC_SITE_URL` pela URL final do site.
+   `NEXT_PUBLIC_SITE_URL` pela URL final do site (ex.: `https://prestacerto.com.br`).
 3. Se for usar login com Google, adicione a URL final em
    **Authentication → URL Configuration → Redirect URLs** no Supabase.
 4. Atualize a URL de webhook no painel do Mercado Pago e troque para
    credenciais de produção quando for aceitar pagamentos reais.
+5. O domínio em si (compra + DNS) é feito fora daqui, no registrador
+   (ex.: registro.br) e no painel **Domains** da Vercel.
+6. **Cold start:** o site fica vazio (sem serviços/projetos) até alguém
+   cadastrar de verdade — antes de divulgar, vale publicar alguns
+   serviços/projetos reais (seus, de conhecidos, de beta testers) pra não
+   parecer abandonado pro primeiro visitante. Evite dado fake — quebra a
+   mesma confiança que o "zero comissão" tenta construir.
 
 ## Estrutura do projeto
 
@@ -122,18 +157,22 @@ src/
     (auth)/              login, cadastro, recuperação de senha
     (protected)/          dashboard (protegido por src/proxy.ts)
     api/
-      mercadopago/          OAuth + checkout + webhook
+      mercadopago/          OAuth + checkout (retido) + webhook
+      monetization/          destaque/verificação/antecipação (placeholder)
+      cron/                   lembrete de retenção prestes a expirar
       proposals/             criar/aceitar proposta
-      projects/[id]/complete   encerrar projeto
+      projects/[id]/complete   encerrar projeto (libera pagamento retido)
       reviews/                 criar avaliação
       team/                    criar equipe, convites
-  components/           componentes de UI (inclui team/, ui/)
+  components/           componentes de UI (inclui monetization/, team/, ui/)
   lib/
     actions/             Server Actions (projetos)
     auth/                 getAuthenticatedUser / getProfile
+    crypto/                criptografia do token do Mercado Pago
     payments/              wrapper da API do Mercado Pago
     supabase/               clientes Supabase (browser, servidor, service role)
   proxy.ts               guarda de sessão pra /dashboard/*
 supabase/
-  migrations/            0001 (schema inicial), 0002 (reviews/pagamento/equipe)
+  migrations/            0001 schema inicial · 0002 reviews/pagamento/equipe
+                         · 0003 retenção de pagamento · 0004 monetização
 ```
