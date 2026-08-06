@@ -43,51 +43,45 @@
 
 ## 🔴 Receitas NÃO Implementadas (Oportunidades)
 
-### 1. **Taxa de Transação do Projeto** ⭐ (MAIOR POTENCIAL)
+### 1. **Taxa de Transação do Projeto** ❌ (NÃO RECOMENDADO)
 
 **Ideia:** Cobrar 2% do valor do projeto quando cliente paga freelancer via PrestaCerto
 
-**Vantagem:**
-- Escala com o volume de negócios
-- Modelo comum em marketplaces (Upwork: 5-20%, Workana: 8-10%)
-- Fácil de implementar (pega de `proposals.proposed_price`)
-
-**Desvantagem:**
-- Conflita com promessa "sem comissão"
+**Problema:**
+- ❌ Conflita DIRETO com promessa "SEM COMISSÃO"
 - Usuários podem contornar (pagar fora da plataforma)
+- Quebra o diferencial vs Upwork (5-20%), Fiverr (20%), Workana (10%)
 
-**Alternativa:** "Fee baixa de segurança" (1-2%) apenas em pagamentos via PrestaCerto, não em negociações diretas
-
-**Potencial:**
-- 50 projetos/mês × R$3.000 médio × 2% = R$3.000/mês
-- **Se escalar:** 500 projetos/mês × R$3.000 × 2% = R$30.000/mês ⚠️ (conflita com positioning)
+**Decisão:** REMOVER desta estratégia. Usar juros do float em vez disso (sem quebrar promessa!)
 
 ---
 
-### 2. **Escrow/Garantia de Pagamento** ⭐⭐ (RECOMENDADO)
+### 2. **Escrow/Garantia de Pagamento** ⭐⭐ (RECOMENDADO - SEM TAXA!)
 
 **Ideia:** PrestaCerto segura o dinheiro do cliente, libera pra freelancer após conclusão
 
 **Como funciona:**
 1. Cliente paga PrestaCerto (não freelancer direto)
-2. PrestaCerto segura o dinheiro em conta intermediária
-3. Após aceite de conclusão, PrestaCerto libera pra freelancer (ganha juros do float + taxa)
+2. PrestaCerto segura o dinheiro em conta intermediária (7-14 dias)
+3. Após aceite de conclusão, PrestaCerto libera pra freelancer
+4. **PrestaCerto ganha com juros do float (SEM taxa ao cliente!)**
 
 **Vantagem:**
 - Reduz fraude/golpes
 - Confiança aumenta → mais pagantes
-- Juro do float = receita "invisível" (R$100k em escrow × 0,5% ao mês = R$500/mês só de juro)
-- Usuários dispõem a pagar taxa pela segurança
+- Juro do float = receita "invisível" (R$100k em escrow × 5% ao ano = R$417/mês)
+- **MANTÉM promessa "SEM COMISSÃO" intacta!** 💪
 
 **Desvantagem:**
 - Precisa licença de Payment Service Provider
 - Compliance regulatório (Brasil tem regras)
 
-**Taxa sugerida:** 3-5% do valor do projeto
+**Modelo de receita:** Juros do float (Tesouro Direto 5% ao ano)
 
 **Potencial:**
-- 50 projetos/mês × R$3.000 × 4% = R$6.000/mês (primeiro ano)
-- Crescer pra R$30k-50k/mês com escala
+- 50 projetos/mês × R$3.000 × 5% ÷ 365 × 7 dias = R$180/mês
+- 200 projetos/mês = R$730/mês (crescimento real!)
+- 500+ projetos/mês = R$1.800+/mês (escala!)
 
 ---
 
@@ -257,33 +251,34 @@
 
 ---
 
-## 📊 PROJEÇÃO: RECEITA TOTAL (12 MESES)
+## 📊 PROJEÇÃO: RECEITA TOTAL (12 MESES) - SEM QUEBRAR PROMESSA
 
-### Conservador (implementar top 3)
-- **Mês 1-3:** R$10k/mês (atuais + Featured)
-- **Mês 4-6:** R$16k/mês (+ Escrow chegar)
-- **Mês 7-12:** R$20k-25k/mês (escrow + juros + escala)
+### Conservador (Featured + Portfolio + Escrow float)
+- **Mês 1-3:** R$12k/mês (planos + featured)
+- **Mês 4-6:** R$13k/mês (+ primeiros juros escrow)
+- **Mês 7-12:** R$14-16k/mês (escrow cresce, mais float)
+- **Total ano 1:** ~R$160k
+
+### Agressivo (com crescimento viral de escrow)
+- **Mês 1-3:** R$12k/mês
+- **Mês 4-12:** R$14-18k/mês
 - **Total ano 1:** ~R$180k
 
-### Agressivo (implementar top 7)
-- **Mês 1-3:** R$12k/mês
-- **Mês 4-12:** R$25-35k/mês
-- **Total ano 1:** ~R$300k
+### Extra (Certificados + Analytics + API)
+- Add R$2-3k/mês conforme escala
+- **Total ano 1 com extras:** ~R$200k+
 
-### Pessimista (só planos)
-- **Steady:** R$7.5k/mês
-- **Total ano 1:** ~R$90k
+**BÔNUS:** Confiança em plataforma → crescimento natural de Pro/Business assinantes
 
 ---
 
 ## ⚠️ PONTOS CRÍTICOS
 
-### 1. **NÃO quebrar promessa "sem comissão"**
-- Clientes estão pagando por essa proposta
-- Se implementar taxa de transação, comunicar como:
-  - "Taxa de segurança" (não comissão)
-  - "Proteção do comprador" (escrow)
-  - Ou: só cobrar em pagamentos VIA plataforma, não em negociações diretas
+### 1. **MANTER promessa "SEM COMISSÃO" SAGRADA** 🔥
+- Essa é a VANTAGEM competitiva
+- NÃO cobrar taxa de transação (nem disfarçada)
+- Ganhar com juros do float (cliente/freelancer não pagam nada)
+- Isso é o diferencial real!
 
 ### 2. **Regulatory/Compliance**
 - Escrow precisa licença de PSP (Payment Service Provider)

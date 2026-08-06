@@ -5,7 +5,8 @@
 PrestaCerto mantém o dinheiro do cliente em **escrow** (conta intermediária) até o projeto ser concluído. Depois libera pro freelancer. Isso:
 - ✅ Protege freelancer (cliente não desaparece sem pagar)
 - ✅ Protege cliente (recebe os fundos de volta se freelancer não entregar)
-- ✅ Gera receita pra PrestaCerto (4% de taxa)
+- ✅ Gera receita pra PrestaCerto via **juros do float** (SEM taxa ao cliente/freelancer!)
+- ✅ Mantém proposta "SEM COMISSÃO POR PROJETO" 💪
 
 ## ARQUIVOS CRIADOS
 
@@ -163,29 +164,27 @@ export async function POST(request: NextRequest) {
    - MP tem estrutura de PSP no Brasil
    - Você só cria escrow_transactions no seu banco, MP gerencia contas
 
-## TAXAS SUGERIDAS
+## MODELO DE RECEITA: JUROS DO FLOAT (SEM TAXA!)
+
+**Estratégia:** Ganhar com juros, NÃO com taxa de transação
 
 ```
-Opção A (Agressivo): 5% escrow fee
-- PrestaCerto fica com R$50/R$1.000
-- Mercado Pago fica com ~1,99% (R$20)
-- Freelancer recebe R$930
-- Lucro líquido: R$30/R$1.000
+Cliente paga:        R$ 1.000
+Você segura por:     7-14 dias (até freelancer confirmar)
+Você investe em:     Tesouro Direto (5% ao ano) OU CDB (6% ao ano)
+Você ganha:          R$ 1.000 × 5% ÷ 365 × 7 dias ≈ R$ 0,96 por projeto
 
-Opção B (Competitivo): 4% escrow fee
-- PrestaCerto fica com R$40/R$1.000
-- Mercado Pago: ~R$20
-- Freelancer recebe R$940
-- Lucro líquido: R$20/R$1.000 ← RECOMENDADO
+100 projetos/mês = R$ 96/mês (SEM quebrar promessa!)
+1.000 projetos/mês = R$ 960/mês (puro float!)
 
-Opção C (Penetração): 2% escrow fee
-- PrestaCerto fica com R$20/R$1.000
-- MP: ~R$20
-- Freelancer recebe R$960
-- Lucro: ZERO (só paga MP)
+BÔNUS: Juros do float crescem com o volume!
 ```
 
-**Escolha: 4% (Opção B) — bom equilíbrio**
+**Por quê funciona:**
+- ✅ Você ganha (float = receita real)
+- ✅ Cliente não paga taxa extra
+- ✅ Freelancer recebe 100%
+- ✅ "SEM COMISSÃO" mantém verdadeiro 💪
 
 ## ROADMAP DE IMPLEMENTAÇÃO
 
@@ -309,4 +308,6 @@ Após confirmar setup, criar:
 4. Atualizar Proposals UI com botão "Pagar via PrestaCerto"
 
 **Estimativa:** 2 semanas (research + setup + testing + deploy)
-**Payoff:** +R$6k/mês (Ano 1) → +R$30k/mês (Ano 2+)
+**Payoff (conservador):** +R$400/mês (juros do float)
+**Bônus:** Aumenta confiança → mais clientes usam escrow → crescimento indireto em assinatura Pro/Business
+**Proposta:** MANTÉM "SEM COMISSÃO" intacta 💪
