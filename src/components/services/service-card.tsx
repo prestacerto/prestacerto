@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
-import type { ServiceWithFreelancer } from "@/lib/firebase/queries";
+import type { ServiceWithFreelancer } from "@/lib/supabase/queries";
 
 export function ServiceCard({ service }: { service: ServiceWithFreelancer }) {
   const freelancer = service.freelancer;

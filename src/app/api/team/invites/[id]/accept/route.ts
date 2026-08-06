@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { TEAM_SEAT_LIMIT } from "@/lib/firebase/queries";
+import { TEAM_SEAT_LIMIT } from "@/lib/supabase/queries";
 
 interface AcceptInviteParams {
   // O valor aqui é o token do convite (não o id da linha) — nomeado "id" só

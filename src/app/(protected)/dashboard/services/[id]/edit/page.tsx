@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCategories, getServiceById } from "@/lib/firebase/queries";
+import { getCategories, getServiceById } from "@/lib/supabase/queries";
 import {
   updateServiceAction,
   deleteServiceAction,

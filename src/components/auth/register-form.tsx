@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Briefcase, User } from "lucide-react";
-import { registerUser } from "@/lib/firebase/auth";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,17 +38,30 @@ export function RegisterForm() {
 
   async function onSubmit(values: RegisterValues) {
     setLoading(true);
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+      options: {
+        data: { role, full_name: values.fullName },
+      },
+    });
+    setLoading(false);
 
-    try {
-      await registerUser(values.email, values.password, values.fullName, role);
+    if (error) {
+      toast.error("Não foi possível criar sua conta", {
+        description: error.message,
+      });
+      return;
+    }
+
+    // Se a confirmação de e-mail estiver habilitada no projeto Supabase,
+    // `session` vem nulo aqui — o usuário precisa confirmar antes de logar.
+    if (data.session) {
       router.push("/dashboard");
       router.refresh();
-    } catch (error) {
-      setLoading(false);
-      const message = error instanceof Error ? error.message : "Erro ao criar conta";
-      toast.error("Não foi possível criar sua conta", {
-        description: message,
-      });
+    } else {
+      setSubmitted(true);
     }
   }
 

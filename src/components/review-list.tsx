@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import type { ReviewWithAuthor } from "@/lib/firebase/queries";
+import type { ReviewWithAuthor } from "@/lib/supabase/queries";
 
 export function ReviewList({ reviews }: { reviews: ReviewWithAuthor[] }) {
   if (reviews.length === 0) {

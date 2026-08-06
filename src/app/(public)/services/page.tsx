@@ -1,4 +1,4 @@
-import { getCategories, listServices } from "@/lib/firebase/queries";
+import { getCategories, listServices } from "@/lib/supabase/queries";
 import { SearchFilterBar } from "@/components/search-filter-bar";
 import { ServiceCard } from "@/components/services/service-card";
 

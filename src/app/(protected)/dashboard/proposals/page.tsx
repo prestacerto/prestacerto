@@ -3,7 +3,7 @@ import { Send, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getMyProposals } from "@/lib/firebase/queries";
+import { getMyProposals } from "@/lib/supabase/queries";
 
 export const metadata = { title: "Minhas propostas — Dashboard PrestaCerto" };
 

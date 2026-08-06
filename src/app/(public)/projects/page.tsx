@@ -1,4 +1,4 @@
-import { getCategories, listOpenProjects } from "@/lib/firebase/queries";
+import { getCategories, listOpenProjects } from "@/lib/supabase/queries";
 import { SearchFilterBar } from "@/components/search-filter-bar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";

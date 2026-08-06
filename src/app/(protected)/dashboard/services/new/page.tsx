@@ -1,4 +1,4 @@
-import { getCategories } from "@/lib/firebase/queries";
+import { getCategories } from "@/lib/supabase/queries";
 import { createServiceAction } from "@/app/(protected)/dashboard/services/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

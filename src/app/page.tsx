@@ -3,7 +3,7 @@ import { LinkButton } from "@/components/link-button";
 import { PlansSection } from "@/components/plans-section";
 import { CategoryGrid } from "@/components/category-grid";
 import { ServiceCard } from "@/components/services/service-card";
-import { getCategories, listServices } from "@/lib/firebase/queries";
+import { getCategories, listServices } from "@/lib/supabase/queries";
 
 const steps = [
   {
@@ -30,7 +30,7 @@ const steps = [
 
 export default async function Home() {
   const categories = await getCategories();
-  const services = (await listServices()).slice(0, 6);
+  const services = (await listServices({})).slice(0, 6);
 
   return (
     <>

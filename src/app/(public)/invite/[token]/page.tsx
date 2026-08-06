@@ -3,7 +3,7 @@ import { Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { AcceptInviteButton } from "@/components/team/accept-invite-button";
-import { getInviteByToken } from "@/lib/firebase/queries";
+import { getInviteByToken } from "@/lib/supabase/queries";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 interface InvitePageProps {

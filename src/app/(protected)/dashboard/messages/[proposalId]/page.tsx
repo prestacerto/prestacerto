@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { MessageThread } from "@/components/message-thread";
 import { ContactReveal } from "@/components/contact-reveal";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getProposalThreadInfo, getMessagesForProposal } from "@/lib/firebase/queries";
+import { getProposalThreadInfo, getMessagesForProposal } from "@/lib/supabase/queries";
 
 interface MessagesPageProps {
   params: Promise<{ proposalId: string }>;

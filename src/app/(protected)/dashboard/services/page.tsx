@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getMyServices } from "@/lib/firebase/queries";
+import { getMyServices } from "@/lib/supabase/queries";
 import {
   deleteServiceAction,
   toggleServiceActiveAction,

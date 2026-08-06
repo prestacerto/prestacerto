@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { AcceptProposalButton } from "@/components/accept-proposal-button";
 import { CompleteProjectButton } from "@/components/complete-project-button";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getProjectById, getProposalsForProject } from "@/lib/firebase/queries";
+import { getProjectById, getProposalsForProject } from "@/lib/supabase/queries";
 
 interface DashboardProjectDetailProps {
   params: Promise<{ id: string }>;
