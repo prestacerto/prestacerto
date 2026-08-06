@@ -30,16 +30,25 @@ export function HighlightProjectModal({
   const handleHighlight = async () => {
     setLoading(true);
     try {
-      // TODO: Integrar com Mercado Pago Brick
-      // 1. Chamar API pra criar preference no MP
-      // 2. Renderizar Card Brick
-      // 3. Após sucesso, chamar addProjectHighlight()
+      // TODO: hoje isso já marca o projeto como destacado (placeholder), mas
+      // ainda não cobra de verdade — falta integrar o Card Brick do Mercado
+      // Pago aqui e só chamar a API depois da confirmação do pagamento.
+      const res = await fetch("/api/monetization/highlight", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, days: selectedDays }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error ?? "Falha ao destacar projeto");
+      }
 
       toast.success("Projeto destacado com sucesso!");
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
-      toast.error("Erro ao destacar projeto");
+      const message = error instanceof Error ? error.message : "Erro ao destacar projeto";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

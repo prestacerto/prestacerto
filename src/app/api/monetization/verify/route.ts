@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/firebase/auth";
-import { addVerificationBadge } from "@/lib/firebase/monetization";
+import { NextResponse } from "next/server";
+import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { addVerificationBadge } from "@/lib/supabase/monetization";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    const user = await getCurrentUser();
+    const user = await getAuthenticatedUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     // TODO: Integrar com Mercado Pago
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     // 3. Webhook pra confirmar e chamar addVerificationBadge()
 
     // Placeholder: simular sucesso
-    await addVerificationBadge(user.uid, "mp_verify_placeholder_123");
+    await addVerificationBadge(user.id, "mp_verify_placeholder_123");
 
     return NextResponse.json({
       success: true,

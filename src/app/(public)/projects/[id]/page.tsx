@@ -7,6 +7,8 @@ import { ProposalForm } from "@/components/proposal-form";
 import { ReviewForm } from "@/components/review-form";
 import { ConnectMpButton } from "@/components/connect-mp-button";
 import { HeldPaymentForm } from "@/components/held-payment-form";
+import { EarlyPaymentButton } from "@/components/monetization/early-payment-button";
+import { daysUntil } from "@/lib/utils";
 import {
   getProjectById,
   hasSubmittedProposal,
@@ -203,6 +205,16 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                 )}
               </div>
             )}
+
+          {isAcceptedFreelancer && payment?.status === "authorized" && payment.capture_deadline && (
+            <div className="mt-4">
+              <EarlyPaymentButton
+                proposalId={acceptedProposal!.id}
+                amount={payment.amount}
+                daysUntilRelease={daysUntil(payment.capture_deadline)}
+              />
+            </div>
+          )}
 
           {isOwner && payment?.status === "authorized" && (
             <p className="mt-4 text-sm text-slate-600">

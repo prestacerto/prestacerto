@@ -12,23 +12,28 @@ interface VerificationBadgeProps {
   onSuccess?: () => void;
 }
 
-export function VerificationBadgeButton({ freelancerId, isVerified, onSuccess }: VerificationBadgeProps) {
+export function VerificationBadgeButton({ isVerified, onSuccess }: VerificationBadgeProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleVerify = async () => {
     setLoading(true);
     try {
-      // TODO: Integrar com Mercado Pago Brick
-      // 1. Chamar API pra criar preference (R$ 9,90)
-      // 2. Renderizar Card Brick
-      // 3. Após sucesso, chamar addVerificationBadge()
+      // TODO: hoje isso já grava o selo (placeholder), mas ainda não cobra
+      // de verdade — falta integrar o Card Brick do Mercado Pago aqui e só
+      // chamar a API depois da confirmação do pagamento.
+      const res = await fetch("/api/monetization/verify", { method: "POST" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error ?? "Falha ao verificar perfil");
+      }
 
       toast.success("Perfil verificado! Badge adicionado.");
       setOpen(false);
       onSuccess?.();
     } catch (error) {
-      toast.error("Erro ao verificar perfil");
+      const message = error instanceof Error ? error.message : "Erro ao verificar perfil";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -68,7 +73,7 @@ export function VerificationBadgeButton({ freelancerId, isVerified, onSuccess }:
             <div className="bg-green-50 p-4 rounded-lg space-y-2">
               <p className="font-medium text-green-900">Benefícios:</p>
               <ul className="text-sm text-green-800 space-y-1">
-                <li>✓ Badge "Verificado" no seu perfil</li>
+                <li>✓ Badge &quot;Verificado&quot; no seu perfil</li>
                 <li>✓ Aparece destacado na busca</li>
                 <li>✓ Aumenta confiança dos clientes</li>
                 <li>✓ Válido por 1 ano</li>

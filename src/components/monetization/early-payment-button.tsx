@@ -29,16 +29,25 @@ export function EarlyPaymentButton({
   const handleEarlyPayment = async () => {
     setLoading(true);
     try {
-      // TODO: Integrar com Mercado Pago Brick
-      // 1. Chamar API pra criar preference (fee value)
-      // 2. Renderizar Card Brick
-      // 3. Após sucesso, chamar createEarlyPaymentRequest() + capturar no MP
+      // TODO: hoje isso já registra o pedido (placeholder), mas ainda não
+      // cobra a taxa nem captura o pagamento original de verdade — falta
+      // integrar o Card Brick do Mercado Pago aqui.
+      const res = await fetch("/api/monetization/early-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ proposalId }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error ?? "Falha ao processar antecipação");
+      }
 
       toast.success("Pagamento antecipado processado!");
       setOpen(false);
       onSuccess?.();
     } catch (error) {
-      toast.error("Erro ao processar antecipação");
+      const message = error instanceof Error ? error.message : "Erro ao processar antecipação";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

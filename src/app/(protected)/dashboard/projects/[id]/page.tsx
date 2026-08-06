@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AcceptProposalButton } from "@/components/accept-proposal-button";
 import { CompleteProjectButton } from "@/components/complete-project-button";
+import { HighlightProjectTrigger } from "@/components/monetization/highlight-project-trigger";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { getProjectById, getProposalsForProject } from "@/lib/supabase/queries";
 
@@ -34,7 +35,16 @@ export default async function DashboardProjectDetailPage({
 
   return (
     <div>
-      <Badge variant="secondary">{project.status}</Badge>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Badge variant="secondary">{project.status}</Badge>
+        {project.status === "open" && (
+          <HighlightProjectTrigger
+            projectId={project.id}
+            isFeatured={project.is_featured}
+            featuredUntil={project.featured_until}
+          />
+        )}
+      </div>
       <h1 className="mt-2 text-2xl font-bold text-slate-900">{project.title}</h1>
       <p className="mt-2 whitespace-pre-line text-sm text-slate-600">
         {project.description}
