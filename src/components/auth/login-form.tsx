@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
+import { loginUser } from "@/lib/firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,18 +33,17 @@ export function LoginForm() {
 
   async function onSubmit(values: LoginValues) {
     setLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword(values);
-    setLoading(false);
 
-    if (error) {
-      toast.error("Não foi possível entrar", { description: error.message });
-      return;
+    try {
+      await loginUser(values.email, values.password);
+      const redirect = searchParams.get("redirect") ?? "/dashboard";
+      router.push(redirect);
+      router.refresh();
+    } catch (error) {
+      setLoading(false);
+      const message = error instanceof Error ? error.message : "Erro ao fazer login";
+      toast.error("Não foi possível entrar", { description: message });
     }
-
-    const redirect = searchParams.get("redirect") ?? "/dashboard";
-    router.push(redirect);
-    router.refresh();
   }
 
   return (

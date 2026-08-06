@@ -14,7 +14,7 @@ import {
   getMyReviewForProject,
   getPaymentForProject,
   hasMpConnection,
-} from "@/lib/supabase/queries";
+} from "@/lib/firebase/queries";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 const paymentStatusLabel: Record<string, string> = {

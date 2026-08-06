@@ -3,7 +3,7 @@ import { Briefcase, Send, Star, ArrowRight, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
-import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
+import { getMyProjects, getMyProposals, getMyServices } from "@/lib/firebase/queries";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 

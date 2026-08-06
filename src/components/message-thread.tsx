@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { MessageWithSender } from "@/lib/supabase/queries";
+import type { MessageWithSender } from "@/lib/firebase/queries";
 
 export function MessageThread({
   proposalId,

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { ReviewList } from "@/components/review-list";
-import { getServiceById, getReviewsForProfile } from "@/lib/supabase/queries";
+import { getServiceById, getReviewsForProfile } from "@/lib/firebase/queries";
 import { Star, BadgeCheck } from "lucide-react";
 
 interface ServiceDetailPageProps {

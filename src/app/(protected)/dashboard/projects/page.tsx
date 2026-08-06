@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getMyProjects } from "@/lib/supabase/queries";
+import { getMyProjects } from "@/lib/firebase/queries";
 
 export const metadata = { title: "Meus projetos — Dashboard PrestaCerto" };
 

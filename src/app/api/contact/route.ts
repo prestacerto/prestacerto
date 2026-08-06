@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/client";
+import { COLLECTIONS } from "@/lib/firebase/firestore-schema";
 import { sendContactNotificationEmail } from "@/lib/email/resend";
 
 export async function POST(request: NextRequest) {
@@ -14,19 +16,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from("contact_messages")
-      .insert({ name, email, subject, message });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
+    await addDoc(collection(db, COLLECTIONS.CONTACT_MESSAGES), {
+      name,
+      email,
+      subject,
+      message,
+      created_at: Date.now(),
+    });
 
     await sendContactNotificationEmail({ name, email, subject, message });
 
     return NextResponse.json({ success: true }, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("Contact error:", error);
     return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }
 }

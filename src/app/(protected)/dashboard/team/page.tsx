@@ -10,7 +10,7 @@ import {
   getTeamMembers,
   getTeamInvites,
   TEAM_SEAT_LIMIT,
-} from "@/lib/supabase/queries";
+} from "@/lib/firebase/queries";
 
 export const metadata = { title: "Minha equipe — Dashboard PrestaCerto" };
 
