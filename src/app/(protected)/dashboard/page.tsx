@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
+import { MonetizationOverview } from "@/components/dashboard/monetization-overview";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -119,6 +120,11 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       )}
+
+      <div className="mt-12">
+        <h2 className="mb-6 text-xl font-bold text-slate-900">Meus investimentos</h2>
+        <MonetizationOverview />
+      </div>
     </div>
   );
 }

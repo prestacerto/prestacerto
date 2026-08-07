@@ -484,3 +484,21 @@ export async function getProjectById(id: string) {
     return null;
   }
 }
+
+export async function getActiveHighlightForProject(projectId: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("project_highlights")
+      .select("valid_until")
+      .eq("project_id", projectId)
+      .eq("status", "active")
+      .gt("valid_until", new Date().toISOString())
+      .order("valid_until", { ascending: false })
+      .maybeSingle();
+    return data;
+  } catch (error) {
+    console.error("getActiveHighlightForProject falhou:", error);
+    return null;
+  }
+}

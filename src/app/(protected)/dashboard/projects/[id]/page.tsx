@@ -7,7 +7,11 @@ import { AcceptProposalButton } from "@/components/accept-proposal-button";
 import { CompleteProjectButton } from "@/components/complete-project-button";
 import { HighlightProjectTrigger } from "@/components/monetization/highlight-project-trigger";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getProjectById, getProposalsForProject } from "@/lib/supabase/queries";
+import {
+  getProjectById,
+  getProposalsForProject,
+  getActiveHighlightForProject,
+} from "@/lib/supabase/queries";
 
 interface DashboardProjectDetailProps {
   params: Promise<{ id: string }>;
@@ -31,7 +35,10 @@ export default async function DashboardProjectDetailPage({
   if (!project) notFound();
   if (project.client_id !== user.id) redirect("/dashboard/projects");
 
-  const proposals = await getProposalsForProject(id);
+  const [proposals, activeHighlight] = await Promise.all([
+    getProposalsForProject(id),
+    project.status === "open" ? getActiveHighlightForProject(id) : Promise.resolve(null),
+  ]);
 
   return (
     <div>
@@ -40,8 +47,8 @@ export default async function DashboardProjectDetailPage({
         {project.status === "open" && (
           <HighlightProjectTrigger
             projectId={project.id}
-            isFeatured={project.is_featured}
-            featuredUntil={project.featured_until}
+            isFeatured={Boolean(activeHighlight)}
+            featuredUntil={activeHighlight?.valid_until ?? null}
           />
         )}
       </div>

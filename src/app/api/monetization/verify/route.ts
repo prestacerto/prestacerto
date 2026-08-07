@@ -13,12 +13,13 @@ export async function POST() {
     // 3. Webhook pra confirmar e chamar addVerificationBadge()
 
     // Placeholder: simular sucesso
-    await addVerificationBadge(user.id, "mp_verify_placeholder_123");
+    const placeholderPaymentId = `mp_verify_placeholder_${crypto.randomUUID()}`;
+    await addVerificationBadge(user.id, 9.9, placeholderPaymentId);
 
     return NextResponse.json({
       success: true,
       message: "Perfil verificado com sucesso",
-      preferenceId: "mp_verify_placeholder_123",
+      preferenceId: placeholderPaymentId,
     });
   } catch (error) {
     console.error("Verification error:", error);

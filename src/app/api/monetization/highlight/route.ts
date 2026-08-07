@@ -40,13 +40,14 @@ export async function POST(request: NextRequest) {
     // 3. Webhook pra confirmar pagamento e chamar addProjectHighlight()
 
     // Placeholder: simula sucesso sem cobrar de verdade ainda
-    await addProjectHighlight(projectId, days, "mp_placeholder_123");
+    const placeholderPaymentId = `mp_placeholder_${crypto.randomUUID()}`;
+    await addProjectHighlight(user.id, projectId, days, price, placeholderPaymentId);
 
     return NextResponse.json({
       success: true,
       message: "Projeto destacado com sucesso",
       price,
-      preferenceId: "mp_placeholder_123",
+      preferenceId: placeholderPaymentId,
     });
   } catch (error) {
     console.error("Highlight error:", error);

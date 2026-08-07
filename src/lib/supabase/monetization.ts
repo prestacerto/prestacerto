@@ -1,50 +1,73 @@
 import { createServiceClient } from "@/lib/supabase/service";
 
-// Três linhas de receita novas — ver MONETIZATION_GUIDE.md. Escritas via
-// service role porque quem chama (webhook/rota de pagamento) já validou o
-// pagamento antes de gravar; não são operações que o usuário faz direto.
+// Três linhas de receita novas — destaque de projeto, badge de verificado e
+// antecipação de recebimento. Escritas via service role porque quem chama
+// (rota de pagamento/webhook) já validou o pagamento antes de gravar; não
+// são operações que o usuário faz direto.
+//
+// Destaque e badge têm histórico próprio (project_highlights,
+// freelancer_badges) em vez de um booleano direto em projects/profiles —
+// um projeto pode ser destacado mais de uma vez ao longo do tempo, e cada
+// cobrança fica registrada em payment_transactions pra dar rastro de
+// auditoria (ver 0005_monetization_tables.sql).
 
 export async function addProjectHighlight(
+  clientId: string,
   projectId: string,
   daysHighlighted: number,
+  amount: number,
   mpPaymentId: string
 ): Promise<void> {
   const supabase = createServiceClient();
-  const featuredUntil = new Date(
+  const validUntil = new Date(
     Date.now() + daysHighlighted * 24 * 60 * 60 * 1000
   ).toISOString();
 
-  const { error } = await supabase
-    .from("projects")
-    .update({ is_featured: true, featured_until: featuredUntil })
-    .eq("id", projectId);
+  const { error: highlightError } = await supabase.from("project_highlights").insert({
+    project_id: projectId,
+    valid_until: validUntil,
+    days_purchased: daysHighlighted,
+    payment_id: mpPaymentId,
+  });
+  if (highlightError) throw highlightError;
 
-  if (error) throw error;
-  void mpPaymentId; // TODO: gravar numa tabela de cobranças da plataforma quando a integração MP entrar
-}
-
-export async function removeProjectHighlight(projectId: string): Promise<void> {
-  const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("projects")
-    .update({ is_featured: false, featured_until: null })
-    .eq("id", projectId);
-
-  if (error) throw error;
+  const { error: transactionError } = await supabase.from("payment_transactions").insert({
+    user_id: clientId,
+    payment_type: "highlight",
+    reference_id: projectId,
+    amount,
+    mercado_pago_id: mpPaymentId,
+    status: "approved",
+    metadata: { days: daysHighlighted },
+  });
+  if (transactionError) throw transactionError;
 }
 
 export async function addVerificationBadge(
   freelancerId: string,
+  amount: number,
   mpPaymentId: string
 ): Promise<void> {
   const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("profiles")
-    .update({ is_verified: true, verified_at: new Date().toISOString() })
-    .eq("id", freelancerId);
+  const validUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
 
-  if (error) throw error;
-  void mpPaymentId; // TODO: idem
+  const { error: badgeError } = await supabase.from("freelancer_badges").insert({
+    freelancer_id: freelancerId,
+    badge_type: "verified",
+    valid_until: validUntil,
+    payment_id: mpPaymentId,
+  });
+  if (badgeError) throw badgeError;
+
+  const { error: transactionError } = await supabase.from("payment_transactions").insert({
+    user_id: freelancerId,
+    payment_type: "badge",
+    reference_id: freelancerId,
+    amount,
+    mercado_pago_id: mpPaymentId,
+    status: "approved",
+  });
+  if (transactionError) throw transactionError;
 }
 
 export async function createEarlyPaymentRequest(
