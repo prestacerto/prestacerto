@@ -4,19 +4,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
-import { MonetizationOverview } from "@/components/dashboard/monetization-overview";
-import { MonetizationCTAs } from "@/components/dashboard/monetization-ctas";
-import { BenchmarkWidget } from "@/components/benchmark-widget";
-import { ReferralCard } from "@/components/dashboard/referral-card";
-import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { getReferralStats } from "@/lib/supabase/referrals";
-import { PartnerMarketplace } from "@/components/partner-marketplace";
-import { DailyChallenges } from "@/components/daily-challenges";
-import { SocialProofCard } from "@/components/social-proof-card";
-import { SurpriseRewards } from "@/components/surprise-rewards";
+import dynamic from "next/dynamic";
+
+// Above the fold (critical)
+import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { UrgencyBanner } from "@/components/urgency-banner";
-import { ProgressMilestones } from "@/components/progress-milestones";
-import { ActivityFeed } from "@/components/activity-feed";
+
+// Below the fold (lazy load)
+const MonetizationCTAs = dynamic(() => import("@/components/dashboard/monetization-ctas").then(m => ({ default: m.MonetizationCTAs })), { loading: () => null });
+const BenchmarkWidget = dynamic(() => import("@/components/benchmark-widget").then(m => ({ default: m.BenchmarkWidget })), { loading: () => null });
+const ReferralCard = dynamic(() => import("@/components/dashboard/referral-card").then(m => ({ default: m.ReferralCard })), { loading: () => null });
+const MonetizationOverview = dynamic(() => import("@/components/dashboard/monetization-overview").then(m => ({ default: m.MonetizationOverview })), { loading: () => null });
+const PartnerMarketplace = dynamic(() => import("@/components/partner-marketplace").then(m => ({ default: m.PartnerMarketplace })), { loading: () => null });
+const DailyChallenges = dynamic(() => import("@/components/daily-challenges").then(m => ({ default: m.DailyChallenges })), { loading: () => null });
+const SocialProofCard = dynamic(() => import("@/components/social-proof-card").then(m => ({ default: m.SocialProofCard })), { loading: () => null });
+const SurpriseRewards = dynamic(() => import("@/components/surprise-rewards").then(m => ({ default: m.SurpriseRewards })), { loading: () => null });
+const ProgressMilestones = dynamic(() => import("@/components/progress-milestones").then(m => ({ default: m.ProgressMilestones })), { loading: () => null });
+const ActivityFeed = dynamic(() => import("@/components/activity-feed").then(m => ({ default: m.ActivityFeed })), { loading: () => null });
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
