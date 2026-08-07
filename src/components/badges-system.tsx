@@ -116,7 +116,7 @@ export function BadgesSystem({ userBadges, stats }: BadgesSystemProps) {
                   style={{ width: `${Math.min(progress.fast_response.percent, 100)}%` }}
                 />
               </div>
-              <p className="text-xs text-slate-500 mt-1">Média: {progress.fast_response.current.toFixed(1)}h (meta: <4h)</p>
+              <p className="text-xs text-slate-500 mt-1">Média: {progress.fast_response.current.toFixed(1)}h (meta: menos de 4h)</p>
             </div>
           )}
         </CardContent>

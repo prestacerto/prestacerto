@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     // Buscar partner info
     const { data: link } = await db
       .from("affiliate_links")
-      .select("partner_id, partners(website_url)")
+      .select("id, user_id, partner_id, partners(website_url)")
       .eq("affiliate_code", affiliateCode)
       .single();
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      redirectUrl: link.partners?.website_url,
+      redirectUrl: (link.partners as any)?.[0]?.website_url,
     });
   } catch (error) {
     return NextResponse.json(

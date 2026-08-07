@@ -10,6 +10,7 @@ import { BenchmarkWidget } from "@/components/benchmark-widget";
 import { ReferralCard } from "@/components/dashboard/referral-card";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { getReferralStats } from "@/lib/supabase/referrals";
+import { PartnerMarketplace } from "@/components/partner-marketplace";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -175,6 +176,9 @@ export default async function DashboardPage() {
         <div>
           <h2 className="mb-6 text-xl font-bold text-slate-900">Meus investimentos</h2>
           <MonetizationOverview />
+        </div>
+        <div>
+          <PartnerMarketplace userId={user.id} />
         </div>
       </div>
     </div>
