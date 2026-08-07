@@ -6,6 +6,7 @@ import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
 import { MonetizationOverview } from "@/components/dashboard/monetization-overview";
 import { MonetizationCTAs } from "@/components/dashboard/monetization-ctas";
+import { BenchmarkWidget } from "@/components/benchmark-widget";
 import { ReferralCard } from "@/components/dashboard/referral-card";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { getReferralStats } from "@/lib/supabase/referrals";
@@ -157,6 +158,9 @@ export default async function DashboardPage() {
       )}
 
       <div className="mt-12 space-y-12">
+        <div className="max-w-md">
+          <BenchmarkWidget />
+        </div>
         <div>
           <MonetizationCTAs />
         </div>
