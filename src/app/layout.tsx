@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
+import { FacebookPixel } from "@/components/facebook-pixel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,7 @@ export default function RootLayout({
           <SiteFooter />
           <Toaster />
           <Analytics />
+          <FacebookPixel />
         </ThemeProvider>
       </body>
     </html>
