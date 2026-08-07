@@ -181,11 +181,50 @@ export async function createHeldOrder(params: {
 
   const body = await res.json().catch(() => null);
   if (!res.ok) {
-    throw new Error(
-      `Falha ao criar cobrança retida no Mercado Pago (${res.status}): ${JSON.stringify(body)}`
+    const statusDetail =
+      body?.status_detail ?? body?.transactions?.payments?.[0]?.status_detail;
+    throw new MercadoPagoOrderError(
+      `Falha ao criar cobrança retida no Mercado Pago (${res.status}): ${JSON.stringify(body)}`,
+      statusDetail
     );
   }
   return body as MpOrder;
+}
+
+export class MercadoPagoOrderError extends Error {
+  statusDetail?: string;
+  constructor(message: string, statusDetail?: string) {
+    super(message);
+    this.name = "MercadoPagoOrderError";
+    this.statusDetail = statusDetail;
+  }
+}
+
+// Mapeia status_detail do Mercado Pago pra mensagem acionável em português.
+// Referência: https://www.mercadopago.com.br/developers/pt/docs/checkout-api/response-handling/collection-results
+const DECLINE_MESSAGES: Record<string, string> = {
+  cc_rejected_insufficient_amount: "Cartão recusado: saldo insuficiente.",
+  cc_rejected_bad_filled_security_code: "Cartão recusado: CVV incorreto.",
+  cc_rejected_bad_filled_date: "Cartão recusado: data de validade incorreta.",
+  cc_rejected_bad_filled_card_number: "Cartão recusado: número do cartão incorreto.",
+  cc_rejected_bad_filled_other: "Cartão recusado: confira os dados digitados.",
+  cc_rejected_call_for_authorize:
+    "Cartão recusado pelo banco — ligue pra autorizar essa compra ou tente outro cartão.",
+  cc_rejected_card_disabled: "Cartão desativado — contate seu banco ou tente outro cartão.",
+  cc_rejected_duplicated_payment: "Já existe uma cobrança igual em andamento pra esse projeto.",
+  cc_rejected_high_risk: "Pagamento recusado por segurança. Tente outro método ou cartão.",
+  cc_rejected_max_attempts: "Muitas tentativas com esse cartão. Tente outro cartão ou mais tarde.",
+  cc_rejected_other_reason: "Cartão recusado pelo banco emissor. Tente outro cartão.",
+};
+
+export function getFriendlyDeclineMessage(statusDetail?: string): string {
+  if (!statusDetail) {
+    return "Não foi possível processar o pagamento. Tente outro método.";
+  }
+  return (
+    DECLINE_MESSAGES[statusDetail] ??
+    "Pagamento recusado pelo banco. Tente outro cartão ou método."
+  );
 }
 
 // Libera pro freelancer um pagamento retido. Usa o token do PRÓPRIO

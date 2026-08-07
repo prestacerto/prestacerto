@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { LinkButton } from "@/components/link-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 const navItems = [
@@ -36,6 +37,7 @@ export async function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <LinkButton href="/dashboard" variant="secondary" size="sm">
               Dashboard

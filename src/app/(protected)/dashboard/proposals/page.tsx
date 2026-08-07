@@ -3,7 +3,7 @@ import { Send, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getMyProposals } from "@/lib/supabase/queries";
+import { getMyProposals, getMyServices } from "@/lib/supabase/queries";
 
 export const metadata = { title: "Minhas propostas — Dashboard PrestaCerto" };
 
@@ -18,7 +18,11 @@ export default async function DashboardProposalsPage() {
   const user = await getAuthenticatedUser();
   if (!user) return null;
 
-  const proposals = await getMyProposals(user.id);
+  const [proposals, services] = await Promise.all([
+    getMyProposals(user.id),
+    getMyServices(user.id),
+  ]);
+  const hasNoServices = services.length === 0;
 
   return (
     <div>
@@ -32,12 +36,28 @@ export default async function DashboardProposalsPage() {
           <span className="flex size-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
             <Send className="size-6" />
           </span>
-          <p className="mt-4 font-medium text-slate-700">
-            Você ainda não enviou nenhuma proposta.
-          </p>
-          <Link href="/projects" className="mt-2 text-sm text-blue-600 hover:underline">
-            Ver projetos abertos
-          </Link>
+          {hasNoServices ? (
+            <>
+              <p className="mt-4 font-medium text-slate-700">
+                Cadastre seu primeiro serviço antes de propor — clientes confiam mais em quem já tem perfil completo.
+              </p>
+              <Link
+                href="/dashboard/services/new"
+                className="mt-2 text-sm text-blue-600 hover:underline"
+              >
+                Cadastrar serviço
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 font-medium text-slate-700">
+                Seu perfil está pronto. Hora de mandar sua primeira proposta.
+              </p>
+              <Link href="/projects" className="mt-2 text-sm text-blue-600 hover:underline">
+                Ver projetos abertos
+              </Link>
+            </>
+          )}
         </Card>
       ) : (
         <div className="mt-6 space-y-3">
