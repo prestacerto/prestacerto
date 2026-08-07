@@ -15,6 +15,7 @@ import { DailyChallenges } from "@/components/daily-challenges";
 import { SocialProofCard } from "@/components/social-proof-card";
 import { SurpriseRewards } from "@/components/surprise-rewards";
 import { UrgencyBanner } from "@/components/urgency-banner";
+import { ProgressMilestones } from "@/components/progress-milestones";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -222,6 +223,18 @@ export default async function DashboardPage() {
         </div>
         <div className="max-w-md">
           <SurpriseRewards userId={user.id} />
+        </div>
+        <div className="max-w-md">
+          <ProgressMilestones
+            title="Caminho para Sênior"
+            current={42}
+            milestones={[
+              { value: 10, label: "10 Projetos", icon: "🚀", reward: "Badge Iniciante" },
+              { value: 25, label: "25 Projetos", icon: "⭐", reward: "R$ 100 em créditos" },
+              { value: 50, label: "50 Projetos", icon: "👑", reward: "Badge Sênior + R$ 250" },
+              { value: 100, label: "100 Projetos", icon: "💎", reward: "Featured Profile" },
+            ]}
+          />
         </div>
       </div>
     </div>
