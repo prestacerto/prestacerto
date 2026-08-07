@@ -37,7 +37,7 @@ export function CompleteProjectButton({
           action: {
             label: "Copiar link",
             onClick: () => {
-              const link = `${window.location.origin}/register?ref=${userId}`;
+              const link = `https://prestacerto.com.br/register?ref=${userId}`;
               navigator.clipboard.writeText(link);
               toast.success("Link copiado!");
             },

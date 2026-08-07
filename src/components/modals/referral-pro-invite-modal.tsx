@@ -18,7 +18,7 @@ export function ReferralProInviteModal({
   freeMonthsEarned = 0,
 }: ReferralProInviteModalProps) {
   const referralLink =
-    initialLink || `${process.env.NEXT_PUBLIC_APP_URL || "https://presta-certo.app"}/register?ref=${userId}`;
+    initialLink || `https://prestacerto.com.br/register?ref=${userId}`;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {

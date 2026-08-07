@@ -23,10 +23,7 @@ export function ReferralCard({
 }: ReferralCardProps) {
   const [copied, setCopied] = useState(false);
 
-  const link =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/register?ref=${userId}`
-      : `/register?ref=${userId}`;
+  const link = `https://prestacerto.com.br/register?ref=${userId}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(link);
