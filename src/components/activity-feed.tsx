@@ -1,109 +1,91 @@
 "use client";
 
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { TrendingUp, MessageCircle, Award, Zap, Heart } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface ActivityItem {
+interface Activity {
   id: string;
-  type: string;
-  userName: string;
-  avatarUrl?: string;
-  title: string;
-  description?: string;
-  icon: string;
-  createdAt: Date;
-  amount?: number;
+  type: "earning" | "response" | "rating" | "milestone" | "like";
+  user: string;
+  action: string;
+  value?: string;
+  timestamp: string;
 }
 
 interface ActivityFeedProps {
-  activities: ActivityItem[];
-  maxItems?: number;
+  activities: Activity[];
 }
 
-export function ActivityFeed({ activities, maxItems = 8 }: ActivityFeedProps) {
-  const displayActivities = activities.slice(0, maxItems);
+export function ActivityFeed({ activities }: ActivityFeedProps) {
+  const getIcon = (type: string) => {
+    switch (type) {
+      case "earning":
+        return <TrendingUp className="size-4 text-green-600" />;
+      case "response":
+        return <MessageCircle className="size-4 text-blue-600" />;
+      case "rating":
+        return <Award className="size-4 text-amber-600" />;
+      case "milestone":
+        return <Zap className="size-4 text-purple-600" />;
+      case "like":
+        return <Heart className="size-4 text-red-600" />;
+      default:
+        return null;
+    }
+  };
 
-  if (displayActivities.length === 0) {
-    return (
-      <Card>
-        <CardContent className="pt-6 text-center text-sm text-slate-500">
-          Nenhuma atividade ainda. Comece a contribuir! 🚀
-        </CardContent>
-      </Card>
-    );
-  }
+  const getBackgroundColor = (type: string) => {
+    switch (type) {
+      case "earning":
+        return "bg-green-50 dark:bg-green-950";
+      case "response":
+        return "bg-blue-50 dark:bg-blue-950";
+      case "rating":
+        return "bg-amber-50 dark:bg-amber-950";
+      case "milestone":
+        return "bg-purple-50 dark:bg-purple-950";
+      case "like":
+        return "bg-red-50 dark:bg-red-950";
+      default:
+        return "bg-slate-50 dark:bg-slate-900";
+    }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <h2 className="font-bold text-lg">🔥 Atividade Recente</h2>
-        <p className="text-xs text-slate-500 mt-1">Veja o que está acontecendo agora</p>
+        <CardTitle className="flex items-center gap-2">
+          ⚡ Atividade Agora
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          {displayActivities.map((activity) => (
+      <CardContent className="space-y-2">
+        {activities.length === 0 ? (
+          <p className="text-sm text-slate-500 py-4">Nenhuma atividade recente</p>
+        ) : (
+          activities.map(activity => (
             <div
               key={activity.id}
-              className="flex gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+              className={`rounded-lg p-3 flex items-start gap-3 border border-slate-200 dark:border-slate-700 ${getBackgroundColor(activity.type)}`}
             >
-              {/* Avatar */}
-              <Avatar className="size-8 flex-shrink-0 mt-1">
-                <AvatarImage src={activity.avatarUrl} alt={activity.userName} />
-                <AvatarFallback>{activity.userName.charAt(0)}</AvatarFallback>
-              </Avatar>
-
-              {/* Content */}
+              <div className="mt-0.5">{getIcon(activity.type)}</div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                      <span className="font-bold">{activity.userName}</span>
-                      {activity.title && (
-                        <>
-                          <span className="text-slate-500 dark:text-slate-400 font-normal">
-                            {" "}
-                            {activity.title}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                    {activity.description && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        {activity.description}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Icon & Amount */}
-                  <div className="text-right flex-shrink-0">
-                    <span className="text-lg">{activity.icon}</span>
-                    {activity.amount && (
-                      <p className="text-xs font-bold text-green-600 mt-0.5">
-                        +R$ {activity.amount.toLocaleString("pt-BR")}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Timestamp */}
-                <p className="text-xs text-slate-400 mt-1">
-                  {formatDistanceToNow(new Date(activity.createdAt), {
-                    addSuffix: true,
-                    locale: ptBR,
-                  })}
+                <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  {activity.user}
                 </p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {activity.action}
+                </p>
+                {activity.value && (
+                  <p className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                    {activity.value}
+                  </p>
+                )}
+              </div>
+              <div className="text-xs text-slate-500 flex-shrink-0">
+                {activity.timestamp}
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* View more */}
-        {activities.length > maxItems && (
-          <button className="mt-4 w-full text-sm font-bold text-blue-600 hover:text-blue-700 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors">
-            Ver mais atividades →
-          </button>
+          ))
         )}
       </CardContent>
     </Card>

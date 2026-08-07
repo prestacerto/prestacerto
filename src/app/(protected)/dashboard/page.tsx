@@ -16,6 +16,7 @@ import { SocialProofCard } from "@/components/social-proof-card";
 import { SurpriseRewards } from "@/components/surprise-rewards";
 import { UrgencyBanner } from "@/components/urgency-banner";
 import { ProgressMilestones } from "@/components/progress-milestones";
+import { ActivityFeed } from "@/components/activity-feed";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -233,6 +234,50 @@ export default async function DashboardPage() {
               { value: 25, label: "25 Projetos", icon: "⭐", reward: "R$ 100 em créditos" },
               { value: 50, label: "50 Projetos", icon: "👑", reward: "Badge Sênior + R$ 250" },
               { value: 100, label: "100 Projetos", icon: "💎", reward: "Featured Profile" },
+            ]}
+          />
+        </div>
+        <div className="max-w-md">
+          <ActivityFeed
+            activities={[
+              {
+                id: "1",
+                type: "earning",
+                user: "João Silva",
+                action: "Ganhou R$ 5.000 com projeto",
+                value: "+R$ 5.000",
+                timestamp: "agora",
+              },
+              {
+                id: "2",
+                type: "response",
+                user: "Maria Santos",
+                action: "Respondeu proposta em 2h",
+                timestamp: "5 min",
+              },
+              {
+                id: "3",
+                type: "rating",
+                user: "Carlos Oliveira",
+                action: "Recebeu 5 estrelas",
+                value: "⭐⭐⭐⭐⭐",
+                timestamp: "15 min",
+              },
+              {
+                id: "4",
+                type: "milestone",
+                user: "Ana Costa",
+                action: "Desbloqueou badge Sênior",
+                timestamp: "30 min",
+              },
+              {
+                id: "5",
+                type: "earning",
+                user: "Pedro Gomes",
+                action: "Ganhou R$ 3.200 com projeto",
+                value: "+R$ 3.200",
+                timestamp: "1h",
+              },
             ]}
           />
         </div>
