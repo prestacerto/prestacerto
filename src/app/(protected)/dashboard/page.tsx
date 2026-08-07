@@ -1,27 +1,11 @@
-import Link from "next/link";
-import { Briefcase, Send, Star, ArrowRight, Wrench } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
-import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
+import { Card, CardContent } from "@/components/ui/card";
+import { LinkButton } from "@/components/link-button";
 import { getReferralStats } from "@/lib/supabase/referrals";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
-// Above the fold (critical)
-import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
-import { UrgencyBanner } from "@/components/urgency-banner";
-
-// Below the fold (lazy load)
-const MonetizationCTAs = dynamic(() => import("@/components/dashboard/monetization-ctas").then(m => ({ default: m.MonetizationCTAs })), { loading: () => null });
-const BenchmarkWidget = dynamic(() => import("@/components/benchmark-widget").then(m => ({ default: m.BenchmarkWidget })), { loading: () => null });
 const ReferralCard = dynamic(() => import("@/components/dashboard/referral-card").then(m => ({ default: m.ReferralCard })), { loading: () => null });
-const MonetizationOverview = dynamic(() => import("@/components/dashboard/monetization-overview").then(m => ({ default: m.MonetizationOverview })), { loading: () => null });
-const PartnerMarketplace = dynamic(() => import("@/components/partner-marketplace").then(m => ({ default: m.PartnerMarketplace })), { loading: () => null });
-const DailyChallenges = dynamic(() => import("@/components/daily-challenges").then(m => ({ default: m.DailyChallenges })), { loading: () => null });
-const SocialProofCard = dynamic(() => import("@/components/social-proof-card").then(m => ({ default: m.SocialProofCard })), { loading: () => null });
-const SurpriseRewards = dynamic(() => import("@/components/surprise-rewards").then(m => ({ default: m.SurpriseRewards })), { loading: () => null });
-const ProgressMilestones = dynamic(() => import("@/components/progress-milestones").then(m => ({ default: m.ProgressMilestones })), { loading: () => null });
-const ActivityFeed = dynamic(() => import("@/components/activity-feed").then(m => ({ default: m.ActivityFeed })), { loading: () => null });
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -29,264 +13,72 @@ export default async function DashboardPage() {
   const user = await getAuthenticatedUser();
   if (!user) return null;
 
-  const [profile, projects, proposals, services, referralStats] = await Promise.all([
+  const [profile, referralStats] = await Promise.all([
     getProfile(),
-    getMyProjects(user.id),
-    getMyProposals(user.id),
-    getMyServices(user.id),
     getReferralStats(user.id),
   ]);
 
-  const openProjects = projects.filter((p) => p.status === "open").length;
-  const pendingProposals = proposals.filter((p) => p.status === "pending").length;
-  const activeServices = services.filter((s) => s.is_active).length;
-
-  const isFreelancer = profile?.role === "freelancer" || profile?.role === "both";
-  const checklistItems = [
-    {
-      label: "Adicione uma foto de perfil",
-      done: Boolean(profile?.avatar_url),
-      href: "/dashboard/profile",
-      cta: "Adicionar foto",
-    },
-    {
-      label: "Escreva uma bio curta",
-      done: Boolean(profile?.bio),
-      href: "/dashboard/profile",
-      cta: "Escrever bio",
-    },
-    ...(isFreelancer
-      ? [
-          {
-            label: "Cadastre seu primeiro serviço",
-            done: services.length > 0,
-            href: "/dashboard/services/new",
-            cta: "Cadastrar serviço",
-          },
-        ]
-      : []),
-  ];
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-slate-900">
-        Olá, {profile?.full_name?.split(" ")[0] ?? "tudo bem"}
-      </h1>
-      <p className="mt-1 text-slate-500">
-        Aqui está um resumo da sua conta na PrestaCerto.
-      </p>
-
-      <div className="mt-6">
-        <UrgencyBanner
-          alerts={[
-            {
-              id: "1",
-              title: "3 projetos acabam em 2 horas",
-              description: "Dev Web, Design Gráfico e Copywriting — seus matches perfeitos",
-              hoursLeft: 2,
-              projectCount: 3,
-              cta: "Ver projetos",
-              href: "/projects",
-            },
-          ]}
-        />
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Olá, {profile?.full_name?.split(" ")[0] ?? "bem-vindo"}</h1>
+        <p className="text-slate-500 mt-1">Seu dashboard está pronto.</p>
       </div>
 
-      <div className="mt-6">
-        <OnboardingChecklist items={checklistItems} />
-      </div>
-
-      <div className="mt-8 max-w-2xl">
-        <DailyChallenges
-          userProgress={[
-            { type: "respond-proposals", progress: 1, completed: false, rewardClaimed: false },
-            { type: "complete-profile", progress: 1, completed: true, rewardClaimed: false },
-            { type: "send-message", progress: 0, completed: false, rewardClaimed: false },
-            { type: "publish-service", progress: 0, completed: false, rewardClaimed: false },
-            { type: "rate-experience", progress: 0, completed: false, rewardClaimed: false },
-          ]}
-        />
-      </div>
-
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-500">
-              <Wrench className="size-4" />
-              Meus serviços
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-slate-900">{services.length}</p>
-            <p className="text-sm text-slate-500">{activeServices} ativos</p>
+          <CardContent className="pt-6">
+            <p className="text-sm text-slate-600">Rating</p>
+            <p className="text-3xl font-bold mt-2">{profile?.rating ? profile.rating.toFixed(1) : "—"}</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-500">
-              <Briefcase className="size-4" />
-              Meus projetos
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-slate-900">{projects.length}</p>
-            <p className="text-sm text-slate-500">{openProjects} em aberto</p>
+          <CardContent className="pt-6">
+            <p className="text-sm text-slate-600">Avaliações</p>
+            <p className="text-3xl font-bold mt-2">{profile?.rating_count ?? 0}</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-500">
-              <Send className="size-4" />
-              Minhas propostas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-slate-900">{proposals.length}</p>
-            <p className="text-sm text-slate-500">{pendingProposals} pendentes</p>
+          <CardContent className="pt-6">
+            <p className="text-sm text-slate-600">Plano</p>
+            <p className="text-lg font-bold mt-2 capitalize">{profile?.plan ?? "free"}</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-500">
-              <Star className="size-4" />
-              Avaliação
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-slate-900">
-              {profile?.rating ? profile.rating.toFixed(1) : "—"}
-            </p>
-            <p className="text-sm text-slate-500">
-              {profile?.rating_count ?? 0} avaliações
-            </p>
+          <CardContent className="pt-6">
+            <p className="text-sm text-slate-600">Status</p>
+            <p className="text-lg font-bold text-green-600 mt-2">Ativo</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <LinkButton href="/dashboard/projects/new">
-          Publicar projeto
-          <ArrowRight className="size-4" />
-        </LinkButton>
-        <LinkButton href="/services" variant="outline">
-          Explorar freelancers
-        </LinkButton>
+      <div className="flex gap-3 flex-wrap">
+        <LinkButton href="/dashboard/projects/new">Novo Projeto</LinkButton>
+        <LinkButton href="/dashboard/profile" variant="outline">Perfil</LinkButton>
+        <LinkButton href="/services" variant="outline">Explorar</LinkButton>
+        <LinkButton href="/checkout" variant="outline">Pro/Business</LinkButton>
       </div>
 
       {profile?.plan === "free" && (
-        <Card className="mt-8">
-          <CardContent className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-semibold text-slate-900">
-                Você está no plano Grátis
-              </p>
-              <p className="text-sm text-slate-500">
-                Assine o Pro pra ter propostas ilimitadas e badge de verificado.
-              </p>
+        <Card className="bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="font-semibold">Upgrade para Pro</p>
+                <p className="text-sm text-slate-600 mt-1">Propostas ilimitadas + Badge</p>
+              </div>
+              <Link href="/checkout" className="text-sm font-bold text-blue-600">Ver →</Link>
             </div>
-            <Link
-              href="/plans"
-              className="text-sm font-medium text-blue-600 hover:underline"
-            >
-              Ver planos
-            </Link>
           </CardContent>
         </Card>
       )}
 
-      <div className="mt-12 space-y-12">
-        <div className="max-w-md">
-          <BenchmarkWidget />
-        </div>
-        <div>
-          <MonetizationCTAs />
-        </div>
-        <div className="max-w-md">
-          <ReferralCard
-            userId={user.id}
-            monthCompleted={referralStats.monthCompleted}
-            totalCompleted={referralStats.totalCompleted}
-            remainingForBusiness={referralStats.remainingForBusiness}
-          />
-        </div>
-        <div>
-          <h2 className="mb-6 text-xl font-bold text-slate-900">Meus investimentos</h2>
-          <MonetizationOverview />
-        </div>
-        <div>
-          <PartnerMarketplace userId={user.id} />
-        </div>
-        <div className="max-w-2xl">
-          <SocialProofCard
-            contractsThisWeek={3}
-            viewsThisWeek={12}
-            rating={profile?.rating || 0}
-            ratingCount={profile?.rating_count || 0}
-          />
-        </div>
-        <div className="max-w-md">
-          <SurpriseRewards userId={user.id} />
-        </div>
-        <div className="max-w-md">
-          <ProgressMilestones
-            title="Caminho para Sênior"
-            current={42}
-            milestones={[
-              { value: 10, label: "10 Projetos", icon: "🚀", reward: "Badge Iniciante" },
-              { value: 25, label: "25 Projetos", icon: "⭐", reward: "R$ 100 em créditos" },
-              { value: 50, label: "50 Projetos", icon: "👑", reward: "Badge Sênior + R$ 250" },
-              { value: 100, label: "100 Projetos", icon: "💎", reward: "Featured Profile" },
-            ]}
-          />
-        </div>
-        <div className="max-w-md">
-          <ActivityFeed
-            activities={[
-              {
-                id: "1",
-                type: "earning",
-                user: "João Silva",
-                action: "Ganhou R$ 5.000 com projeto",
-                value: "+R$ 5.000",
-                timestamp: "agora",
-              },
-              {
-                id: "2",
-                type: "response",
-                user: "Maria Santos",
-                action: "Respondeu proposta em 2h",
-                timestamp: "5 min",
-              },
-              {
-                id: "3",
-                type: "rating",
-                user: "Carlos Oliveira",
-                action: "Recebeu 5 estrelas",
-                value: "⭐⭐⭐⭐⭐",
-                timestamp: "15 min",
-              },
-              {
-                id: "4",
-                type: "milestone",
-                user: "Ana Costa",
-                action: "Desbloqueou badge Sênior",
-                timestamp: "30 min",
-              },
-              {
-                id: "5",
-                type: "earning",
-                user: "Pedro Gomes",
-                action: "Ganhou R$ 3.200 com projeto",
-                value: "+R$ 3.200",
-                timestamp: "1h",
-              },
-            ]}
-          />
-        </div>
-      </div>
+      <ReferralCard
+        userId={user.id}
+        monthCompleted={referralStats.monthCompleted}
+        totalCompleted={referralStats.totalCompleted}
+        remainingForBusiness={referralStats.remainingForBusiness}
+      />
     </div>
   );
 }

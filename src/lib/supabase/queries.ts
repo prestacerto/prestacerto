@@ -71,7 +71,7 @@ export async function listServices(params: {
 
 export async function getMyServices(freelancerId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("services")
       .select("*")
@@ -309,7 +309,7 @@ export async function listOpenProjects(params: {
 
 export async function getMyProjects(userId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("projects")
       .select("id, title, status, category_id, created_at, proposals(count)")
@@ -343,7 +343,7 @@ export interface ProposalWithProject {
 
 export async function getMyProposals(userId: string): Promise<ProposalWithProject[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("proposals")
       .select("id, message, proposed_price, status, created_at, project:projects(id, title, status)")
