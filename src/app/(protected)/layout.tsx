@@ -1,17 +1,16 @@
 import { redirect } from "next/navigation";
-import { LayoutDashboard, Briefcase, Send, Users, Wrench, Plug, UserCircle, Sparkles, TrendingUp } from "lucide-react";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
-  { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard },
-  { href: "/dashboard/profile", label: "Meu perfil", icon: UserCircle },
-  { href: "/dashboard/para-voce", label: "Pra você", icon: Sparkles },
-  { href: "/dashboard/mercado", label: "Mercado", icon: TrendingUp },
-  { href: "/dashboard/services", label: "Meus serviços", icon: Wrench },
-  { href: "/dashboard/projects", label: "Meus projetos", icon: Briefcase },
-  { href: "/dashboard/proposals", label: "Minhas propostas", icon: Send },
-  { href: "/dashboard/integrations", label: "Integrações", icon: Plug },
+  { href: "/dashboard", label: "Visão geral", icon: "layout-dashboard" },
+  { href: "/dashboard/profile", label: "Meu perfil", icon: "user-circle" },
+  { href: "/dashboard/para-voce", label: "Pra você", icon: "sparkles" },
+  { href: "/dashboard/mercado", label: "Mercado", icon: "trending-up" },
+  { href: "/dashboard/services", label: "Meus serviços", icon: "wrench" },
+  { href: "/dashboard/projects", label: "Meus projetos", icon: "briefcase" },
+  { href: "/dashboard/proposals", label: "Minhas propostas", icon: "send" },
+  { href: "/dashboard/integrations", label: "Integrações", icon: "plug" },
 ];
 
 export default async function ProtectedLayout({
@@ -19,15 +18,13 @@ export default async function ProtectedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // O proxy (src/proxy.ts) já bloqueia /dashboard/* sem sessão — isso aqui é
-  // a camada 2 de defesa em profundidade, não a única checagem.
   const user = await getAuthenticatedUser();
   if (!user) redirect("/login?redirect=/dashboard");
 
   const profile = await getProfile();
   const items =
     profile?.plan === "business"
-      ? [...navItems, { href: "/dashboard/team", label: "Minha equipe", icon: Users }]
+      ? [...navItems, { href: "/dashboard/team", label: "Minha equipe", icon: "users" }]
       : navItems;
 
   return (
