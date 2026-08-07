@@ -12,6 +12,9 @@ import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist
 import { getReferralStats } from "@/lib/supabase/referrals";
 import { PartnerMarketplace } from "@/components/partner-marketplace";
 import { DailyChallenges } from "@/components/daily-challenges";
+import { SocialProofCard } from "@/components/social-proof-card";
+import { SurpriseRewards } from "@/components/surprise-rewards";
+import { UrgencyBanner } from "@/components/urgency-banner";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -65,6 +68,22 @@ export default async function DashboardPage() {
       <p className="mt-1 text-slate-500">
         Aqui está um resumo da sua conta na PrestaCerto.
       </p>
+
+      <div className="mt-6">
+        <UrgencyBanner
+          alerts={[
+            {
+              id: "1",
+              title: "3 projetos acabam em 2 horas",
+              description: "Dev Web, Design Gráfico e Copywriting — seus matches perfeitos",
+              hoursLeft: 2,
+              projectCount: 3,
+              cta: "Ver projetos",
+              href: "/projects",
+            },
+          ]}
+        />
+      </div>
 
       <div className="mt-6">
         <OnboardingChecklist items={checklistItems} />
@@ -192,6 +211,17 @@ export default async function DashboardPage() {
         </div>
         <div>
           <PartnerMarketplace userId={user.id} />
+        </div>
+        <div className="max-w-2xl">
+          <SocialProofCard
+            contractsThisWeek={3}
+            viewsThisWeek={12}
+            rating={profile?.rating || 0}
+            ratingCount={profile?.rating_count || 0}
+          />
+        </div>
+        <div className="max-w-md">
+          <SurpriseRewards userId={user.id} />
         </div>
       </div>
     </div>
