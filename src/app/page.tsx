@@ -461,7 +461,7 @@ export default async function Home() {
             Cadastro grátis. Comece a receber projetos em minutos.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <LinkButton href="/register?role=freelancer" size="lg" className="h-13 bg-white px-8 text-base font-bold text-blue-600 hover:bg-blue-50">
+            <LinkButton href="/register?role=freelancer" size="lg" className="h-13 bg-white px-8 text-base font-bold text-blue-700 hover:bg-blue-50">
               Criar perfil gratuito <ArrowRight className="size-4" />
             </LinkButton>
             <LinkButton href="/register?role=client" size="lg" variant="outline" className="h-13 border-white/30 px-8 text-base text-white hover:bg-white/10">
