@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from "@supabase/ssr";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Search, TrendingUp } from "lucide-react";
 
@@ -12,7 +12,7 @@ interface Payment {
   status: string;
   type: string;
   created_at: string;
-  profiles?: { full_name: string; email: string };
+  profiles?: { full_name: string; email: string }[];
 }
 
 export default function TransacoesPage() {
@@ -20,7 +20,10 @@ export default function TransacoesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("todos");
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+  );
 
   useEffect(() => {
     fetchPayments();
@@ -30,15 +33,7 @@ export default function TransacoesPage() {
     try {
       const { data } = await supabase
         .from("payments")
-        .select(`
-          id,
-          user_id,
-          amount,
-          status,
-          type,
-          created_at,
-          profiles!inner(full_name, email)
-        `)
+        .select("id, user_id, amount, status, type, created_at, profiles(full_name, email)")
         .order("created_at", { ascending: false })
         .limit(100);
 
@@ -52,8 +47,8 @@ export default function TransacoesPage() {
 
   const filteredPayments = payments.filter((p) => {
     const matchesSearch =
-      p.profiles?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-      p.profiles?.email?.toLowerCase().includes(search.toLowerCase());
+      p.profiles?.[0]?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.profiles?.[0]?.email?.toLowerCase().includes(search.toLowerCase());
 
     const matchesFilter =
       filter === "todos" || p.status === filter;
@@ -217,10 +212,10 @@ export default function TransacoesPage() {
                       <td className="py-4 px-4">
                         <div>
                           <p className="font-medium text-slate-900 dark:text-white">
-                            {payment.profiles?.full_name || "—"}
+                            {payment.profiles?.[0]?.full_name || "—"}
                           </p>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {payment.profiles?.email}
+                            {payment.profiles?.[0]?.email}
                           </p>
                         </div>
                       </td>

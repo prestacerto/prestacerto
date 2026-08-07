@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { AuthCard } from "@/components/auth/auth-card";
 import { RegisterForm } from "@/components/auth/register-form";
 
