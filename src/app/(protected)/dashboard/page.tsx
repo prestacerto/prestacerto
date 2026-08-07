@@ -11,6 +11,7 @@ import { ReferralCard } from "@/components/dashboard/referral-card";
 import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { getReferralStats } from "@/lib/supabase/referrals";
 import { PartnerMarketplace } from "@/components/partner-marketplace";
+import { DailyChallenges } from "@/components/daily-challenges";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -67,6 +68,18 @@ export default async function DashboardPage() {
 
       <div className="mt-6">
         <OnboardingChecklist items={checklistItems} />
+      </div>
+
+      <div className="mt-8 max-w-2xl">
+        <DailyChallenges
+          userProgress={[
+            { type: "respond-proposals", progress: 1, completed: false, rewardClaimed: false },
+            { type: "complete-profile", progress: 1, completed: true, rewardClaimed: false },
+            { type: "send-message", progress: 0, completed: false, rewardClaimed: false },
+            { type: "publish-service", progress: 0, completed: false, rewardClaimed: false },
+            { type: "rate-experience", progress: 0, completed: false, rewardClaimed: false },
+          ]}
+        />
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
