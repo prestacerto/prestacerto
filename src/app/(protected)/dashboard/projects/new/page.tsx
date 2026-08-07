@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { BriefAssistant } from "@/components/ai/brief-assistant";
 
 export default async function NewProjectPage() {
   const categories = await getCategories();
@@ -14,6 +15,10 @@ export default async function NewProjectPage() {
       <p className="mt-1 text-slate-500">
         Descreva o que você precisa e receba propostas de freelancers.
       </p>
+
+      <div className="mt-6">
+        <BriefAssistant />
+      </div>
 
       <form action={createProjectAction} className="mt-8 space-y-5">
         <div className="space-y-1.5">

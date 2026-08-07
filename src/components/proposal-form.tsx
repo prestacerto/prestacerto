@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -18,16 +19,51 @@ const proposalSchema = z.object({
 
 type ProposalValues = z.infer<typeof proposalSchema>;
 
-export function ProposalForm({ projectId }: { projectId: string }) {
+export function ProposalForm({
+  projectId,
+  projectTitle,
+}: {
+  projectId: string;
+  projectTitle: string;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [improving, setImproving] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ProposalValues>({ resolver: zodResolver(proposalSchema) });
+
+  async function handleImprove() {
+    const draft = watch("message");
+    if (!draft || draft.trim().length < 5) {
+      toast.error("Escreva um pouco antes de pedir ajuda da IA");
+      return;
+    }
+
+    setImproving(true);
+    const res = await fetch("/api/ai/improve-proposal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ draft, projectTitle }),
+    });
+    setImproving(false);
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      toast.error("Não foi possível melhorar o texto", { description: body?.error });
+      return;
+    }
+
+    const { improved } = await res.json();
+    setValue("message", improved);
+    toast.success("Texto melhorado — revise antes de enviar");
+  }
 
   async function onSubmit(values: ProposalValues) {
     setLoading(true);
@@ -80,6 +116,15 @@ export function ProposalForm({ projectId }: { projectId: string }) {
         {errors.message && (
           <p className="text-xs text-red-600">{errors.message.message}</p>
         )}
+        <button
+          type="button"
+          onClick={handleImprove}
+          disabled={improving}
+          className="flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline disabled:opacity-50"
+        >
+          <Sparkles className="size-3.5" />
+          {improving ? "Melhorando..." : "Melhorar com Certo AI"}
+        </button>
       </div>
 
       <div className="space-y-1.5">

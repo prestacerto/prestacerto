@@ -30,9 +30,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // Redirecionar pro perfil público
-    const domain = process.env.NEXT_PUBLIC_DOMAIN || "prestacerto.com";
-    const profileUrl = `https://${domain}/@${freelancerId}`;
+    // Redirecionar pro perfil público. Usa /profile/[id] (funciona pra
+    // qualquer freelancer) em vez de /@slug (só existe pra quem configurou
+    // portfólio premium — nem todo freelancer tem um).
+    const domain = process.env.NEXT_PUBLIC_SITE_URL ?? "https://prestacerto.com.br";
+    const profileUrl = `${domain}/profile/${freelancerId}`;
 
     return NextResponse.redirect(profileUrl, { status: 302 });
   } catch (error) {

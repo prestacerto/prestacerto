@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -21,8 +22,8 @@ const GUARANTEE_FEE_PERCENT = 0.05; // 5% do orçamento
 
 export async function POST(req: NextRequest) {
   try {
-    const auth = req.headers.get("authorization");
-    if (!auth) {
+    const user = await getAuthenticatedUser();
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -49,12 +50,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Obter user_id do header
-    const userIdHeader = req.headers.get("x-user-id");
-    if (!userIdHeader) {
-      return NextResponse.json({ error: "Missing user-id" }, { status: 400 });
-    }
-
     // Calcular taxas
     let urgent_fee = 0;
     if (urgency === "urgent") urgent_fee = URGENT_FEE;
@@ -69,7 +64,7 @@ export async function POST(req: NextRequest) {
     const { data: project, error: projectError } = await supabase
       .from("projects")
       .insert({
-        client_id: userIdHeader,
+        client_id: user.id,
         title,
         description,
         category_id,
@@ -99,7 +94,13 @@ export async function POST(req: NextRequest) {
 
     // Criar milestones se fornecidos
     if (milestones.length > 0) {
-      const milestonesToInsert = milestones.map((m: any, idx: number) => ({
+      interface MilestoneInput {
+        title: string;
+        description?: string;
+        amount: number;
+        due_date?: string;
+      }
+      const milestonesToInsert = milestones.map((m: MilestoneInput, idx: number) => ({
         project_id: project.id,
         title: m.title,
         description: m.description,
@@ -111,14 +112,16 @@ export async function POST(req: NextRequest) {
       await supabase.from("project_milestones").insert(milestonesToInsert);
     }
 
-    // Registrar transações de monetização
+    // Registrar transações de monetização — "pending" até o pagamento real
+    // ser cobrado no checkout. Nunca marcar "completed" sem cobrança de
+    // verdade confirmada (senão vira receita fabricada no relatório).
     const transactions = [];
     if (urgent_fee > 0) {
       transactions.push({
         project_id: project.id,
         transaction_type: "urgent_fee",
         amount: urgent_fee,
-        status: "completed",
+        status: "pending",
       });
     }
     if (guarantee_fee > 0) {
@@ -126,7 +129,7 @@ export async function POST(req: NextRequest) {
         project_id: project.id,
         transaction_type: "guarantee_fee",
         amount: guarantee_fee,
-        status: "completed",
+        status: "pending",
       });
     }
 

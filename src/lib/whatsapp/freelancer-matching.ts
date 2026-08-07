@@ -105,7 +105,7 @@ export function formatFreelancerResponse(
     // Link seguro com validação de conversa
     const profileLink = conversationId
       ? `${prestagercoDomain}/api/whatsapp/redirect-profile?conversation_id=${conversationId}&freelancer_id=${f.profile_slug}`
-      : `${prestagercoDomain}/@${f.profile_slug}`;
+      : `${prestagercoDomain}/profile/${f.profile_slug}`;
 
     response += `   👉 ${profileLink}\n\n`;
   });

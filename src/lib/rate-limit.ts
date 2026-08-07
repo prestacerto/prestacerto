@@ -40,6 +40,14 @@ export const rateLimiters = {
     analytics: true,
     prefix: "rl:messages",
   }),
+
+  // 20 chamadas de IA por hora por usuário — cada chamada custa dinheiro de verdade
+  ai: new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(20, "1 h"),
+    analytics: true,
+    prefix: "rl:ai",
+  }),
 };
 
 /**

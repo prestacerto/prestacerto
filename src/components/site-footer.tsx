@@ -6,6 +6,10 @@ const columns = [
     links: [
       { href: "/services", label: "Buscar serviços" },
       { href: "/projects", label: "Projetos abertos" },
+      { href: "/aprenda", label: "Aprenda" },
+      { href: "/mercado", label: "Dados de mercado" },
+      { href: "/ferramentas/calculadora", label: "Calculadora de preço" },
+      { href: "/ferramentas/benchmark", label: "Benchmark de preço" },
       { href: "/como-funciona", label: "Como funciona" },
       { href: "/plans", label: "Planos" },
       { href: "/ajuda", label: "Central de ajuda" },

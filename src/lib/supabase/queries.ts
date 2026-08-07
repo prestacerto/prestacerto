@@ -111,6 +111,120 @@ export interface ReviewWithAuthor {
   author: { full_name: string } | null;
 }
 
+export async function getPublicProfile(freelancerId: string) {
+  try {
+    const supabase = await createClient();
+    const { data: freelancer, error } = await supabase
+      .from("profiles")
+      .select("id, full_name, avatar_url, bio, headline, resume_url, city, state, rating, rating_count, plan, role")
+      .eq("id", freelancerId)
+      .single();
+
+    if (error || !freelancer) return null;
+    if (freelancer.role !== "freelancer" && freelancer.role !== "both") return null;
+
+    const [{ data: services }, reviews, { data: portfolio }] = await Promise.all([
+      supabase
+        .from("services")
+        .select("id, title, description, skills, price_hour, delivery_days")
+        .eq("freelancer_id", freelancerId)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false }),
+      getReviewsForProfile(freelancerId),
+      supabase
+        .from("portfolio_public")
+        .select("url_slug")
+        .eq("freelancer_id", freelancerId)
+        .eq("is_active", true)
+        .maybeSingle(),
+    ]);
+
+    return {
+      freelancer,
+      services: services ?? [],
+      reviews,
+      portfolioSlug: portfolio?.url_slug ?? null,
+    };
+  } catch (error) {
+    console.error("getPublicProfile falhou:", error);
+    return null;
+  }
+}
+
+export async function getPublicPortfolioBySlug(slug: string) {
+  try {
+    const supabase = await createClient();
+    const { data: portfolio, error } = await supabase
+      .from("portfolio_public")
+      .select(
+        "url_slug, headline, bio, social_links, theme, featured_projects, freelancer_id"
+      )
+      .eq("url_slug", slug)
+      .eq("is_active", true)
+      .single();
+
+    if (error || !portfolio) return null;
+
+    const { data: freelancer } = await supabase
+      .from("profiles")
+      .select("id, full_name, avatar_url, bio, rating, rating_count, created_at")
+      .eq("id", portfolio.freelancer_id)
+      .single();
+
+    if (!freelancer) return null;
+
+    const featuredIds = portfolio.featured_projects ?? [];
+    const { data: projects } = featuredIds.length
+      ? await supabase
+          .from("projects")
+          .select("id, title, description, category:categories(name)")
+          .in("id", featuredIds)
+      : { data: [] };
+
+    const yearsExperience = Math.max(
+      1,
+      Math.floor(
+        (Date.now() - new Date(freelancer.created_at).getTime()) /
+          (1000 * 60 * 60 * 24 * 365)
+      )
+    );
+
+    return {
+      freelancer: {
+        id: freelancer.id,
+        full_name: freelancer.full_name,
+        avatar_url: freelancer.avatar_url ?? "",
+        bio: freelancer.bio ?? "",
+        rating: freelancer.rating ?? 0,
+        rating_count: freelancer.rating_count ?? 0,
+      },
+      portfolio: {
+        url_slug: portfolio.url_slug,
+        headline: portfolio.headline,
+        bio: portfolio.bio ?? "",
+        social_links: portfolio.social_links ?? {},
+        theme: (portfolio.theme ?? "minimal") as "minimal" | "bold" | "dark",
+      },
+      projects: (projects ?? []).map((p) => ({
+        id: p.id,
+        title: p.title,
+        image: "",
+        description: p.description,
+        // @ts-expect-error -- join do Supabase retorna objeto, não array, nesse formato de select
+        category: p.category?.name ?? "",
+      })),
+      stats: {
+        projects_completed: freelancer.rating_count ?? 0,
+        avg_rating: freelancer.rating ?? 0,
+        years_experience: yearsExperience,
+      },
+    };
+  } catch (error) {
+    console.error("getPublicPortfolioBySlug falhou:", error);
+    return null;
+  }
+}
+
 export async function getReviewsForProfile(profileId: string): Promise<ReviewWithAuthor[]> {
   try {
     const supabase = await createClient();
@@ -473,7 +587,7 @@ export async function getProjectById(id: string) {
     const { data, error } = await supabase
       .from("projects")
       .select(
-        "*, client:profiles!projects_client_id_fkey(id, full_name), proposals(count)"
+        "*, client:profiles!projects_client_id_fkey(id, full_name), proposals(count), project_google_data(drive_folder_url)"
       )
       .eq("id", id)
       .single();

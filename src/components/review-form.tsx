@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-export function ReviewForm({ projectId }: { projectId: string }) {
+export function ReviewForm({ projectId, userId }: { projectId: string; userId?: string }) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -37,6 +37,25 @@ export function ReviewForm({ projectId }: { projectId: string }) {
     }
 
     setSent(true);
+
+    // Nota alta é o pico de satisfação do lado de quem avalia — momento
+    // certo pra convidar a indicar, igual já fazemos após concluir projeto.
+    if (userId && rating >= 4) {
+      setTimeout(() => {
+        toast("Que bom que gostou! Indique a PrestaCerto", {
+          description: "Copie seu link e ganhe recompensa quando seu indicado fizer o primeiro projeto.",
+          action: {
+            label: "Copiar link",
+            onClick: () => {
+              const link = `${window.location.origin}/register?ref=${userId}`;
+              navigator.clipboard.writeText(link);
+              toast.success("Link copiado!");
+            },
+          },
+        });
+      }, 1000);
+    }
+
     router.refresh();
   }
 

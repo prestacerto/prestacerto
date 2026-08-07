@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { createHeldOrder, CAPTURE_WINDOW_DAYS } from "@/lib/payments/mercadopago";
+import {
+  createHeldOrder,
+  CAPTURE_WINDOW_DAYS,
+  MercadoPagoOrderError,
+  getFriendlyDeclineMessage,
+} from "@/lib/payments/mercadopago";
 import { decryptSecret } from "@/lib/crypto/token-cipher";
 
 // Cria uma cobrança RETIDA: o cartão do cliente é autorizado, mas o dinheiro
@@ -140,9 +145,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, orderId: order.id });
   } catch (err) {
     console.error("mercadopago checkout falhou:", err);
-    return NextResponse.json(
-      { error: "Não foi possível criar a cobrança no Mercado Pago." },
-      { status: 500 }
-    );
+    const message =
+      err instanceof MercadoPagoOrderError
+        ? getFriendlyDeclineMessage(err.statusDetail)
+        : "Não foi possível criar a cobrança no Mercado Pago.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

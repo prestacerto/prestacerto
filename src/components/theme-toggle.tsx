@@ -9,6 +9,7 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- padrão oficial do next-themes pra evitar mismatch de hidratação (servidor não sabe o tema)
     setMounted(true);
   }, []);
 

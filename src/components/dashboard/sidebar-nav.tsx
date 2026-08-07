@@ -20,6 +20,7 @@ export function DashboardSidebarNav({ items }: { items: NavItem[] }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lê localStorage (só existe no client) pra restaurar preferência salva
     setMounted(true);
     setCollapsed(localStorage.getItem(STORAGE_KEY) === "1");
   }, []);

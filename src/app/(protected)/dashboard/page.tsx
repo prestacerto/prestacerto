@@ -7,6 +7,7 @@ import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/que
 import { MonetizationOverview } from "@/components/dashboard/monetization-overview";
 import { MonetizationCTAs } from "@/components/dashboard/monetization-ctas";
 import { ReferralCard } from "@/components/dashboard/referral-card";
+import { OnboardingChecklist } from "@/components/dashboard/onboarding-checklist";
 import { getReferralStats } from "@/lib/supabase/referrals";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
@@ -27,6 +28,32 @@ export default async function DashboardPage() {
   const pendingProposals = proposals.filter((p) => p.status === "pending").length;
   const activeServices = services.filter((s) => s.is_active).length;
 
+  const isFreelancer = profile?.role === "freelancer" || profile?.role === "both";
+  const checklistItems = [
+    {
+      label: "Adicione uma foto de perfil",
+      done: Boolean(profile?.avatar_url),
+      href: "/dashboard/profile",
+      cta: "Adicionar foto",
+    },
+    {
+      label: "Escreva uma bio curta",
+      done: Boolean(profile?.bio),
+      href: "/dashboard/profile",
+      cta: "Escrever bio",
+    },
+    ...(isFreelancer
+      ? [
+          {
+            label: "Cadastre seu primeiro serviço",
+            done: services.length > 0,
+            href: "/dashboard/services/new",
+            cta: "Cadastrar serviço",
+          },
+        ]
+      : []),
+  ];
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-slate-900">
@@ -35,6 +62,10 @@ export default async function DashboardPage() {
       <p className="mt-1 text-slate-500">
         Aqui está um resumo da sua conta na PrestaCerto.
       </p>
+
+      <div className="mt-6">
+        <OnboardingChecklist items={checklistItems} />
+      </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>

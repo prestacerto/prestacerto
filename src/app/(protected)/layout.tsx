@@ -1,13 +1,17 @@
 import { redirect } from "next/navigation";
-import { LayoutDashboard, Briefcase, Send, Users, Wrench } from "lucide-react";
+import { LayoutDashboard, Briefcase, Send, Users, Wrench, Plug, UserCircle, Sparkles, TrendingUp } from "lucide-react";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
   { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard },
+  { href: "/dashboard/profile", label: "Meu perfil", icon: UserCircle },
+  { href: "/dashboard/para-voce", label: "Pra você", icon: Sparkles },
+  { href: "/dashboard/mercado", label: "Mercado", icon: TrendingUp },
   { href: "/dashboard/services", label: "Meus serviços", icon: Wrench },
   { href: "/dashboard/projects", label: "Meus projetos", icon: Briefcase },
   { href: "/dashboard/proposals", label: "Minhas propostas", icon: Send },
+  { href: "/dashboard/integrations", label: "Integrações", icon: Plug },
 ];
 
 export default async function ProtectedLayout({

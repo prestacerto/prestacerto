@@ -10,7 +10,6 @@ import {
   Trophy,
   Star,
   Target,
-  Gift,
   TrendingUp,
   Building2,
 } from "lucide-react";
@@ -29,55 +28,83 @@ interface CTAItem {
   badge?: string;
 }
 
-const CTA_ITEMS: CTAItem[] = [
+interface CTAGroup {
+  title: string;
+  subtitle: string;
+  items: CTAItem[];
+}
+
+// Consolidado de 6 cards soltos pra 3 grupos claros — menos opção pra
+// decidir de uma vez, mais fácil de entender o que cada coisa faz.
+const CTA_GROUPS: CTAGroup[] = [
   {
-    id: "credits-buy",
-    title: "Comprar Créditos",
-    description: "Compra avulsa de 5-50 créditos",
-    icon: Zap,
-    color: "from-blue-500 to-blue-600",
-    badge: "Pagar conforme usa",
+    title: "Apareça mais",
+    subtitle: "Ganhe visibilidade extra nos resultados de busca",
+    items: [
+      {
+        id: "priority-boost",
+        title: "Destaque Rápido",
+        description: "Apareça no topo por 3-14 dias",
+        icon: Target,
+        color: "from-orange-500 to-red-600",
+        badge: "25-100% mais propostas",
+      },
+      {
+        id: "credits-buy",
+        title: "Comprar Créditos",
+        description: "Compra avulsa pra usar em destaque, sob demanda",
+        icon: Zap,
+        color: "from-blue-500 to-blue-600",
+        badge: "Pagar conforme usa",
+      },
+      {
+        id: "credits-sub",
+        title: "Assinatura de Créditos",
+        description: "Créditos todo mês, com economia",
+        icon: Calendar,
+        color: "from-green-500 to-emerald-600",
+        badge: "Economize 60%",
+      },
+    ],
   },
   {
-    id: "credits-sub",
-    title: "Assinatura de Créditos",
-    description: "10-∞ créditos/mês com economia",
-    icon: Calendar,
-    color: "from-green-500 to-emerald-600",
-    badge: "Economize 60%",
+    title: "Prove que é bom",
+    subtitle: "Selos e verificações que aumentam a confiança de quem contrata",
+    items: [
+      {
+        id: "badges",
+        title: "Selos de Verificação",
+        description: "4 tiers: Verificado até VIP",
+        icon: Trophy,
+        color: "from-purple-500 to-pink-600",
+        badge: "40-60% mais demanda",
+      },
+      {
+        id: "company-verification",
+        title: "Verificação Empresa",
+        description: "Valide seu CNPJ — aumente confiança",
+        icon: Building2,
+        color: "from-indigo-500 to-purple-600",
+        badge: "Clientes confiam mais",
+      },
+    ],
   },
   {
-    id: "badges",
-    title: "Selos de Verificação",
-    description: "4 tiers: Verificado até VIP",
-    icon: Trophy,
-    color: "from-purple-500 to-pink-600",
-    badge: "40-60% mais demanda",
-  },
-  {
-    id: "priority-boost",
-    title: "Destaque Rápido",
-    description: "Apareça no topo por 3-14 dias",
-    icon: Target,
-    color: "from-orange-500 to-red-600",
-    badge: "25-100% mais propostas",
-  },
-  {
-    id: "company-verification",
-    title: "Verificação Empresa",
-    description: "Valide seu CNPJ — aumente confiança",
-    icon: Building2,
-    color: "from-indigo-500 to-purple-600",
-    badge: "Clientes confiam mais",
-  },
-  {
-    id: "portfolio-premium",
-    title: "Portfólio Premium",
-    description: "Sempre em destaque + analytics",
-    icon: Star,
-    color: "from-yellow-500 to-orange-600",
+    title: "Vá além do básico",
+    subtitle: "Recursos extras pra quem quer se diferenciar de verdade",
+    items: [
+      {
+        id: "portfolio-premium",
+        title: "Portfólio Premium",
+        description: "Sempre em destaque + analytics",
+        icon: Star,
+        color: "from-yellow-500 to-orange-600",
+      },
+    ],
   },
 ];
+
+const CTA_ITEMS: CTAItem[] = CTA_GROUPS.flatMap((group) => group.items);
 
 export function MonetizationCTAs() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -148,46 +175,55 @@ export function MonetizationCTAs() {
         </p>
       </div>
 
-      {/* CTAs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {CTA_ITEMS.map((cta) => {
-          const Icon = cta.icon;
-          return (
-            <Card
-              key={cta.id}
-              className="group hover:shadow-lg transition overflow-hidden cursor-pointer"
-              onClick={() => setActiveModal(cta.id)}
-            >
-              <CardContent className="p-6">
-                {/* Header with gradient bg */}
-                <div className={`${getColorClasses(cta.color)} p-4 rounded-lg mb-4 flex items-center justify-between`}>
-                  <Icon className="h-6 w-6 text-white" />
-                  {cta.badge && (
-                    <span className="text-xs font-bold text-white bg-black/20 px-2 py-1 rounded">
-                      {cta.badge}
-                    </span>
-                  )}
-                </div>
+      {/* 3 grupos, em vez de 6 cards soltos */}
+      <div className="space-y-8">
+        {CTA_GROUPS.map((group) => (
+          <div key={group.title}>
+            <h3 className="font-semibold text-slate-900">{group.title}</h3>
+            <p className="text-sm text-slate-500">{group.subtitle}</p>
 
-                {/* Content */}
-                <h3 className="font-bold text-slate-900 mb-1">{cta.title}</h3>
-                <p className="text-sm text-slate-600 mb-4">{cta.description}</p>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {group.items.map((cta) => {
+                const Icon = cta.icon;
+                return (
+                  <Card
+                    key={cta.id}
+                    className="group hover:shadow-lg transition overflow-hidden cursor-pointer"
+                    onClick={() => setActiveModal(cta.id)}
+                  >
+                    <CardContent className="p-6">
+                      {/* Header with gradient bg */}
+                      <div className={`${getColorClasses(cta.color)} p-4 rounded-lg mb-4 flex items-center justify-between`}>
+                        <Icon className="h-6 w-6 text-white" />
+                        {cta.badge && (
+                          <span className="text-xs font-bold text-white bg-black/20 px-2 py-1 rounded">
+                            {cta.badge}
+                          </span>
+                        )}
+                      </div>
 
-                {/* CTA Button */}
-                <Button
-                  variant="outline"
-                  className="w-full group-hover:bg-blue-50 group-hover:text-blue-600 transition"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveModal(cta.id);
-                  }}
-                >
-                  Saiba Mais
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
+                      {/* Content */}
+                      <h3 className="font-bold text-slate-900 mb-1">{cta.title}</h3>
+                      <p className="text-sm text-slate-600 mb-4">{cta.description}</p>
+
+                      {/* CTA Button */}
+                      <Button
+                        variant="outline"
+                        className="w-full group-hover:bg-blue-50 group-hover:text-blue-600 transition"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveModal(cta.id);
+                        }}
+                      >
+                        Saiba Mais
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Combine recursos */}

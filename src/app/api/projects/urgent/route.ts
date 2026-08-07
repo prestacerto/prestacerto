@@ -52,19 +52,32 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     // Formatar resposta
-    const formatted = projects.map((p: any) => ({
+    interface UrgentProjectRow {
+      id: string;
+      title: string;
+      description: string;
+      budget_min: number | null;
+      budget_max: number | null;
+      deadline_days: number | null;
+      urgency: string;
+      urgent_fee: number | null;
+      guarantee_fee: number | null;
+      created_at: string;
+      categories: { name: string }[] | null;
+    }
+    const formatted = (projects as unknown as UrgentProjectRow[]).map((p) => ({
       id: p.id,
       title: p.title,
       description: p.description.substring(0, 200) + "...",
       budget_min: p.budget_min,
       budget_max: p.budget_max,
       deadline_days: p.deadline_days,
-      category: p.categories?.name,
+      category: p.categories?.[0]?.name,
       urgency: p.urgency,
       extra_fees: {
         urgent_fee: p.urgent_fee,
         guarantee_fee: p.guarantee_fee,
-        total: p.urgent_fee + p.guarantee_fee,
+        total: (p.urgent_fee ?? 0) + (p.guarantee_fee ?? 0),
       },
       badge: p.urgency === "critical" ? "🚨 CRÍTICO" : "⚡ URGENTE",
       created_at: p.created_at,

@@ -7,6 +7,7 @@ import { getAuthenticatedUser } from "@/lib/auth/getUser";
 const navItems = [
   { href: "/services", label: "Serviços" },
   { href: "/projects", label: "Projetos" },
+  { href: "/aprenda", label: "Aprenda" },
   { href: "/vagas", label: "Vagas", badge: "NOVO" },
   { href: "/plans", label: "Planos" },
 ];

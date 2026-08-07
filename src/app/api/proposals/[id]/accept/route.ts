@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { getUserEmailById } from "@/lib/supabase/admin";
 import { sendProposalAcceptedEmail } from "@/lib/email/resend";
+import { handleProposalAcceptedGoogle } from "@/lib/integrations/google";
 
 interface AcceptProposalParams {
   id: string;
@@ -35,7 +36,7 @@ export async function POST(
     // Confirma que o usuário é o dono do projeto (a RLS vai garantir, mas valida primeiro)
     const { data: project } = await supabase
       .from("projects")
-      .select("title, client_id, status")
+      .select("title, client_id, status, deadline_days")
       .eq("id", proposal.project_id)
       .single();
 
@@ -84,6 +85,18 @@ export async function POST(
       projectTitle: project.title,
       threadUrl: `${siteUrl}/dashboard/messages/${params.id}`,
     });
+
+    // Cria Calendar event + Drive folder pra quem tiver Google conectado
+    // Erros aqui não devem bloquear o fluxo principal
+    handleProposalAcceptedGoogle({
+      projectId: proposal.project_id,
+      projectTitle: project.title,
+      deadlineDays: project.deadline_days ?? null,
+      clientId: user.id,
+      clientEmail: user.email ?? "",
+      freelancerId: proposal.freelancer_id,
+      freelancerEmail: freelancerEmail ?? "",
+    }).catch((err) => console.error("handleProposalAcceptedGoogle falhou:", err));
 
     return NextResponse.json({ success: true });
   } catch (error) {

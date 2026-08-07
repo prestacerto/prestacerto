@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { HardDrive } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
@@ -144,7 +145,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           <>
             <h2 className="font-semibold text-slate-900">Enviar proposta</h2>
             <div className="mt-4">
-              <ProposalForm projectId={project.id} />
+              <ProposalForm projectId={project.id} projectTitle={project.title} />
             </div>
           </>
         )}
@@ -228,6 +229,27 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         </Card>
       )}
 
+      {isParticipant && Array.isArray(project.project_google_data) && project.project_google_data[0]?.drive_folder_url && (
+        <Card className="mt-6 p-5">
+          <div className="flex items-center gap-2">
+            <HardDrive className="size-4 text-blue-600" />
+            <h2 className="font-semibold text-slate-900">Pasta do projeto</h2>
+          </div>
+          <p className="mt-1 text-sm text-slate-500">
+            Pasta compartilhada no Google Drive pra entrega e troca de arquivos.
+          </p>
+          <Link
+            href={project.project_google_data[0].drive_folder_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:underline"
+          >
+            <HardDrive className="size-3.5" />
+            Abrir pasta no Drive
+          </Link>
+        </Card>
+      )}
+
       {project.status === "closed" && isParticipant && (
         <Card className="mt-6 p-5">
           <h2 className="font-semibold text-slate-900">Avaliar</h2>
@@ -237,7 +259,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             </p>
           ) : (
             <div className="mt-4">
-              <ReviewForm projectId={project.id} />
+              <ReviewForm projectId={project.id} userId={user?.id} />
             </div>
           )}
         </Card>

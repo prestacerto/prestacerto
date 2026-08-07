@@ -4,6 +4,7 @@ import { MessageSquare, MessageCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AcceptProposalButton } from "@/components/accept-proposal-button";
+import { KeyboardNavList } from "@/components/dashboard/keyboard-nav-list";
 import { CompleteProjectButton } from "@/components/complete-project-button";
 import { HighlightProjectTrigger } from "@/components/monetization/highlight-project-trigger";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
@@ -66,7 +67,7 @@ export default async function DashboardProjectDetailPage({
             momento — e a avaliação é destravada pros dois lados.
           </p>
           <div className="mt-4">
-            <CompleteProjectButton projectId={project.id} />
+            <CompleteProjectButton projectId={project.id} userId={user.id} />
           </div>
         </Card>
       )}
@@ -80,50 +81,55 @@ export default async function DashboardProjectDetailPage({
         {proposals.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">Nenhuma proposta ainda.</p>
         ) : (
-          <ul className="mt-4 space-y-3">
-            {proposals.map((proposal) => (
-              <li key={proposal.id}>
-                <Card className="p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-semibold text-slate-900">
-                        {proposal.freelancer?.full_name ?? "Freelancer"}
-                      </p>
-                      {proposal.freelancer?.rating != null && (
-                        <p className="text-xs text-slate-500">
-                          ⭐ {proposal.freelancer.rating.toFixed(1)} (
-                          {proposal.freelancer.rating_count})
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      {proposal.proposed_price != null && (
+          <KeyboardNavList>
+            <ul className="mt-4 space-y-3">
+              {proposals.map((proposal) => (
+                <li key={proposal.id} data-kbd-item tabIndex={-1} className="rounded-lg">
+                  <Card className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
                         <p className="font-semibold text-slate-900">
-                          R$ {proposal.proposed_price}
+                          {proposal.freelancer?.full_name ?? "Freelancer"}
                         </p>
-                      )}
-                      <Badge variant="secondary" className="mt-1">
-                        {proposalStatusLabel[proposal.status] ?? proposal.status}
-                      </Badge>
+                        {proposal.freelancer?.rating != null && (
+                          <p className="text-xs text-slate-500">
+                            ⭐ {proposal.freelancer.rating.toFixed(1)} (
+                            {proposal.freelancer.rating_count})
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        {proposal.proposed_price != null && (
+                          <p className="font-semibold text-slate-900">
+                            R$ {proposal.proposed_price}
+                          </p>
+                        )}
+                        <Badge variant="secondary" className="mt-1">
+                          {proposalStatusLabel[proposal.status] ?? proposal.status}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                  <p className="mt-3 text-sm text-slate-600">{proposal.message}</p>
-                  <div className="mt-3 flex flex-wrap items-center gap-3">
-                    {project.status === "open" && proposal.status === "pending" && (
-                      <AcceptProposalButton proposalId={proposal.id} />
-                    )}
-                    <Link
-                      href={`/dashboard/messages/${proposal.id}`}
-                      className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
-                    >
-                      <MessageCircle className="size-4" />
-                      Conversar
-                    </Link>
-                  </div>
-                </Card>
-              </li>
-            ))}
-          </ul>
+                    <p className="mt-3 text-sm text-slate-600">{proposal.message}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-3">
+                      {project.status === "open" && proposal.status === "pending" && (
+                        <span data-kbd-primary>
+                          <AcceptProposalButton proposalId={proposal.id} />
+                        </span>
+                      )}
+                      <Link
+                        href={`/dashboard/messages/${proposal.id}`}
+                        data-kbd-secondary
+                        className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                      >
+                        <MessageCircle className="size-4" />
+                        Conversar
+                      </Link>
+                    </div>
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          </KeyboardNavList>
         )}
       </div>
     </div>
