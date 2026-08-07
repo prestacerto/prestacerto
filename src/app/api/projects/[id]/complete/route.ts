@@ -6,6 +6,7 @@ import { getUserEmailById } from "@/lib/supabase/admin";
 import { sendProjectCompletedEmail, sendPaymentApprovedEmail } from "@/lib/email/resend";
 import { captureOrder } from "@/lib/payments/mercadopago";
 import { decryptSecret } from "@/lib/crypto/token-cipher";
+import { completeReferralIfFirstPayment } from "@/lib/supabase/referrals";
 
 interface CompleteProjectParams {
   id: string;
@@ -99,6 +100,14 @@ export async function POST(
         .from("payments")
         .update({ status: "approved" })
         .eq("id", payment.id);
+
+      // Best-effort: se cliente ou freelancer foram indicados por alguém e
+      // esse é o primeiro pagamento aprovado deles, libera a recompensa de
+      // indicação. Nunca deve impedir o pagamento de ser confirmado.
+      await Promise.all([
+        completeReferralIfFirstPayment(user.id),
+        completeReferralIfFirstPayment(payment.freelancer_id),
+      ]).catch((err) => console.error("completeReferralIfFirstPayment falhou:", err));
 
       const freelancerEmail = await getUserEmailById(payment.freelancer_id);
       await sendPaymentApprovedEmail({

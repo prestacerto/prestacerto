@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,6 +24,8 @@ type RegisterValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const referrerId = searchParams.get("ref");
   const [role, setRole] = useState<"freelancer" | "client">("freelancer");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -41,7 +43,11 @@ export function RegisterForm() {
       email: values.email,
       password: values.password,
       options: {
-        data: { role, full_name: values.fullName },
+        data: {
+          role,
+          full_name: values.fullName,
+          ...(referrerId ? { referrer_id: referrerId } : {}),
+        },
       },
     });
     setLoading(false);

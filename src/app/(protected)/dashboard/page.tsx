@@ -5,6 +5,9 @@ import { LinkButton } from "@/components/link-button";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { getMyProjects, getMyProposals, getMyServices } from "@/lib/supabase/queries";
 import { MonetizationOverview } from "@/components/dashboard/monetization-overview";
+import { MonetizationCTAs } from "@/components/dashboard/monetization-ctas";
+import { ReferralCard } from "@/components/dashboard/referral-card";
+import { getReferralStats } from "@/lib/supabase/referrals";
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -12,11 +15,12 @@ export default async function DashboardPage() {
   const user = await getAuthenticatedUser();
   if (!user) return null;
 
-  const [profile, projects, proposals, services] = await Promise.all([
+  const [profile, projects, proposals, services, referralStats] = await Promise.all([
     getProfile(),
     getMyProjects(user.id),
     getMyProposals(user.id),
     getMyServices(user.id),
+    getReferralStats(user.id),
   ]);
 
   const openProjects = projects.filter((p) => p.status === "open").length;
@@ -121,9 +125,22 @@ export default async function DashboardPage() {
         </Card>
       )}
 
-      <div className="mt-12">
-        <h2 className="mb-6 text-xl font-bold text-slate-900">Meus investimentos</h2>
-        <MonetizationOverview />
+      <div className="mt-12 space-y-12">
+        <div>
+          <MonetizationCTAs />
+        </div>
+        <div className="max-w-md">
+          <ReferralCard
+            userId={user.id}
+            monthCompleted={referralStats.monthCompleted}
+            totalCompleted={referralStats.totalCompleted}
+            remainingForBusiness={referralStats.remainingForBusiness}
+          />
+        </div>
+        <div>
+          <h2 className="mb-6 text-xl font-bold text-slate-900">Meus investimentos</h2>
+          <MonetizationOverview />
+        </div>
       </div>
     </div>
   );
