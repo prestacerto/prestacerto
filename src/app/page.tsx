@@ -358,7 +358,7 @@ export default async function Home() {
                     <p className="mt-1 line-clamp-2 text-sm text-slate-500">{service.description}</p>
 
                     <div className="mt-4 flex flex-wrap gap-1.5">
-                      {service.skills.slice(0, 3).map((skill: string) => (
+                      {service.skills.slice(0, 3).map((skill) => (
                         <span key={skill} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">{skill}</span>
                       ))}
                     </div>
