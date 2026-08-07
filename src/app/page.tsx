@@ -266,6 +266,51 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── APRENDA ── */}
+      <section className="border-t border-slate-200 bg-gradient-to-b from-white to-blue-50/50 px-4 py-20 dark:border-slate-800 dark:from-slate-900 dark:to-blue-950/20 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Conteúdo de valor</p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
+              Aprenda com especialistas
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-slate-600 dark:text-slate-400">
+              Dicas e estratégias pra crescer seus ganhos como freelancer: precificação, propostas, posicionamento e mais.
+            </p>
+          </div>
+
+          <div className="mt-8 text-center">
+            <LinkButton href="/aprenda" size="lg" className="gap-2 bg-blue-600 px-8 hover:bg-blue-500">
+              Explorar lições <ArrowRight className="size-4" />
+            </LinkButton>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BENCHMARK ── */}
+      <section className="bg-slate-50 px-4 py-20 dark:bg-slate-950 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Compare seus preços</p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
+              Benchmark de preço
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-slate-600 dark:text-slate-400">
+              Veja quanto freelancers na sua área estão cobrando e posicione seu preço com dados reais.
+            </p>
+          </div>
+
+          <div className="mt-8 text-center">
+            <LinkButton href="/ferramentas/benchmark" size="lg" className="gap-2 bg-blue-600 px-8 hover:bg-blue-500">
+              Calcular meu benchmark <ArrowRight className="size-4" />
+            </LinkButton>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PLANOS ── */}
+      <PlansSection />
+
       {/* ── FREELANCERS EM DESTAQUE ── */}
       {services.length > 0 && (
         <section className="bg-white px-4 py-20 dark:bg-slate-900 sm:px-6">
