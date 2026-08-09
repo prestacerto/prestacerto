@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { createServiceClient } from "@/lib/supabase/service";
 import type { Category } from "@/lib/supabase/types";
 
 // Helpers de leitura pública, com fallback resiliente: se o Supabase ainda
@@ -71,7 +70,7 @@ export async function listServices(params: {
 
 export async function getMyServices(freelancerId: string) {
   try {
-    const supabase = createServiceClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("services")
       .select("*")
@@ -309,7 +308,7 @@ export async function listOpenProjects(params: {
 
 export async function getMyProjects(userId: string) {
   try {
-    const supabase = createServiceClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("projects")
       .select("id, title, status, category_id, created_at, proposals(count)")
@@ -343,7 +342,7 @@ export interface ProposalWithProject {
 
 export async function getMyProposals(userId: string): Promise<ProposalWithProject[]> {
   try {
-    const supabase = createServiceClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("proposals")
       .select("id, message, proposed_price, status, created_at, project:projects(id, title, status)")
