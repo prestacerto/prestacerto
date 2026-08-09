@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   const user = await getAuthenticatedUser();
   if (!user) return null;
 
-  const [profile, referralStats] = await Promise.all([
+  const [profileResult, referralResult] = await Promise.allSettled([
     getProfile(),
     getReferralStats(user.id),
   ]);
