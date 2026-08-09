@@ -1,16 +1,17 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
+import { type LucideIcon, LayoutDashboard, UserCircle, Sparkles, TrendingUp, Wrench, Briefcase, Send, Plug, Users } from "lucide-react";
 
-const navItems = [
-  { href: "/dashboard", label: "Visão geral", icon: "layout-dashboard" },
-  { href: "/dashboard/profile", label: "Meu perfil", icon: "user-circle" },
-  { href: "/dashboard/para-voce", label: "Pra você", icon: "sparkles" },
-  { href: "/dashboard/mercado", label: "Mercado", icon: "trending-up" },
-  { href: "/dashboard/services", label: "Meus serviços", icon: "wrench" },
-  { href: "/dashboard/projects", label: "Meus projetos", icon: "briefcase" },
-  { href: "/dashboard/proposals", label: "Minhas propostas", icon: "send" },
-  { href: "/dashboard/integrations", label: "Integrações", icon: "plug" },
+const navItems: Array<{ href: string; label: string; icon: LucideIcon }> = [
+  { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard as LucideIcon },
+  { href: "/dashboard/profile", label: "Meu perfil", icon: UserCircle as LucideIcon },
+  { href: "/dashboard/para-voce", label: "Pra você", icon: Sparkles as LucideIcon },
+  { href: "/dashboard/mercado", label: "Mercado", icon: TrendingUp as LucideIcon },
+  { href: "/dashboard/services", label: "Meus serviços", icon: Wrench as LucideIcon },
+  { href: "/dashboard/projects", label: "Meus projetos", icon: Briefcase as LucideIcon },
+  { href: "/dashboard/proposals", label: "Minhas propostas", icon: Send as LucideIcon },
+  { href: "/dashboard/integrations", label: "Integrações", icon: Plug as LucideIcon },
 ];
 
 export default async function ProtectedLayout({
@@ -27,7 +28,7 @@ export default async function ProtectedLayout({
 
   const items =
     profile?.plan === "business"
-      ? [...navItems, { href: "/dashboard/team", label: "Minha equipe", icon: "users" }]
+      ? [...navItems, { href: "/dashboard/team", label: "Minha equipe", icon: Users as LucideIcon }]
       : navItems;
 
   return (
