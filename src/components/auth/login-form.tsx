@@ -60,7 +60,7 @@ export function LoginForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="email">E-mail</Label>
-          <Input id="email" type="email" placeholder="voce@exemplo.com" {...register("email")} />
+          <Input id="email" type="email" placeholder="voce@exemplo.com" autoComplete="off" {...register("email")} />
           {errors.email && (
             <p className="text-xs text-red-600">{errors.email.message}</p>
           )}
@@ -73,7 +73,7 @@ export function LoginForm() {
               Esqueci minha senha
             </Link>
           </div>
-          <Input id="password" type="password" {...register("password")} />
+          <Input id="password" type="password" autoComplete="off" {...register("password")} />
           {errors.password && (
             <p className="text-xs text-red-600">{errors.password.message}</p>
           )}

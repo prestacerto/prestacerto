@@ -85,6 +85,16 @@ export function ProposalForm({
         toast.error("Você precisa entrar na sua conta pra enviar uma proposta.");
         return;
       }
+      if (res.status === 402) {
+        toast.error("Conectares insuficientes", {
+          description: "Você não tem conectares disponíveis. Compre mais para enviar propostas.",
+          action: {
+            label: "Comprar",
+            onClick: () => router.push("/dashboard/connects"),
+          },
+        });
+        return;
+      }
       toast.error("Não foi possível enviar sua proposta", {
         description: body?.error ?? "Tente novamente em instantes.",
       });
@@ -92,6 +102,7 @@ export function ProposalForm({
     }
 
     setSent(true);
+    toast.success("Proposta enviada! Um conectar foi usado.");
     router.refresh();
   }
 
