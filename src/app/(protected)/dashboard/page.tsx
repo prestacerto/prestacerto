@@ -8,6 +8,8 @@ import { Clock, TrendingUp, Zap, Trophy } from "lucide-react";
 
 const ReferralCard = dynamic(() => import("@/components/dashboard/referral-card").then(m => ({ default: m.ReferralCard })), { loading: () => null });
 const RevenueWidget = dynamic(() => import("@/components/dashboard/revenue-widget").then(m => ({ default: m.RevenueWidget })), { loading: () => <div className="bg-gray-100 rounded animate-pulse h-40" /> });
+const ActivityFeed = dynamic(() => import("@/components/dashboard/activity-feed").then(m => ({ default: m.ActivityFeed })), { loading: () => null });
+const PushNotificationBell = dynamic(() => import("@/components/push-notification-bell").then(m => ({ default: m.PushNotificationBell })), { loading: () => null });
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -32,6 +34,84 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Olá, {profile?.full_name?.split(" ")[0] ?? "bem-vindo"}</h1>
         <p className="text-slate-500 mt-1">Seu dashboard está pronto.</p>
+      </div>
+
+      {/* Urgency Banner */}
+      <div className="bg-red-50 border-l-4 border-red-600 p-4 rounded">
+        <div className="flex items-center gap-2">
+          <Clock size={20} className="text-red-600" />
+          <div>
+            <p className="font-semibold text-red-900">⏰ 3 projetos acabam em 2 horas!</p>
+            <p className="text-sm text-red-700">Não perca essas oportunidades</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Revenue Widget */}
+      <RevenueWidget />
+
+      {/* Daily Challenges */}
+      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Zap size={20} className="text-purple-600" />
+            <h3 className="font-bold">Desafios de Hoje</h3>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-white rounded">
+              <div>
+                <p className="font-semibold text-sm">Publicar um projeto</p>
+                <p className="text-xs text-slate-500">+50 XP + R$ 10</p>
+              </div>
+              <div className="text-right">
+                <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full w-0 bg-green-500"></div>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">0/1</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-white rounded">
+              <div>
+                <p className="font-semibold text-sm">Responder 2 mensagens</p>
+                <p className="text-xs text-slate-500">+30 XP + R$ 5</p>
+              </div>
+              <div className="text-right">
+                <div className="h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full w-1/2 bg-yellow-500"></div>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">1/2</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Social Proof */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card className="border-green-200 bg-green-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2">
+              <TrendingUp size={20} className="text-green-600" />
+              <div>
+                <p className="text-sm text-slate-600">Esta semana</p>
+                <p className="text-3xl font-bold text-green-600">3 contratos</p>
+                <p className="text-xs text-slate-500 mt-1">+50% vs semana passada</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2">
+              <Trophy size={20} className="text-blue-600" />
+              <div>
+                <p className="text-sm text-slate-600">Visualizações</p>
+                <p className="text-3xl font-bold text-blue-600">12</p>
+                <p className="text-xs text-slate-500 mt-1">Seu perfil está em alta!</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
