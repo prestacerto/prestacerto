@@ -23,23 +23,47 @@ export async function getAuthenticatedUser() {
 
 export async function getProfile() {
   try {
-    const supabase = await createClient();
     const user = await getAuthenticatedUser();
-    if (!user) return null;
+    if (!user) {
+      console.log("[getProfile] No authenticated user");
+      return null;
+    }
 
-    // Use service client to bypass RLS (temporary - until RLS is properly configured)
-    const { createServiceClient } = await import("@/lib/supabase/service");
-    const serviceSupabase = createServiceClient();
+    // Try service client first (for production where RLS is bypassed)
+    try {
+      const { createServiceClient } = await import("@/lib/supabase/service");
+      const serviceSupabase = createServiceClient();
 
-    const { data: profile } = await serviceSupabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+      const { data: profile, error } = await serviceSupabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-    return profile;
+      if (error) throw error;
+      console.log("[getProfile] Got profile via serviceClient:", profile?.id);
+      return profile;
+    } catch (serviceError) {
+      console.warn("[getProfile] serviceClient failed, trying authenticated client:", serviceError);
+
+      // Fallback: use authenticated client (RLS will apply)
+      const supabase = await createClient();
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("[getProfile] Both clients failed:", error);
+        return null;
+      }
+
+      console.log("[getProfile] Got profile via authenticated client:", profile?.id);
+      return profile;
+    }
   } catch (error) {
-    console.error("getProfile failed:", error);
+    console.error("[getProfile] Unexpected error:", error);
     return null;
   }
 }

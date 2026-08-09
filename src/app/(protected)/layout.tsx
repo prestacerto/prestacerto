@@ -21,7 +21,10 @@ export default async function ProtectedLayout({
   const user = await getAuthenticatedUser();
   if (!user) redirect("/login?redirect=/dashboard");
 
+  // Try to get profile, but don't block if it fails — user is authenticated
   const profile = await getProfile();
+  console.log("[ProtectedLayout] User authenticated:", user.id, "Profile:", profile?.id);
+
   const items =
     profile?.plan === "business"
       ? [...navItems, { href: "/dashboard/team", label: "Minha equipe", icon: "users" }]
