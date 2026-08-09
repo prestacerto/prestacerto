@@ -4,8 +4,10 @@ import { LinkButton } from "@/components/link-button";
 import { getReferralStats } from "@/lib/supabase/referrals";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Clock, TrendingUp, Zap, Trophy } from "lucide-react";
 
 const ReferralCard = dynamic(() => import("@/components/dashboard/referral-card").then(m => ({ default: m.ReferralCard })), { loading: () => null });
+const RevenueWidget = dynamic(() => import("@/components/dashboard/revenue-widget").then(m => ({ default: m.RevenueWidget })), { loading: () => <div className="bg-gray-100 rounded animate-pulse h-40" /> });
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
