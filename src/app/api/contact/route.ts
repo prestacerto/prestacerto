@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendContactNotificationEmail } from "@/lib/email/resend";
+import { rateLimiters, getClientIP, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  // Rate limit: 3 submissions per hour per IP
+  const ip = getClientIP(request);
+  const { success, reset } = await rateLimiters.contact.limit(ip);
+
+  if (!success) {
+    return rateLimitResponse(reset);
+  }
+
   try {
     const body = await request.json();
     const name = (body.name as string)?.trim();
