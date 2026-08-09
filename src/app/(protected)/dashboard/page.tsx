@@ -18,6 +18,13 @@ export default async function DashboardPage() {
     getReferralStats(user.id),
   ]);
 
+  const profile = profileResult.status === "fulfilled" ? profileResult.value : null;
+  const referralStats = referralResult.status === "fulfilled" ? referralResult.value : {
+    monthCompleted: 0,
+    totalCompleted: 0,
+    remainingForBusiness: 3,
+  };
+
   return (
     <div className="space-y-8">
       <div>
