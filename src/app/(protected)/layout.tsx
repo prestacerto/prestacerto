@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
-import { type LucideIcon, LayoutDashboard, UserCircle, Sparkles, TrendingUp, Wrench, Briefcase, Send, Plug, Users } from "lucide-react";
+import { type LucideIcon, LayoutDashboard, UserCircle, Sparkles, TrendingUp, Wrench, Briefcase, Send, Plug, Users, Zap, CreditCard } from "lucide-react";
 
 const navItems: Array<{ href: string; label: string; icon: LucideIcon }> = [
   { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard as LucideIcon },
@@ -12,6 +12,9 @@ const navItems: Array<{ href: string; label: string; icon: LucideIcon }> = [
   { href: "/dashboard/projects", label: "Meus projetos", icon: Briefcase as LucideIcon },
   { href: "/dashboard/proposals", label: "Minhas propostas", icon: Send as LucideIcon },
   { href: "/dashboard/integrations", label: "Integrações", icon: Plug as LucideIcon },
+  { href: "/dashboard/connects", label: "Conectares", icon: Zap as LucideIcon },
+  { href: "/dashboard/priority-queue", label: "Priority Queue", icon: Zap as LucideIcon },
+  { href: "/dashboard/monetization", label: "Planos", icon: CreditCard as LucideIcon },
 ];
 
 export default async function ProtectedLayout({

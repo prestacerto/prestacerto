@@ -22,9 +22,9 @@ export function ConnectsDisplay() {
         {remaining} conectar{remaining !== 1 ? "es" : ""} disponível{remaining !== 1 ? "s" : ""}
       </span>
       {low && (
-        <Button asChild variant="ghost" size="sm" className="ml-auto h-auto p-0 text-xs underline">
-          <Link href="/dashboard/connects">Comprar</Link>
-        </Button>
+        <Link href="/dashboard/connects" className="ml-auto text-xs underline hover:no-underline">
+          Comprar
+        </Link>
       )}
     </div>
   );

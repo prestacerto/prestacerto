@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import type { Category } from "@/lib/supabase/types";
 
 // Helpers de leitura pública, com fallback resiliente: se o Supabase ainda

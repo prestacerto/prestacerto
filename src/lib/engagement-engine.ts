@@ -208,14 +208,18 @@ export function generateDeepLink(
     user_id: event.userId,
   });
 
-  const paths = {
+  const paths: Record<NotificationType, string> = {
     new_project: `/projects/${event.data.projectId}`,
     proposal_accepted: `/dashboard/proposals`,
-    project_ending: `/projects/${event.data.projectId}`,
+    proposal_rejected: `/dashboard/proposals`,
+    friend_earning: `/dashboard`,
     badge_unlocked: `/dashboard?tab=badges`,
+    streak_milestone: `/dashboard`,
+    leaderboard_climb: `/dashboard?tab=leaderboard`,
+    project_ending: `/projects/${event.data.projectId}`,
     surprise_reward: `/dashboard?show_reward=true`,
   };
 
-  const path = paths[event.type] || "/dashboard";
+  const path = paths[event.type];
   return `${baseUrl}${path}?${params}`;
 }

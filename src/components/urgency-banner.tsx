@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AlertCircle, Clock, Flame } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -63,17 +64,18 @@ export function UrgencyBanner({ alerts }: UrgencyBannerProps) {
                 </div>
               </div>
 
-              <Button
-                href={alert.href}
-                size="sm"
-                className={
-                  isUrgent
-                    ? "bg-red-600 hover:bg-red-700 text-white flex-shrink-0"
-                    : "bg-amber-600 hover:bg-amber-700 text-white flex-shrink-0"
-                }
-              >
-                {alert.cta}
-              </Button>
+              <Link href={alert.href}>
+                <Button
+                  size="sm"
+                  className={
+                    isUrgent
+                      ? "bg-red-600 hover:bg-red-700 text-white flex-shrink-0"
+                      : "bg-amber-600 hover:bg-amber-700 text-white flex-shrink-0"
+                  }
+                >
+                  {alert.cta}
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         );

@@ -85,10 +85,19 @@ export async function POST(req: NextRequest) {
     // Adicionar conectares à cota do usuário
     await serviceClient.rpc("reset_monthly_connects");
 
+    // Buscar cota atual
+    const { data: currentQuota } = await serviceClient
+      .from("user_connects_quota")
+      .select("connects_available")
+      .eq("user_id", user.id)
+      .single();
+
+    const newAvailable = (currentQuota?.connects_available || 0) + package_.connects_amount;
+
     await serviceClient
       .from("user_connects_quota")
       .update({
-        connects_available: serviceClient.sql`connects_available + ${package_.connects_amount}`,
+        connects_available: newAvailable,
       })
       .eq("user_id", user.id);
 

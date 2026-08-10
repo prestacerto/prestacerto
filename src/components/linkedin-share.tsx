@@ -1,6 +1,6 @@
 "use client";
 
-import { Linkedin, Share2 } from "lucide-react";
+import { Share2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -46,7 +46,7 @@ export function LinkedInShareButton({
       size="sm"
       className="gap-2 text-blue-600 hover:text-blue-700 border-blue-200"
     >
-      <Linkedin className="size-4" />
+      <Briefcase className="size-4" />
       Compartilhar
     </Button>
   );
