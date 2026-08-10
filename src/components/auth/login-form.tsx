@@ -32,19 +32,35 @@ export function LoginForm() {
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
   async function onSubmit(values: LoginValues) {
-    setLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword(values);
-    setLoading(false);
+    try {
+      setLoading(true);
+      console.log("[LoginForm] Starting login with:", values.email);
 
-    if (error) {
-      toast.error("Não foi possível entrar", { description: error.message });
-      return;
+      const supabase = createClient();
+      console.log("[LoginForm] Supabase client created");
+
+      const { data, error } = await supabase.auth.signInWithPassword(values);
+      console.log("[LoginForm] Auth response:", { hasData: !!data, hasError: !!error, errorMessage: error?.message });
+
+      setLoading(false);
+
+      if (error) {
+        console.error("[LoginForm] Login error:", error);
+        toast.error("Não foi possível entrar", { description: error.message });
+        return;
+      }
+
+      console.log("[LoginForm] Login successful, user:", data?.user?.id);
+      const redirect = searchParams.get("redirect") ?? "/dashboard";
+      console.log("[LoginForm] Redirecting to:", redirect);
+
+      router.push(redirect);
+      router.refresh();
+    } catch (err) {
+      console.error("[LoginForm] Caught error:", err);
+      setLoading(false);
+      toast.error("Erro ao entrar", { description: String(err) });
     }
-
-    const redirect = searchParams.get("redirect") ?? "/dashboard";
-    router.push(redirect);
-    router.refresh();
   }
 
   return (
