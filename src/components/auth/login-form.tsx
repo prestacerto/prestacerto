@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,53 +10,51 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 
-const loginSchema = z.object({
-  email: z.string().email("Informe um e-mail válido"),
-  password: z.string().min(6, "A senha precisa ter pelo menos 6 caracteres"),
-});
-
-type LoginValues = z.infer<typeof loginSchema>;
-
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+  async function handleLogin(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-  async function onSubmit(values: LoginValues) {
+    if (!email || !password) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+
     try {
       setLoading(true);
-      console.log("[LoginForm] Starting login with:", values.email);
+      console.log("[LoginForm] Login attempt:", { email });
 
       const supabase = createClient();
-      console.log("[LoginForm] Supabase client created");
-
-      const { data, error } = await supabase.auth.signInWithPassword(values);
-      console.log("[LoginForm] Auth response:", { hasData: !!data, hasError: !!error, errorMessage: error?.message });
-
-      setLoading(false);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
       if (error) {
-        console.error("[LoginForm] Login error:", error);
-        toast.error("Não foi possível entrar", { description: error.message });
+        console.error("[LoginForm] Error:", error.message);
+        toast.error("Erro ao entrar", { description: error.message });
         return;
       }
 
-      console.log("[LoginForm] Login successful, user:", data?.user?.id);
-      const redirect = searchParams.get("redirect") ?? "/dashboard";
-      console.log("[LoginForm] Redirecting to:", redirect);
+      if (!data.user) {
+        console.error("[LoginForm] No user returned");
+        toast.error("Erro ao entrar", { description: "Nenhum usuário retornado" });
+        return;
+      }
 
+      console.log("[LoginForm] Login success:", data.user.id);
+      const redirect = searchParams.get("redirect") ?? "/dashboard";
       router.push(redirect);
-      router.refresh();
     } catch (err) {
-      console.error("[LoginForm] Caught error:", err);
-      setLoading(false);
+      console.error("[LoginForm] Exception:", err);
       toast.error("Erro ao entrar", { description: String(err) });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -73,13 +68,18 @@ export function LoginForm() {
         <span className="h-px flex-1 bg-slate-200" />
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleLogin} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="email">E-mail</Label>
-          <Input id="email" type="email" placeholder="voce@exemplo.com" autoComplete="off" {...register("email")} />
-          {errors.email && (
-            <p className="text-xs text-red-600">{errors.email.message}</p>
-          )}
+          <Input
+            id="email"
+            type="email"
+            placeholder="voce@exemplo.com"
+            autoComplete="off"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+          />
         </div>
 
         <div className="space-y-1.5">
@@ -89,10 +89,14 @@ export function LoginForm() {
               Esqueci minha senha
             </Link>
           </div>
-          <Input id="password" type="password" autoComplete="off" {...register("password")} />
-          {errors.password && (
-            <p className="text-xs text-red-600">{errors.password.message}</p>
-          )}
+          <Input
+            id="password"
+            type="password"
+            autoComplete="off"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+          />
         </div>
 
         <Button type="submit" nativeButton className="w-full" disabled={loading}>
