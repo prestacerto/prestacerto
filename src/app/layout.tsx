@@ -7,6 +7,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
 import { FacebookPixel } from "@/components/facebook-pixel";
+import { PWAInstaller } from "@/components/pwa-installer";
+import { PushNotificationManager } from "@/components/push-notification-manager";
+import { StructuredData, organizationSchema } from "@/components/structured-data";
+import { defaultMetadata } from "@/lib/seo/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +23,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PrestaCerto — Contrate talentos. Sem comissões.",
-  description:
-    "A plataforma que conecta freelancers e clientes com um modelo justo: assinatura fixa, pagamento direto, sem surpresas.",
+  ...defaultMetadata,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "PrestaCerto",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -35,6 +51,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <StructuredData type="Organization" data={organizationSchema} />
+      </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider
           attribute="class"
@@ -48,6 +67,8 @@ export default function RootLayout({
           <Toaster />
           <Analytics />
           <FacebookPixel />
+          <PWAInstaller />
+          <PushNotificationManager />
         </ThemeProvider>
       </body>
     </html>

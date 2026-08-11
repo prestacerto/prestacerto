@@ -1,84 +1,127 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
-import { getUserEmailById } from "@/lib/supabase/admin";
-import { sendNewProposalEmail } from "@/lib/email/resend";
+
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = createServiceClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get proposals where user is the freelancer
+    const { data: proposals, error } = await supabase
+      .from("proposals")
+      .select(`
+        id,
+        status,
+        proposed_price,
+        message,
+        created_at,
+        projects (
+          title,
+          budget_min,
+          budget_max,
+          profiles!projects_client_id_fkey (
+            full_name
+          )
+        )
+      `)
+      .eq("freelancer_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("[PROPOSALS API] Error:", error);
+      return NextResponse.json({ error: "Failed to fetch proposals" }, { status: 500 });
+    }
+
+    const formattedProposals = proposals?.map((p: any) => ({
+      id: p.id,
+      project_title: p.projects?.title,
+      budget: p.proposed_price || p.projects?.budget_max,
+      status: p.status,
+      created_at: p.created_at,
+      client_name: p.projects?.profiles?.full_name,
+    })) || [];
+
+    return NextResponse.json({ proposals: formattedProposals });
+  } catch (error) {
+    console.error("[PROPOSALS API] Exception:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
-  const user = await getAuthenticatedUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    const body = await request.json();
-    const supabase = await createClient();
-    const serviceClient = createServiceClient();
+    const supabase = createServiceClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    // Criar proposta primeiro (sem validação de conectares, pra teste)
-    const { data: proposal, error: propError } = await supabase
-      .from("proposals")
-      .insert({
-        project_id: body.projectId,
-        freelancer_id: user.id,
-        message: body.message,
-        proposed_price: body.proposedPrice || null,
-        used_connect: false, // Será atualizado após validar conectares
-      })
-      .select("id")
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { projectId, message, proposedPrice } = body;
+
+    if (!projectId || !message || !proposedPrice) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    }
+
+    // Get freelancer profile
+    const { data: freelancerProfile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
       .single();
 
-    if (propError) {
-      return NextResponse.json({ error: propError.message }, { status: 400 });
+    // Get project details
+    const { data: project } = await supabase
+      .from("projects")
+      .select("title, client_id")
+      .eq("id", projectId)
+      .single();
+
+    // Create proposal
+    const { data: proposal, error } = await supabase
+      .from("proposals")
+      .insert({
+        project_id: projectId,
+        freelancer_id: user.id,
+        message,
+        proposed_price: proposedPrice,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("[PROPOSALS API] Insert error:", error);
+      return NextResponse.json({ error: "Failed to create proposal" }, { status: 500 });
     }
 
-    // Gastar um conectar (função RLS-protected do Supabase)
-    const { data: connectSpent, error: connectError } = await serviceClient.rpc("spend_connect", {
-      p_user_id: user.id,
-      p_proposal_id: proposal.id,
-    });
-
-    if (connectError || !connectSpent) {
-      // Se não tiver conectares, deletar a proposta e retornar erro
-      await supabase.from("proposals").delete().eq("id", proposal.id);
-
-      return NextResponse.json(
-        {
-          error: "Você não tem conectares disponíveis para enviar esta proposta",
-          connectsRemaining: 0,
-          action: "purchase_connects",
-        },
-        { status: 402 }
-      );
+    // Send notification to client
+    if (project?.client_id) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/send-proposal-notification`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clientId: project.client_id,
+            projectTitle: project.title,
+            freelancerName: freelancerProfile?.full_name || "Freelancer",
+            proposalId: proposal.id,
+          }),
+        });
+      } catch (notifError) {
+        console.error("[PROPOSALS API] Notification error:", notifError);
+        // Don't fail the proposal creation if notification fails
+      }
     }
 
-    // Marcar proposta como usando conectar
-    await supabase.from("proposals").update({ used_connect: true }).eq("id", proposal.id);
-
-    // Enviar email ao cliente
-    const [{ data: project }, profile] = await Promise.all([
-      supabase.from("projects").select("title, client_id").eq("id", body.projectId).single(),
-      getProfile(),
-    ]);
-
-    if (project) {
-      const clientEmail = await getUserEmailById(project.client_id);
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-      await sendNewProposalEmail({
-        to: clientEmail,
-        projectTitle: project.title,
-        freelancerName: profile?.full_name ?? "Um freelancer",
-        projectUrl: `${siteUrl}/dashboard/projects/${body.projectId}`,
-      });
-    }
-
-    return NextResponse.json({ ...proposal, connectSpent: 1 }, { status: 201 });
+    return NextResponse.json({ proposal }, { status: 201 });
   } catch (error) {
-    console.error("[PROPOSALS ERROR]", error);
-    return NextResponse.json(
-      { error: "Failed to create proposal" },
-      { status: 500 }
-    );
+    console.error("[PROPOSALS API] Exception:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

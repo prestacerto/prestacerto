@@ -1,8 +1,5 @@
-import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
+import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { redirect } from "next/navigation";
-import { VerifiedBadgeCard } from "@/components/monetization/verified-badge-card";
-import { PortfolioPremiumCard } from "@/components/monetization/portfolio-premium-card";
-import { FeaturedProjectCard } from "@/components/monetization/featured-project-card";
 
 export const metadata = {
   title: "Monetização | PrestaCerto",
@@ -13,9 +10,6 @@ export default async function MonetizationPage() {
   const user = await getAuthenticatedUser();
   if (!user) redirect("/login");
 
-  const profile = await getProfile();
-  if (!profile) redirect("/dashboard");
-
   return (
     <div className="space-y-8">
       <div>
@@ -23,16 +17,11 @@ export default async function MonetizationPage() {
         <p className="text-muted-foreground">Aumente sua visibilidade com planos premium</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <VerifiedBadgeCard
-          isVerified={profile.verified_badge_active}
-          expiresAt={profile.verified_badge_expires}
-        />
-
-        <PortfolioPremiumCard
-          isPremium={profile.has_premium_portfolio}
-          expiresAt={profile.portfolio_premium_expires}
-        />
+      <div className="rounded-lg border p-6 bg-card">
+        <h2 className="text-xl font-bold mb-2">Planos Premium</h2>
+        <p className="text-sm text-muted-foreground">
+          Aumente sua visibilidade e ganhe mais propostas com nossos planos premium
+        </p>
       </div>
 
       <div>

@@ -6,6 +6,19 @@ const PROTECTED_PREFIX = "/dashboard";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Add security headers
+  supabaseResponse.headers.set("X-Content-Type-Options", "nosniff");
+  supabaseResponse.headers.set("X-Frame-Options", "DENY");
+  supabaseResponse.headers.set("X-XSS-Protection", "1; mode=block");
+  supabaseResponse.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains"
+  );
+  supabaseResponse.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self' https://taktwwwpcyxhyylzmgho.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://taktwwwpcyxhyylzmgho.supabase.co https://www.googletagmanager.com https://connect.facebook.net;"
+  );
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -19,6 +32,17 @@ export async function updateSession(request: NextRequest) {
             request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({ request });
+          supabaseResponse.headers.set("X-Content-Type-Options", "nosniff");
+          supabaseResponse.headers.set("X-Frame-Options", "DENY");
+          supabaseResponse.headers.set("X-XSS-Protection", "1; mode=block");
+          supabaseResponse.headers.set(
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains"
+          );
+          supabaseResponse.headers.set(
+            "Content-Security-Policy",
+            "default-src 'self' https://taktwwwpcyxhyylzmgho.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://taktwwwpcyxhyylzmgho.supabase.co https://www.googletagmanager.com https://connect.facebook.net;"
+          );
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -27,11 +51,6 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // IMPORTANTE: getUser() revalida a sessão contra o servidor de auth do
-  // Supabase a cada chamada. getSession() sozinho só leria o cookie local,
-  // que pode estar presente mesmo com uma sessão já revogada/expirada — foi
-  // exatamente esse tipo de checagem "de mentirinha" que deixou /dashboard e
-  // /financial públicos no protótipo anterior.
   let user = null;
   try {
     const {
@@ -39,9 +58,6 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser();
     user = authUser;
   } catch (error) {
-    // Falha de rede/config do Supabase: trata como não-autenticado. Em rota
-    // protegida isso resulta em redirect pro login (seguro por padrão); em
-    // rota pública o request segue normalmente.
     console.error("proxy: falha ao verificar sessão:", error);
   }
 

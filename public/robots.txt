@@ -1,0 +1,36 @@
+# PrestaCerto Robots.txt
+# Allow search engines to crawl the site
+
+User-agent: *
+Allow: /
+Allow: /projects
+Allow: /services
+Allow: /plans
+Allow: /aprenda
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /register
+Disallow: /admin/
+Disallow: /.next/
+Disallow: /private/
+
+# Specific rules for Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Specific rules for other bots
+User-agent: *
+Crawl-delay: 1
+Request-rate: 30/60
+
+# Sitemap location
+Sitemap: https://prestacerto.com.br/sitemap.xml
+Sitemap: https://prestacerto.com.br/sitemap-projects.xml
+Sitemap: https://prestacerto.com.br/sitemap-services.xml

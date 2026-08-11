@@ -3,13 +3,39 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeftOpen, type LucideIcon } from "lucide-react";
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  LayoutDashboard,
+  UserCircle,
+  Sparkles,
+  TrendingUp,
+  Wrench,
+  Briefcase,
+  Send,
+  Plug,
+  Zap,
+  CreditCard,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const ICON_MAP = {
+  LayoutDashboard,
+  UserCircle,
+  Sparkles,
+  TrendingUp,
+  Wrench,
+  Briefcase,
+  Send,
+  Plug,
+  Zap,
+  CreditCard,
+} as const;
 
 interface NavItem {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: keyof typeof ICON_MAP;
 }
 
 const STORAGE_KEY = "prestacerto:sidebar-collapsed";
@@ -41,6 +67,7 @@ export function DashboardSidebarNav({ items }: { items: NavItem[] }) {
       <nav className="sticky top-24 space-y-1">
         {items.map((item) => {
           const active = pathname === item.href;
+          const IconComponent = ICON_MAP[item.icon];
           return (
             <Link
               key={item.href}
@@ -52,7 +79,7 @@ export function DashboardSidebarNav({ items }: { items: NavItem[] }) {
                 mounted && collapsed && "justify-center px-2"
               )}
             >
-              <item.icon className="size-4 shrink-0" />
+              <IconComponent className="size-4 shrink-0" />
               {(!mounted || !collapsed) && item.label}
             </Link>
           );

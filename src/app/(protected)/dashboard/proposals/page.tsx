@@ -1,99 +1,121 @@
-import Link from "next/link";
-import { Send, MessageCircle } from "lucide-react";
-import { Card } from "@/components/ui/card";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getMyProposals, getMyServices } from "@/lib/supabase/queries";
+import Link from "next/link";
 
-export const metadata = { title: "Minhas propostas — Dashboard PrestaCerto" };
+interface Proposal {
+  id: string;
+  project_title: string;
+  budget: number;
+  status: "pending" | "accepted" | "rejected" | "withdrawn";
+  created_at: string;
+  client_name: string;
+}
 
-const statusLabel: Record<string, string> = {
-  pending: "Pendente",
-  accepted: "Aceita",
-  rejected: "Recusada",
-  withdrawn: "Retirada",
-};
+export default function ProposalsPage() {
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function DashboardProposalsPage() {
-  const user = await getAuthenticatedUser();
-  if (!user) return null;
+  useEffect(() => {
+    const fetchProposals = async () => {
+      try {
+        const response = await fetch("/api/proposals");
+        if (response.ok) {
+          const data = await response.json();
+          setProposals(data.proposals || []);
+        }
+      } catch (error) {
+        console.error("Error fetching proposals:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [proposals, services] = await Promise.all([
-    getMyProposals(user.id),
-    getMyServices(user.id),
-  ]);
-  const hasNoServices = services.length === 0;
+    fetchProposals();
+  }, []);
+
+  const statusColors: Record<string, string> = {
+    pending: "bg-yellow-100 text-yellow-800",
+    accepted: "bg-green-100 text-green-800",
+    rejected: "bg-red-100 text-red-800",
+    withdrawn: "bg-gray-100 text-gray-800",
+  };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-slate-900">Minhas propostas</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Propostas que você enviou pra projetos publicados por clientes.
-      </p>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Minhas Propostas</h1>
+        <p className="text-muted-foreground">Acompanhe suas propostas e negocie com clientes</p>
+      </div>
 
-      {proposals.length === 0 ? (
-        <Card className="mt-6 flex flex-col items-center p-10 text-center">
-          <span className="flex size-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-            <Send className="size-6" />
-          </span>
-          {hasNoServices ? (
-            <>
-              <p className="mt-4 font-medium text-slate-700">
-                Cadastre seu primeiro serviço antes de propor — clientes confiam mais em quem já tem perfil completo.
-              </p>
-              <Link
-                href="/dashboard/services/new"
-                className="mt-2 text-sm text-blue-600 hover:underline"
-              >
-                Cadastrar serviço
+      {loading ? (
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">Carregando propostas...</p>
+          </CardContent>
+        </Card>
+      ) : proposals.length === 0 ? (
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">Você ainda não tem propostas</p>
+            <p className="text-center text-sm mt-2">
+              <Link href="/dashboard/projects" className="text-blue-600 hover:underline">
+                Veja projetos disponíveis →
               </Link>
-            </>
-          ) : (
-            <>
-              <p className="mt-4 font-medium text-slate-700">
-                Seu perfil está pronto. Hora de mandar sua primeira proposta.
-              </p>
-              <Link href="/projects" className="mt-2 text-sm text-blue-600 hover:underline">
-                Ver projetos abertos
-              </Link>
-            </>
-          )}
+            </p>
+          </CardContent>
         </Card>
       ) : (
-        <div className="mt-6 space-y-3">
+        <div className="grid gap-4">
           {proposals.map((proposal) => (
-            <Card
-              key={proposal.id}
-              className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <Link
-                href={proposal.project ? `/projects/${proposal.project.id}` : "#"}
-                className="min-w-0 flex-1"
-              >
-                <Badge variant="secondary">
-                  {statusLabel[proposal.status] ?? proposal.status}
-                </Badge>
-                <h3 className="mt-2 font-semibold text-slate-900 hover:underline">
-                  {proposal.project?.title ?? "Projeto removido"}
-                </h3>
-                <p className="mt-1 line-clamp-1 text-sm text-slate-500">
-                  {proposal.message}
-                </p>
-              </Link>
-              <div className="flex shrink-0 items-center gap-4">
-                {proposal.proposed_price != null && (
-                  <span className="font-semibold text-slate-900">
-                    R$ {proposal.proposed_price}
+            <Card key={proposal.id}>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">{proposal.project_title}</CardTitle>
+                    <CardDescription>Por {proposal.client_name}</CardDescription>
+                  </div>
+                  <Badge className={statusColors[proposal.status]}>
+                    {proposal.status === "pending" && "Pendente"}
+                    {proposal.status === "accepted" && "Aceita"}
+                    {proposal.status === "rejected" && "Rejeitada"}
+                    {proposal.status === "withdrawn" && "Retirada"}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Enviada em {new Date(proposal.created_at).toLocaleDateString("pt-BR")}
                   </span>
-                )}
-                <Link
-                  href={`/dashboard/messages/${proposal.id}`}
-                  className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
-                >
-                  <MessageCircle className="size-4" />
-                  Conversar
-                </Link>
-              </div>
+                  <span className="text-lg font-bold">R$ {proposal.budget.toFixed(2)}</span>
+                </div>
+
+                <div className="flex gap-2">
+                  {proposal.status === "pending" && (
+                    <>
+                      <Link href={`/dashboard/proposals/${proposal.id}`} className="flex-1">
+                        <Button variant="default" className="w-full">
+                          Ver Detalhes
+                        </Button>
+                      </Link>
+                      <Button variant="outline" className="flex-1">
+                        Retirar
+                      </Button>
+                    </>
+                  )}
+                  {proposal.status === "accepted" && (
+                    <Link href={`/dashboard/proposals/${proposal.id}`} className="flex-1">
+                      <Button variant="default" className="w-full">
+                        Conversar
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </CardContent>
             </Card>
           ))}
         </div>
