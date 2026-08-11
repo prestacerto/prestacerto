@@ -1,4 +1,4 @@
-// TEMPORARY: Auth disabled for testing
+// AUTH DISABLED - DASHBOARD OPEN TO ALL - v2
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
