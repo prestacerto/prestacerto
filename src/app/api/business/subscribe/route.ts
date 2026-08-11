@@ -7,6 +7,17 @@ export async function POST(req: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  const { plan } = await req.json();
+  const plans: Record<string, number> = {
+    starter: 299,
+    pro: 599,
+    enterprise: 999,
+  };
+
+  if (!plans[plan]) {
+    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+  }
+
   const authHeader = req.headers.get("authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -19,23 +30,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { title, description, prize, category, deadline } = await req.json();
-  const prestaCommission = prize * 0.3;
-
-  const { data: contest, error } = await supabase
-    .from("contests")
-    .insert({
-      client_id: user.user.id,
-      title,
-      description,
-      prize,
-      presta_commission: prestaCommission,
-      category,
-      deadline,
-      status: "open",
-    })
-    .select()
-    .single();
+  const { error } = await supabase.from("business_subscriptions").upsert(
+    {
+      user_id: user.user.id,
+      plan,
+      price: plans[plan],
+      team_limit: plan === "starter" ? 3 : plan === "pro" ? 5 : 10,
+      next_billing: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    { onConflict: "user_id" }
+  );
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -43,8 +47,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     success: true,
-    contest_id: contest.id,
-    your_cost: prize,
-    presta_takes: prestaCommission,
+    plan,
+    price: plans[plan],
   });
 }

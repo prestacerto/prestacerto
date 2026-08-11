@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -19,32 +19,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { title, description, prize, category, deadline } = await req.json();
-  const prestaCommission = prize * 0.3;
-
-  const { data: contest, error } = await supabase
-    .from("contests")
-    .insert({
-      client_id: user.user.id,
-      title,
-      description,
-      prize,
-      presta_commission: prestaCommission,
-      category,
-      deadline,
-      status: "open",
-    })
-    .select()
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", user.user.id)
     .single();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!profile) {
+    return NextResponse.json({ error: "Profile not found" }, { status: 404 });
   }
 
+  const code = `PREST${user.user.id.substring(0, 8).toUpperCase()}`;
+
   return NextResponse.json({
-    success: true,
-    contest_id: contest.id,
-    your_cost: prize,
-    presta_takes: prestaCommission,
+    referral_code: code,
+    referral_url: `${process.env.NEXT_PUBLIC_SITE_URL}/register?ref=${code}`,
+    potential_earnings: {
+      per_freelancer: 50,
+      per_client: 200,
+      lifetime_percentage: 0.1,
+    },
   });
 }

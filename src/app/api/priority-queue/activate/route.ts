@@ -7,6 +7,17 @@ export async function POST(req: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  const { tier } = await req.json();
+  const prices: Record<string, { days: number; price: number }> = {
+    gold: { days: 3, price: 15 },
+    platinum: { days: 7, price: 25 },
+    diamond: { days: 14, price: 40 },
+  };
+
+  if (!prices[tier]) {
+    return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
+  }
+
   const authHeader = req.headers.get("authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -19,23 +30,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { title, description, prize, category, deadline } = await req.json();
-  const prestaCommission = prize * 0.3;
+  const { days, price } = prices[tier];
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + days);
 
-  const { data: contest, error } = await supabase
-    .from("contests")
-    .insert({
-      client_id: user.user.id,
-      title,
-      description,
-      prize,
-      presta_commission: prestaCommission,
-      category,
-      deadline,
-      status: "open",
-    })
-    .select()
-    .single();
+  const { error } = await supabase.from("priority_queue").upsert(
+    {
+      user_id: user.user.id,
+      tier,
+      expires_at: expiresAt.toISOString(),
+      price,
+    },
+    { onConflict: "user_id" }
+  );
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -43,8 +50,8 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     success: true,
-    contest_id: contest.id,
-    your_cost: prize,
-    presta_takes: prestaCommission,
+    message: `Ativado por ${days} dias`,
+    expires_at: expiresAt.toISOString(),
+    price,
   });
 }
