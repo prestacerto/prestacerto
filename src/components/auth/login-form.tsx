@@ -99,7 +99,7 @@ export function LoginForm() {
           />
         </div>
 
-        <Button type="submit" nativeButton className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Entrando..." : "Entrar"}
         </Button>
       </form>
