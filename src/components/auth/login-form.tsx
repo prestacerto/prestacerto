@@ -19,39 +19,46 @@ export function LoginForm() {
 
   async function handleLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("🔐 FORM SUBMIT TRIGGERED!");
 
     if (!email || !password) {
+      console.warn("❌ Email ou password vazio");
       toast.error("Preencha todos os campos");
       return;
     }
 
     try {
       setLoading(true);
-      console.log("[LoginForm] Login attempt:", { email });
+      console.log("📧 Login attempt:", { email, password: "***" });
 
       const supabase = createClient();
+      console.log("✅ Supabase client criado");
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log("📡 Response:", { data, error });
+
       if (error) {
-        console.error("[LoginForm] Error:", error.message);
+        console.error("❌ Auth error:", error);
         toast.error("Erro ao entrar", { description: error.message });
         return;
       }
 
       if (!data.user) {
-        console.error("[LoginForm] No user returned");
+        console.error("❌ No user returned");
         toast.error("Erro ao entrar", { description: "Nenhum usuário retornado" });
         return;
       }
 
-      console.log("[LoginForm] Login success:", data.user.id);
+      console.log("✅ LOGIN SUCCESS:", data.user.id);
       const redirect = searchParams.get("redirect") ?? "/dashboard";
+      console.log("🚀 Redirecting to:", redirect);
       router.push(redirect);
     } catch (err) {
-      console.error("[LoginForm] Exception:", err);
+      console.error("❌ Exception:", err);
       toast.error("Erro ao entrar", { description: String(err) });
     } finally {
       setLoading(false);
