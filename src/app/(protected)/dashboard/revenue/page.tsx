@@ -126,7 +126,7 @@ export default function RevenueDashboard() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(value) => `R$ ${value.toFixed(2)}`} />
+                <Tooltip formatter={(value: any) => `R$ ${(value || 0).toFixed(2)}`} />
                 <Legend />
                 <Line
                   type="monotone"
@@ -161,7 +161,7 @@ export default function RevenueDashboard() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => `R$ ${value.toFixed(2)}`} />
+                <Tooltip formatter={(value: any) => `R$ ${(value || 0).toFixed(2)}`} />
               </PieChart>
             </ResponsiveContainer>
             <div className="mt-4 space-y-2">

@@ -34,7 +34,7 @@ export default async function ProtectedLayout({
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 gap-8 px-4 py-10 sm:px-6">
-      <DashboardSidebarNav items={items} />
+      <DashboardSidebarNav items={items as any} />
 
       <div className="min-w-0 flex-1">{children}</div>
     </div>
