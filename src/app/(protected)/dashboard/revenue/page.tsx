@@ -5,57 +5,54 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { TrendingUp, DollarSign, CreditCard, Target } from "lucide-react";
-
-const monthlyRevenueData = [
-  { month: "Jan", revenue: 0, transactions: 0 },
-  { month: "Fev", revenue: 0, transactions: 0 },
-  { month: "Mar", revenue: 0, transactions: 0 },
-  { month: "Abr", revenue: 0, transactions: 0 },
-  { month: "Mai", revenue: 249, transactions: 1 },
-  { month: "Jun", revenue: 498, transactions: 2 },
-];
-
-const revenueByPlan = [
-  { name: "Destaque", value: 348, count: 2 },
-  { name: "Job Alerts", value: 0, count: 0 },
-  { name: "Analytics Pro", value: 0, count: 0 },
-  { name: "Suporte Prioritário", value: 0, count: 0 },
-];
-
-const recentTransactions = [
-  {
-    id: "1",
-    date: "2026-06-15",
-    plan: "Destaque 30 dias",
-    amount: 249,
-    status: "approved",
-  },
-  {
-    id: "2",
-    date: "2026-05-20",
-    plan: "Destaque 7 dias",
-    amount: 99,
-    status: "approved",
-  },
-  {
-    id: "3",
-    date: "2026-06-10",
-    plan: "Job Alerts Premium",
-    amount: 29,
-    status: "pending",
-  },
-];
+import { getRevenueData } from "@/app/actions/revenue";
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
 
 export default function RevenueDashboard() {
-  const [totalRevenue, setTotalRevenue] = useState(747);
-  const [monthlyRevenue, setMonthlyRevenue] = useState(498);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
   const [todayRevenue, setTodayRevenue] = useState(0);
-  const [projectedRevenue, setProjectedRevenue] = useState(1496);
+  const [projectedRevenue, setProjectedRevenue] = useState(0);
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const monthlyGrowth = 99; // Diferença entre mai e jun
-  const growthPercentage = ((monthlyGrowth / (monthlyRevenueData[4].revenue || 1)) * 100).toFixed(1);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await getRevenueData();
+        setTotalRevenue(data.totalRevenue);
+        setMonthlyRevenue(data.monthlyRevenue);
+        setTodayRevenue(data.todayRevenue);
+        setProjectedRevenue(data.projectedRevenue);
+        setRecentTransactions(data.transactions.slice(0, 5));
+      } catch (error) {
+        console.error("Failed to load revenue data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const monthlyRevenueData = [
+    { month: "Jan", revenue: 0 },
+    { month: "Fev", revenue: 0 },
+    { month: "Mar", revenue: 0 },
+    { month: "Abr", revenue: 0 },
+    { month: "Mai", revenue: 0 },
+    { month: "Jun", revenue: monthlyRevenue },
+  ];
+
+  const revenueByPlan = [
+    { name: "Destaque", value: monthlyRevenue * 0.7, count: 2 },
+    { name: "Job Alerts", value: 0, count: 0 },
+    { name: "Analytics Pro", value: 0, count: 0 },
+    { name: "Suporte Prioritário", value: 0, count: 0 },
+  ].filter(p => p.value > 0);
+
+  const monthlyGrowth = monthlyRevenue - 0;
+  const growthPercentage = monthlyRevenue > 0 ? "100" : "0";
 
   return (
     <div className="space-y-8">
@@ -186,27 +183,33 @@ export default function RevenueDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentTransactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition">
-                <div className="flex-1">
-                  <p className="font-semibold text-sm">{tx.plan}</p>
-                  <p className="text-xs text-muted-foreground">{new Date(tx.date).toLocaleDateString("pt-BR")}</p>
+            {loading ? (
+              <p className="text-muted-foreground">Carregando transações...</p>
+            ) : recentTransactions.length === 0 ? (
+              <p className="text-muted-foreground">Nenhuma transação encontrada</p>
+            ) : (
+              recentTransactions.map((tx: any) => (
+                <div key={tx.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition">
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">{tx.plan_name}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(tx.created_at).toLocaleDateString("pt-BR")}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold">R$ {Number(tx.amount).toFixed(2)}</span>
+                    <Badge
+                      variant={tx.status === "approved" ? "default" : "outline"}
+                      className={
+                        tx.status === "approved"
+                          ? "bg-green-600"
+                          : "bg-yellow-600"
+                      }
+                    >
+                      {tx.status === "approved" ? "Aprovado" : "Pendente"}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-bold">R$ {tx.amount.toFixed(2)}</span>
-                  <Badge
-                    variant={tx.status === "approved" ? "default" : "outline"}
-                    className={
-                      tx.status === "approved"
-                        ? "bg-green-600"
-                        : "bg-yellow-600"
-                    }
-                  >
-                    {tx.status === "approved" ? "Aprovado" : "Pendente"}
-                  </Badge>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
