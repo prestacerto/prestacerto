@@ -176,3 +176,5 @@ supabase/
   migrations/            0001 schema inicial · 0002 reviews/pagamento/equipe
                          · 0003 retenção de pagamento · 0004 monetização
 ```
+// rebuild trigger
+// rebuild trigger Tue Aug 11 20:41:33 -03 2026
