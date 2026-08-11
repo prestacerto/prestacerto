@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -17,53 +17,40 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleLogin(e: FormEvent<HTMLFormElement>) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔐 FORM SUBMIT TRIGGERED!");
 
     if (!email || !password) {
-      console.warn("❌ Email ou password vazio");
       toast.error("Preencha todos os campos");
       return;
     }
 
+    setLoading(true);
+
     try {
-      setLoading(true);
-      console.log("📧 Login attempt:", { email, password: "***" });
-
       const supabase = createClient();
-      console.log("✅ Supabase client criado");
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("📡 Response:", { data, error });
-
       if (error) {
-        console.error("❌ Auth error:", error);
-        toast.error("Erro ao entrar", { description: error.message });
+        toast.error("Erro ao entrar: " + error.message);
         return;
       }
 
       if (!data.user) {
-        console.error("❌ No user returned");
-        toast.error("Erro ao entrar", { description: "Nenhum usuário retornado" });
+        toast.error("Usuário não encontrado");
         return;
       }
 
-      console.log("✅ LOGIN SUCCESS:", data.user.id);
-      const redirect = searchParams.get("redirect") ?? "/dashboard";
-      console.log("🚀 Redirecting to:", redirect);
-      router.push(redirect);
-    } catch (err) {
-      console.error("❌ Exception:", err);
-      toast.error("Erro ao entrar", { description: String(err) });
+      router.push(searchParams.get("redirect") || "/dashboard");
+    } catch (err: any) {
+      toast.error("Erro: " + (err?.message || "Desconhecido"));
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-4">
