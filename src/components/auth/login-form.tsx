@@ -28,44 +28,22 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      // Try API endpoint first
-      try {
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.user) {
-          if (data.access_token) {
-            localStorage.setItem("supabase.auth.token", data.access_token);
-          }
-          router.push(searchParams.get("redirect") || "/dashboard");
-          return;
-        }
-      } catch (apiErr) {
-        console.log("[LoginForm] API endpoint not yet available, falling back to direct client auth");
-      }
-
-      // Fallback: Direct Supabase auth via client
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // Use endpoint that handles auth AND cookies properly
+      const response = await fetch("/api/auth/login-and-redirect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error) {
-        toast.error("Erro ao entrar: " + error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error("Erro ao entrar: " + (data.error || "Desconhecido"));
         return;
       }
 
-      if (!data.user) {
-        toast.error("Usuário não encontrado");
-        return;
-      }
-
+      // If we get here, server already redirected (3xx status)
+      // This shouldn't execute, but just in case:
       router.push(searchParams.get("redirect") || "/dashboard");
     } catch (err: any) {
       toast.error("Erro: " + (err?.message || "Desconhecido"));
