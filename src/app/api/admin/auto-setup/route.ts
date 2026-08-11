@@ -67,12 +67,17 @@ export async function GET(req: NextRequest) {
         for (const statement of statements) {
           try {
             // Usar rpc pra executar se existir
-            const { error } = await serviceClient.rpc("exec_sql", {
-              sql: statement,
-            }).catch(() => {
-              // Se rpc não existir, tentar via query direto
-              return { error: null }; // Ignore error pra este teste
-            });
+            let result: any = { error: null };
+            try {
+              result = await serviceClient.rpc("exec_sql", {
+                sql: statement,
+              });
+            } catch {
+              // Se rpc não existir, ignorar
+              result = { error: null };
+            }
+
+            const { error } = result;
 
             if (!error) {
               // OK

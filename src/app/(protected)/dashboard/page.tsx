@@ -10,6 +10,7 @@ const ReferralCard = dynamic(() => import("@/components/dashboard/referral-card"
 const RevenueWidget = dynamic(() => import("@/components/dashboard/revenue-widget").then(m => ({ default: m.RevenueWidget })), { loading: () => <div className="bg-gray-100 rounded animate-pulse h-40" /> });
 const ActivityFeed = dynamic(() => import("@/components/dashboard/activity-feed").then(m => ({ default: m.ActivityFeed })), { loading: () => null });
 const PushNotificationBell = dynamic(() => import("@/components/push-notification-bell").then(m => ({ default: m.PushNotificationBell })), { loading: () => null });
+const RevenueDashboard = dynamic(() => import("@/components/analytics/revenue-dashboard").then(m => ({ default: m.RevenueDashboard })), { loading: () => <div className="bg-gray-100 rounded animate-pulse h-96" /> });
 
 export const metadata = { title: "Dashboard — PrestaCerto" };
 
@@ -49,6 +50,12 @@ export default async function DashboardPage() {
 
       {/* Revenue Widget */}
       <RevenueWidget />
+
+      {/* Revenue Analytics Dashboard */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Análise de Receita em Tempo Real</h2>
+        <RevenueDashboard />
+      </div>
 
       {/* Daily Challenges */}
       <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">

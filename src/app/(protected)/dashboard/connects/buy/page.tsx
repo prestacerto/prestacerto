@@ -1,7 +1,14 @@
+'use client';
+
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useSession } from '@/lib/auth/useSession';
 
 export default function BuyConnectsPage() {
+  const { session } = useSession();
+  const [loading, setLoading] = useState(false);
+
   const packages = [
     {
       name: 'Starter',
@@ -23,6 +30,42 @@ export default function BuyConnectsPage() {
       bestFor: 'Máximo alcance',
     },
   ];
+
+  const handleCheckout = async (price: number, connects: number) => {
+    if (!session?.access_token) {
+      alert('Você precisa estar logado');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          item_type: 'connects',
+          amount: price,
+          description: `${connects} propostas`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        alert('Erro ao iniciar compra');
+      }
+    } catch (error) {
+      alert('Erro ao processar pagamento');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -57,13 +100,11 @@ export default function BuyConnectsPage() {
               </div>
 
               <Button
-                onClick={() => {
-                  // TODO: Integrar Mercado Pago
-                  alert(`Comprar ${pkg.connects} connects por R$ ${pkg.price}`);
-                }}
+                onClick={() => handleCheckout(pkg.price, pkg.connects)}
+                disabled={loading}
                 className="w-full"
               >
-                Comprar Agora
+                {loading ? 'Processando...' : 'Comprar Agora'}
               </Button>
             </CardContent>
           </Card>
@@ -82,7 +123,7 @@ export default function BuyConnectsPage() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">R$ 49<span className="text-sm">/mês</span></p>
-              <Button size="sm" onClick={() => alert('Assinar Pro por R$ 49/mês')}>
+              <Button size="sm" onClick={() => alert('Recurso em breve - Mercado Pago')}>
                 Assinar
               </Button>
             </div>
@@ -97,7 +138,7 @@ export default function BuyConnectsPage() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">R$ 149<span className="text-sm">/mês</span></p>
-              <Button size="sm" onClick={() => alert('Assinar Business por R$ 149/mês')}>
+              <Button size="sm" onClick={() => alert('Recurso em breve - Mercado Pago')}>
                 Assinar
               </Button>
             </div>
