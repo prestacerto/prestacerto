@@ -7,7 +7,7 @@ export default function LoginDirect() {
     const email = (document.getElementById("email") as HTMLInputElement)?.value;
     const password = (document.getElementById("password") as HTMLInputElement)?.value;
 
-    console.log("Attempting login with:", { email, password: password ? "***" : "" });
+    console.log("Attempting login...");
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -23,6 +23,7 @@ export default function LoginDirect() {
         alert("❌ Erro: " + data.error);
       } else if (data.user) {
         alert("✅ Login bem-sucedido!");
+        localStorage.setItem("supabase.auth.token", data.access_token);
         window.location.href = "/dashboard";
       }
     } catch (err: any) {
@@ -32,7 +33,7 @@ export default function LoginDirect() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px" }}>
+    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", fontFamily: "sans-serif" }}>
       <h1>🔐 Login</h1>
       <form onSubmit={handleLogin}>
         <div style={{ marginBottom: "15px" }}>
@@ -41,7 +42,7 @@ export default function LoginDirect() {
             id="email"
             type="email"
             defaultValue="finaltest@prestacerto.com.br"
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            style={{ width: "100%", padding: "8px", marginTop: "5px", boxSizing: "border-box" }}
             required
           />
         </div>
@@ -51,7 +52,7 @@ export default function LoginDirect() {
             id="password"
             type="password"
             defaultValue="Test123456!"
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            style={{ width: "100%", padding: "8px", marginTop: "5px", boxSizing: "border-box" }}
             required
           />
         </div>
@@ -66,6 +67,7 @@ export default function LoginDirect() {
             borderRadius: "4px",
             cursor: "pointer",
             fontSize: "16px",
+            fontWeight: "bold",
           }}
         >
           Entrar
