@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useSession } from '@/lib/auth/useSession';
+import { createClient } from '@supabase/supabase-js';
 
 export default function BuyConnectsPage() {
-  const { session } = useSession();
   const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
 
   const packages = [
     {
@@ -31,8 +31,22 @@ export default function BuyConnectsPage() {
     },
   ];
 
+  useEffect(() => {
+    const getToken = async () => {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        setToken(session.access_token);
+      }
+    };
+    getToken();
+  }, []);
+
   const handleCheckout = async (price: number, connects: number) => {
-    if (!session?.access_token) {
+    if (!token) {
       alert('Você precisa estar logado');
       return;
     }
@@ -42,7 +56,7 @@ export default function BuyConnectsPage() {
       const response = await fetch('/api/payments/checkout', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
