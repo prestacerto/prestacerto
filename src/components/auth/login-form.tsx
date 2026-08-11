@@ -28,26 +28,42 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      // Try API endpoint first
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.user) {
+          if (data.access_token) {
+            localStorage.setItem("supabase.auth.token", data.access_token);
+          }
+          router.push(searchParams.get("redirect") || "/dashboard");
+          return;
+        }
+      } catch (apiErr) {
+        console.log("[LoginForm] API endpoint not yet available, falling back to direct client auth");
+      }
+
+      // Fallback: Direct Supabase auth via client
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        toast.error("Erro ao entrar: " + (data.error || "Desconhecido"));
+      if (error) {
+        toast.error("Erro ao entrar: " + error.message);
         return;
       }
 
       if (!data.user) {
         toast.error("Usuário não encontrado");
         return;
-      }
-
-      if (data.access_token) {
-        localStorage.setItem("supabase.auth.token", data.access_token);
       }
 
       router.push(searchParams.get("redirect") || "/dashboard");
