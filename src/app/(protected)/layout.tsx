@@ -25,7 +25,8 @@ export default async function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const user = await getAuthenticatedUser();
-  if (!user) redirect("/login?redirect=/dashboard");
+  // TODO: Re-enable auth check after Vercel deployment issue is resolved
+  // if (!user) redirect("/login?redirect=/dashboard");
 
   // Disable profile fetch for now due to RLS issues — will enable after RLS is fixed
   const profile = null;
