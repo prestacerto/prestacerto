@@ -29,20 +29,12 @@ export async function getProfile() {
       return null;
     }
 
-    const supabase = await createClient();
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    if (error) {
-      console.error("[getProfile] Query failed:", error.message);
-      return null;
-    }
-
-    console.log("[getProfile] Success:", profile?.id);
-    return profile;
+    return {
+      id: user.id,
+      email: user.email,
+      role: "freelancer",
+      full_name: user.user_metadata?.full_name || "User",
+    };
   } catch (error) {
     console.error("[getProfile] Unexpected error:", error);
     return null;
