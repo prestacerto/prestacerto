@@ -28,22 +28,19 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      // Use endpoint that handles auth AND cookies properly
-      const response = await fetch("/api/auth/login-and-redirect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const supabase = createClient();
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast.error("Erro ao entrar: " + (data.error || "Desconhecido"));
+      if (error || !data.user) {
+        toast.error("Erro ao entrar: " + (error?.message || "Desconhecido"));
         return;
       }
 
-      // If we get here, server already redirected (3xx status)
-      // This shouldn't execute, but just in case:
+      toast.success("Login bem-sucedido!");
       router.push(searchParams.get("redirect") || "/dashboard");
     } catch (err: any) {
       toast.error("Erro: " + (err?.message || "Desconhecido"));
