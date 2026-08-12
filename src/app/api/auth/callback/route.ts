@@ -4,10 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 export async function POST(request: Request) {
   const { email, password } = await request.json();
 
-  let response = NextResponse.json(
-    { error: "Unauthorized" },
-    { status: 401 }
-  );
+  let response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,17 +36,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No session returned" }, { status: 400 });
   }
 
-  // Return success with session data
-  response = NextResponse.json(
-    {
-      success: true,
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-      user: data.user,
-    },
-    { status: 200 }
-  );
+  // Redirect to dashboard instead of returning JSON
+  response = NextResponse.redirect(new URL("/dashboard", request.url));
 
-  // Cookies are already set via the setAll callback above
+  // Cookies are already set via the setAll callback
   return response;
 }

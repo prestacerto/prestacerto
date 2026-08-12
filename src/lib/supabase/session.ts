@@ -58,7 +58,30 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser();
     user = authUser;
   } catch (error) {
-    console.error("proxy: falha ao verificar sessão:", error);
+    // Fallback: check for auth token directly
+    const token = request.cookies.get("sb-token")?.value ||
+                  request.cookies.get("sb-access-token")?.value ||
+                  (request.headers.get("authorization")?.replace("Bearer ", ""));
+
+    if (token) {
+      try {
+        // Verify token with Supabase
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            },
+          }
+        );
+        if (response.ok) {
+          user = await response.json();
+        }
+      } catch (err) {
+        console.error("proxy: fallback token validation failed:", err);
+      }
+    }
   }
 
   const isProtected = request.nextUrl.pathname.startsWith(PROTECTED_PREFIX);
