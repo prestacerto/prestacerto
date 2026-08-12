@@ -96,7 +96,11 @@
                 document.cookie = `supabase-auth-token=${data.access_token}; path=/; max-age=604800; samesite=lax`;
 
                 setTimeout(() => {
-                    window.location.href = '/dashboard';
+                    // Redirecionar pro site correto (produção ou localhost)
+                    const baseUrl = window.location.hostname === 'localhost'
+                        ? 'https://prestacerto.vercel.app'
+                        : window.location.origin;
+                    window.location.href = baseUrl + '/dashboard';
                 }, 800);
 
             } catch (err) {
