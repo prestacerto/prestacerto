@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Migrations Guide - Certo AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+            vertical-align: top;
+        }
+
+        .step-content {
+            display: inline-block;
+            width: calc(100% - 60px);
+            vertical-align: top;
+        }
+
+        .step h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .sql-query {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .sql-query .keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .sql-query .string {
+            color: #ce9178;
+        }
+
+        .sql-query .comment {
+            color: #6a9955;
+        }
+
+        .copy-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #764ba2;
+        }
+
+        .files-list {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .files-list li {
+            margin: 8px 0;
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            list-style-position: inside;
+        }
+
+        .files-list li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #155724;
+        }
+
+        .screenshot-guide {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .screenshot-guide img {
+            max-width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .timeline {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .timeline-item {
+            flex: 1;
+            min-width: 200px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+
+        .timeline-item.active {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .timeline-item .time {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .timeline-item .task {
+            color: #666;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Certo AI SQL Migration</h1>
+            <p>Execute as 3 migrations no Supabase</p>
+        </div>
+
+        <div class="content">
+            <div class="timeline">
+                <div class="timeline-item active">
+                    <div class="time">Agora</div>
+                    <div class="task">SQL Migrations</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">15 min</div>
+                    <div class="task">Redis Setup</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="time">30 min</div>
+                    <div class="task">Testar Produção</div>
+                </div>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                    <h2>Acessar Supabase SQL Editor</h2>
+                    <p>Abra o dashboard do seu projeto Supabase</p>
+                    <div class="code-block">
+                        → https://app.supabase.com<br>
+                        → Selecione projeto "prestacerto"<br>
+                        → Menu lateral: <strong>SQL Editor</strong><br>
+                        → Clique em <strong>"New Query"</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                    <h2>Execute a 1ª Migration (ai-proposals.sql)</h2>
+                    <p>Cole o código SQL abaixo no editor e clique em ▶️ <strong>RUN</strong></p>
+
+                    <div class="warning">
+                        ⚠️ Copie TODO o código abaixo (inclui tabelas, views e functions)
+                    </div>
+
+                    <button class="copy-button" onclick="copySql1()">📋 Copiar SQL 1</button>
+
+                    <div class="sql-query" id="sql1">
+<span class="comment">-- AI Proposals (CERTO AI)</span>
+<span class="keyword">create table if not exists</span> ai_optimizations (
+  id uuid <span class="keyword">primary key default</span> gen_random_uuid(),
+  user_id uuid <span class="keyword">not null references</span> auth.users(id) <span class="keyword">on delete cascade</span>,
+  action text <span class="keyword">not null</span>,
+  original_proposal text <span class="keyword">not null</span>,
+  optimized_proposal text,
+  score integer,
+  win_rate decimal(5,2),
+  issues jsonb,
+  suggestions jsonb,
+  analysis jsonb,
+  plan_type text <span class="keyword">default</span> <span class="string">'free'</span>,
+  created_at timestamp <span class="keyword">default now</span>()
+);
+
+<span class="keyword">create table if not exists</span> ai_usage (
+  id uuid <span class="keyword">primary key default</span> gen_random_uuid(),
+  user_id uuid <span class="keyword">not null references</span> auth.users(id) <span class="keyword">on delete cascade</span>,
+  plan_type text <span class="keyword">not null</span>,
+  optimizations_used integer <span class="keyword">default</span> 0,
+  optimizations_limit integer <span class="keyword">default</span> 3,
+  created_at timestamp <span class="keyword">default now</span>()
+);
+
+<span class="keyword">alter table</span> ai_optimizations <span class="keyword">enable row level security</span>;
+<span class="keyword">alter table</span> ai_usage <span class="keyword">enable row level security</span>;
+
+<span class="keyword">create policy</span> <span class="string">"Users can view own ai_optimizations"</span>
+  <span class="keyword">on</span> ai_optimizations <span class="keyword">for select</span>
+  <span class="keyword">using</span> (auth.uid() = user_id);

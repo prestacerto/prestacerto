@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { Anthropic } from '@anthropic-ai/sdk';
+import { checkRateLimit, redis } from '@/lib/redis';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -37,6 +38,17 @@ SEMPRE em português PT-BR. Sem menção a IA, automação, revisão, etc.`;
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limiting (100 req/min por IP)
+    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    const allowed = await checkRateLimit(`rate-limit:${ip}`, 100, 60);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Try again in a minute.' },
+        { status: 429 }
+      );
+    }
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
