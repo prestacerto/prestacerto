@@ -28,27 +28,23 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/callback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        toast.error("Erro ao entrar: " + (data.error_description || data.error || "Desconhecido"));
+        const data = await res.json();
+        toast.error("Erro ao entrar: " + (data.error || "Desconhecido"));
         return;
       }
 
-      if (!data.success || !data.access_token) {
-        toast.error("Erro ao entrar: autenticação falhou");
-        return;
-      }
-
+      // Server redirects automatically, but wait a moment for cookies to be set
       toast.success("Login bem-sucedido!");
-      // Cookies are set by the server, redirect immediately
-      router.push(searchParams.get("redirect") || "/dashboard");
+      setTimeout(() => {
+        window.location.href = searchParams.get("redirect") || "/dashboard";
+      }, 500);
     } catch (err: any) {
       toast.error("Erro: " + (err?.message || "Desconhecido"));
     } finally {
