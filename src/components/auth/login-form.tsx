@@ -28,18 +28,26 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const supabase = createClient();
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error || !data.user) {
-        toast.error("Erro ao entrar: " + (error?.message || "Desconhecido"));
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error("Erro ao entrar: " + (data.error_description || data.error || "Desconhecido"));
         return;
       }
 
+      if (!data.access_token) {
+        toast.error("Erro ao entrar: token não recebido");
+        return;
+      }
+
+      // Store token and redirect
+      localStorage.setItem("supabase-token", data.access_token);
       toast.success("Login bem-sucedido!");
       router.push(searchParams.get("redirect") || "/dashboard");
     } catch (err: any) {
