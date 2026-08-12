@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Debug - PrestaCerto</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #252526;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 { color: #4ec9b0; margin-bottom: 20px; }
+        .step { margin: 15px 0; padding: 10px; background: #1e1e1e; border-left: 3px solid #007acc; }
+        .step h3 { color: #4ec9b0; margin-bottom: 5px; }
+        input { width: 100%; padding: 8px; margin: 5px 0; background: #3c3c3c; color: #d4d4d4; border: 1px solid #555; }
+        button { width: 100%; padding: 10px; background: #007acc; color: white; border: none; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1084d7; }
+        .log { background: #1e1e1e; padding: 10px; margin: 10px 0; border-radius: 4px; font-size: 12px; max-height: 300px; overflow-y: auto; }
+        .success { color: #6a9955; }
+        .error { color: #f48771; }
+        .info { color: #9cdcfe; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Login Debug PrestaCerto</h1>
+
+        <div class="step">
+            <h3>Step 1: Credenciais</h3>
+            <input type="email" id="email" value="finaltest@prestacerto.com.br">
+            <input type="password" id="password" value="Test123456!">
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Ações</h3>
+            <button onclick="testSupabaseAuth()">1️⃣ Testar Auth com Supabase</button>
+            <button onclick="testLogin()">2️⃣ Fazer Login Completo</button>
+            <button onclick="checkSession()">3️⃣ Verificar Sessão Atual</button>
+            <button onclick="goDashboard()">4️⃣ Ir pro Dashboard</button>
+        </div>
+
+        <div class="step">
+            <h3>📋 Log:</h3>
+            <div class="log" id="log"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://taktwwwpcyxhyylzmgho.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_ArMX97jGsCK0jbe3Opd74g_ZNY2WQ36";
+
+        function log(msg, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function testSupabaseAuth() {
+            log('🔄 Testando autenticação com Supabase...', 'info');
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                log(`Status: ${response.status}`, 'info');
+
+                const data = await response.json();
+
+                if (data.access_token) {
+                    log('✅ Token obtido com sucesso!', 'success');
+                    log(`Token: ${data.access_token.substring(0, 50)}...`, 'success');
+                    window.lastToken = data.access_token;
+                } else if (data.error) {
+                    log(`❌ Erro: ${data.error}`, 'error');
+                } else {
+                    log('❌ Resposta inválida', 'error');
+                    log(JSON.stringify(data), 'error');
+                }
+            } catch (err) {
+                log(`❌ Erro de rede: ${err.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            log('🔄 Iniciando login completo...', 'info');
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                log('1. Fazendo fetch ao Supabase...', 'info');
+                const response = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    log(`❌ Resposta não OK: ${response.status}`, 'error');
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!data.access_token) {
+                    log(`❌ Sem token na resposta`, 'error');
+                    return;
+                }
+
+                log('✅ 2. Token obtido', 'success');
+
+                log('3. Setando cookie...', 'info');
+                document.cookie = `supabase-auth-token=${data.access_token}; path=/; max-age=604800; samesite=lax`;
+                log('✅ Cookie setado', 'success');
+
+                log('🎯 Login bem-sucedido! Redirecionando em 2 segundos...', 'success');
+                window.lastToken = data.access_token;
+
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 2000);
+            } catch (err) {
+                log(`❌ Erro: ${err.message}`, 'error');
+            }
+        }
+
+        function checkSession() {
+            log('🔍 Verificando sessão...', 'info');
+
+            const cookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('supabase-auth-token='))
+                ?.split('=')[1];
+
+            if (cookie) {
+                log(`✅ Cookie encontrado: ${cookie.substring(0, 50)}...`, 'success');
+            } else {
+                log('❌ Nenhum cookie encontrado', 'error');
+            }
+
+            if (window.lastToken) {
+                log(`✅ Token em memória: ${window.lastToken.substring(0, 50)}...`, 'success');
+            } else {
+                log('❌ Nenhum token em memória', 'error');
+            }
+        }
+
+        function goDashboard() {
+            log('🚀 Navegando para /dashboard...', 'info');
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1000);
+        }
+
+        // Log inicial
+        log('🎬 Debug iniciado', 'info');
+        log(`Supabase URL: ${SUPABASE_URL}`, 'info');
+    </script>
+</body>
+</html>
