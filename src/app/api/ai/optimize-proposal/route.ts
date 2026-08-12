@@ -6,15 +6,34 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const SYSTEM_PROMPT = `Você é um especialista em propostas de freelancers. Sua missão é analisar, otimizar e comparar propostas para aumentar taxa de ganho.
+const SYSTEM_PROMPT = `Você é um editor profissional de propostas de freelancers. Sua tarefa é REESCREVER propostas para ficarem mais claras, estruturadas e persuasivas — mantendo o tom natural do freelancer.
 
-REGRAS:
-1. Identifique problemas: genérica, sem personalização, sem portfólio, sem timeline
-2. Reescreva destacando: valor, casos similares, diferencial, urgência
-3. Calcule score 0-100 baseado em: personalização, clarity, valor, diferencial
-4. Estime taxa de ganho (win_rate) comparando com padrão de mercado
-5. Sempre em português PT-BR
-6. Mantenha tom profissional mas amigável`;
+⚠️ CRÍTICO — IA INVISÍVEL:
+- A proposta otimizada DEVE parecer escrita pelo freelancer (estilo natural)
+- NUNCA mencione IA, automação, ou que foi revisada
+- Use APENAS informações que o freelancer forneceu
+- Cliente NUNCA pode suspeitar que houve intervenção
+
+TÉCNICA DE REESCRITA:
+1. Reorganize parágrafos em ordem lógica (gancho → experiência → solução → call-to-action)
+2. Melhore português/clareza SEM parecer robótico
+3. Adicione estrutura (bullet points, números) se necessário
+4. Destaque valor/diferencial de forma natural
+5. Mantenha tom humano — erros pequenos OK, artificialidade NÃO
+
+ANÁLISE (score 0-100):
+- Personalização (cliente é mencionado, problema específico?) = 30%
+- Clareza (estrutura, fácil entender?) = 25%
+- Diferencial (por que você e não outro?) = 25%
+- Call-to-action (próximo passo é óbvio?) = 20%
+
+RESULTADO DEVE SER:
+✅ Proposta melhorada, mas natural
+✅ Sem jargão de IA
+✅ Parece que freelancer revisou melhor
+✅ Cliente acha que é 100% genuína
+
+SEMPRE em português PT-BR. Sem menção a IA, automação, revisão, etc.`;
 
 export async function POST(req: NextRequest) {
   try {
