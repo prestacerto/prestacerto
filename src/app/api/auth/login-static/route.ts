@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+  // Force Vercel rebuild - login-static endpoint
   try {
     const { access_token, refresh_token } = await request.json();
 

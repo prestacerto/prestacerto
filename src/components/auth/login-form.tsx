@@ -41,14 +41,13 @@ export function LoginForm() {
         return;
       }
 
-      if (!data.access_token) {
-        toast.error("Erro ao entrar: token não recebido");
+      if (!data.success || !data.access_token) {
+        toast.error("Erro ao entrar: autenticação falhou");
         return;
       }
 
-      // Store token and redirect
-      localStorage.setItem("supabase-token", data.access_token);
       toast.success("Login bem-sucedido!");
+      // Cookies are set by the server, redirect immediately
       router.push(searchParams.get("redirect") || "/dashboard");
     } catch (err: any) {
       toast.error("Erro: " + (err?.message || "Desconhecido"));
