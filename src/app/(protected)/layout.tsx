@@ -3,6 +3,7 @@ import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
   { href: "/dashboard", label: "Visão geral", icon: "LayoutDashboard" },
+  { href: "/dashboard/certo-ai", label: "Certo AI", icon: "Sparkles" },
   { href: "/dashboard/profile", label: "Meu perfil", icon: "UserCircle" },
   { href: "/dashboard/para-voce", label: "Pra você", icon: "Sparkles" },
   { href: "/dashboard/revenue", label: "Receita", icon: "CreditCard" },
