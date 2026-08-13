@@ -38,6 +38,13 @@ SEMPRE em português PT-BR. Sem menção a IA, automação, revisão, etc.`;
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        { error: 'API key não configurada' },
+        { status: 500 }
+      );
+    }
+
     // Rate limiting (100 req/min por IP)
     const ip = req.headers.get('x-forwarded-for') || 'unknown';
     const allowed = await checkRateLimit(`rate-limit:${ip}`, 100, 60);
@@ -66,11 +73,21 @@ export async function POST(req: NextRequest) {
     }
 
     // Check usage limits
-    const { data: usage } = await supabase
+    const { data: usage, error: usageError } = await supabase
       .from('ai_usage')
       .select('*')
       .eq('user_id', user.id)
       .single();
+
+    // If no usage record exists, create one
+    if (usageError && usageError.code === 'PGRST116') {
+      await supabase.from('ai_usage').insert({
+        user_id: user.id,
+        plan_type: 'free',
+        optimizations_used: 0,
+        optimizations_limit: 3,
+      });
+    }
 
     const planType = usage?.plan_type || 'free';
 
