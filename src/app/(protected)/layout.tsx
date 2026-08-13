@@ -4,6 +4,7 @@ import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
+  { href: "/dashboard/products", label: "Produtos", icon: "Sparkles" },
   { href: "/dashboard/certo-ai", label: "Certo AI", icon: "Sparkles" },
   { href: "/dashboard/profile", label: "Perfil", icon: "UserCircle" },
   { href: "/dashboard/revenue", label: "Receita", icon: "CreditCard" },
@@ -12,6 +13,10 @@ const navItems = [
   { href: "/dashboard/projects", label: "Projetos", icon: "Briefcase" },
   { href: "/dashboard/proposals", label: "Propostas", icon: "Send" },
   { href: "/dashboard/mercado", label: "Mercado", icon: "TrendingUp" },
+  { href: "/dashboard/gamification", label: "Gamificação", icon: "Zap" },
+  { href: "/dashboard/escrow", label: "Escrow", icon: "Lock" },
+  { href: "/dashboard/tax", label: "Fiscal", icon: "FileText" },
+  { href: "/dashboard/messages", label: "Mensagens", icon: "MessageCircle" },
 ];
 
 export default function ProtectedLayout({
