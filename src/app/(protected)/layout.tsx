@@ -1,22 +1,17 @@
-// AUTH DISABLED - DASHBOARD OPEN TO ALL - v2
+'use client';
+
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
-  { href: "/dashboard", label: "Visão geral", icon: "LayoutDashboard" },
+  { href: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/dashboard/certo-ai", label: "Certo AI", icon: "Sparkles" },
-  { href: "/dashboard/profile", label: "Meu perfil", icon: "UserCircle" },
-  { href: "/dashboard/para-voce", label: "Pra você", icon: "Sparkles" },
+  { href: "/dashboard/profile", label: "Perfil", icon: "UserCircle" },
   { href: "/dashboard/revenue", label: "Receita", icon: "CreditCard" },
-  { href: "/dashboard/leaderboard", label: "Leaderboard", icon: "TrendingUp" },
-  { href: "/dashboard/job-matching", label: "Job Matching", icon: "Sparkles" },
+  { href: "/dashboard/leaderboard", label: "Ranking", icon: "TrendingUp" },
+  { href: "/dashboard/services", label: "Serviços", icon: "Wrench" },
+  { href: "/dashboard/projects", label: "Projetos", icon: "Briefcase" },
+  { href: "/dashboard/proposals", label: "Propostas", icon: "Send" },
   { href: "/dashboard/mercado", label: "Mercado", icon: "TrendingUp" },
-  { href: "/dashboard/services", label: "Meus serviços", icon: "Wrench" },
-  { href: "/dashboard/projects", label: "Meus projetos", icon: "Briefcase" },
-  { href: "/dashboard/proposals", label: "Minhas propostas", icon: "Send" },
-  { href: "/dashboard/integrations", label: "Integrações", icon: "Plug" },
-  { href: "/dashboard/connects", label: "Conectares", icon: "Zap" },
-  { href: "/dashboard/priority-queue", label: "Priority Queue", icon: "Zap" },
-  { href: "/dashboard/monetization", label: "Planos", icon: "CreditCard" },
 ];
 
 export default function ProtectedLayout({
@@ -25,20 +20,38 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen w-full flex-col sm:flex-row">
-      {/* Sidebar - collapsible on mobile */}
-      <aside className="w-full border-b sm:w-56 sm:border-b-0 sm:border-r">
-        <nav className="sticky top-0 px-4 py-6">
-          <DashboardSidebarNav items={navItems as any} />
-        </nav>
-      </aside>
-      
-      {/* Main content */}
+    <div className="flex min-h-screen w-full flex-col">
+      {/* Main content - full width on mobile, with sidebar on desktop */}
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
+        <div className="mx-auto w-full px-3 py-6 sm:max-w-6xl sm:px-6 sm:py-10">
           {children}
         </div>
       </main>
+
+      {/* Bottom navigation - mobile only, sticky */}
+      <nav className="fixed bottom-0 left-0 right-0 border-t bg-white sm:hidden">
+        <div className="flex justify-around gap-1 overflow-x-auto">
+          {navItems.slice(0, 5).map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="flex-1 px-2 py-3 text-center text-xs font-semibold text-gray-700 hover:bg-gray-100"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      {/* Add bottom padding to prevent content overlap with nav */}
+      <div className="h-20 sm:hidden" />
+
+      {/* Desktop sidebar - hidden on mobile */}
+      <aside className="hidden w-56 border-l bg-white sm:block">
+        <nav className="sticky top-0 overflow-y-auto p-6">
+          <DashboardSidebarNav items={navItems as any} />
+        </nav>
+      </aside>
     </div>
   );
 }
