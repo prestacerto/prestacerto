@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { TrendingUp, MessageSquare, Link2, Zap, Briefcase, DollarSign, Star, Users } from 'lucide-react';
+import { TrendingUp, MessageSquare, Link2, Zap, Briefcase, DollarSign, Star, Users, Award, BarChart3, Lightbulb } from 'lucide-react';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
@@ -64,6 +64,9 @@ export default function DashboardPage() {
     { icon: Users, name: 'Clientes', desc: 'Meus clientes', href: '/dashboard/clients', color: 'pink' },
     { icon: Star, name: 'Portfólio', desc: 'Meus trabalhos', href: '/dashboard/portfolio', color: 'orange' },
     { icon: DollarSign, name: 'Planos', desc: 'Premium', href: '/dashboard/plans', color: 'emerald' },
+    { icon: Award, name: 'Badges', desc: 'Achievements', href: '/dashboard/badges', color: 'yellow' },
+    { icon: BarChart3, name: 'Trending', desc: 'Skills em alta', href: '/dashboard/trending', color: 'green' },
+    { icon: Lightbulb, name: 'Insights', desc: 'Mercado', href: '/dashboard/insights', color: 'blue' },
   ];
 
   if (loading) {
@@ -124,6 +127,8 @@ export default function DashboardPage() {
               pink: 'text-pink-500 bg-pink-50 dark:bg-pink-900/20',
               orange: 'text-orange-500 bg-orange-50 dark:bg-orange-900/20',
               emerald: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20',
+              teal: 'text-teal-500 bg-teal-50 dark:bg-teal-900/20',
+              cyan: 'text-cyan-500 bg-cyan-50 dark:bg-cyan-900/20',
             };
 
             return (
