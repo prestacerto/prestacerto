@@ -25,9 +25,20 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 gap-8 px-4 py-10 sm:px-6">
-      <DashboardSidebarNav items={navItems as any} />
-      <div className="min-w-0 flex-1">{children}</div>
+    <div className="flex min-h-screen w-full flex-col sm:flex-row">
+      {/* Sidebar - collapsible on mobile */}
+      <aside className="w-full border-b sm:w-56 sm:border-b-0 sm:border-r">
+        <nav className="sticky top-0 px-4 py-6">
+          <DashboardSidebarNav items={navItems as any} />
+        </nav>
+      </aside>
+      
+      {/* Main content */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }
