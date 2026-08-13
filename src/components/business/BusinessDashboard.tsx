@@ -7,6 +7,7 @@ import { ProposalCard } from './ProposalCard';
 import { ResponseRateCard } from './ResponseRateCard';
 import { SkillDemandCard } from './SkillDemandCard';
 import { CommunityPollsCard } from './CommunityPollsCard';
+import { ProjectOfDay } from './ProjectOfDay';
 
 export function BusinessDashboard() {
   const [loading, setLoading] = useState(true);
@@ -63,6 +64,9 @@ export function BusinessDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Projeto do Dia */}
+      <ProjectOfDay />
+
       {/* Revenue Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <RevenueCard revenue={data.revenue} />
