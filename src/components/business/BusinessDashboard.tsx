@@ -8,6 +8,9 @@ import { ResponseRateCard } from './ResponseRateCard';
 import { SkillDemandCard } from './SkillDemandCard';
 import { CommunityPollsCard } from './CommunityPollsCard';
 import { ProjectOfDay } from './ProjectOfDay';
+import { VisitHistory } from './VisitHistory';
+import { ConsistencyBadgeDisplay } from './ConsistencyBadgeDisplay';
+import { LeaderboardCard } from './LeaderboardCard';
 
 export function BusinessDashboard() {
   const [loading, setLoading] = useState(true);
@@ -64,22 +67,31 @@ export function BusinessDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Projeto do Dia */}
-      <ProjectOfDay />
+      {/* Row 1: Projeto do Dia + Consistência */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ProjectOfDay />
+        <ConsistencyBadgeDisplay />
+      </div>
 
-      {/* Revenue Section */}
+      {/* Row 2: Revenue + Response Rate */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <RevenueCard revenue={data.revenue} />
         <ResponseRateCard metrics={data.responseRate} />
       </div>
 
-      {/* Transactions */}
+      {/* Row 3: Histórico de Visitas + Leaderboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <VisitHistory />
+        <LeaderboardCard city="São Paulo" />
+      </div>
+
+      {/* Row 4: Transactions */}
       <TransactionCard transactions={data.transactions?.transactions || []} />
 
-      {/* Proposals */}
+      {/* Row 5: Proposals */}
       <ProposalCard proposals={data.proposals?.proposals || []} stats={data.proposals?.stats} />
 
-      {/* Market Data */}
+      {/* Row 6: Market Data + Community */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <SkillDemandCard skills={data.skills?.skills || []} />
         <CommunityPollsCard polls={data.polls?.polls || []} />
