@@ -1,59 +1,67 @@
-import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { MessageThread } from "@/components/message-thread";
-import { ContactReveal } from "@/components/contact-reveal";
-import { getAuthenticatedUser } from "@/lib/auth/getUser";
-import { getProposalThreadInfo, getMessagesForProposal } from "@/lib/supabase/queries";
+'use client';
 
-interface MessagesPageProps {
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { RealtimeChat } from '@/components/chat/RealtimeChat';
+
+interface Message {
+  id: string;
+  proposal_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+}
+
+interface ProposalMessagesPageProps {
   params: Promise<{ proposalId: string }>;
 }
 
-export default async function ProposalMessagesPage({ params }: MessagesPageProps) {
-  const { proposalId } = await params;
-  const user = await getAuthenticatedUser();
-  if (!user) redirect("/login");
+export default function ProposalMessagesPage({ params }: ProposalMessagesPageProps) {
+  const [proposalId, setProposalId] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentUserId, setCurrentUserId] = useState('');
+  const [otherPartyName, setOtherPartyName] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const thread = await getProposalThreadInfo(proposalId);
-  if (!thread || !thread.project) notFound();
+  useEffect(() => {
+    (async () => {
+      const { proposalId: id } = await params;
+      setProposalId(id);
 
-  const isFreelancer = thread.freelancer_id === user.id;
-  const isClient = thread.project.client_id === user.id;
-  if (!isFreelancer && !isClient) redirect("/dashboard");
+      // Fetch initial messages
+      const res = await fetch(`/api/messages?proposal_id=${id}`);
+      const data = await res.json();
+      setMessages(data.messages || []);
 
-  const messages = await getMessagesForProposal(proposalId);
-  const otherPartyName = isFreelancer
-    ? "o cliente"
-    : (thread.freelancer?.full_name ?? "o freelancer");
+      // Get current user
+      const userRes = await fetch('/api/auth/user');
+      const userData = await userRes.json();
+      setCurrentUserId(userData.user?.id || '');
+      setOtherPartyName('outro usuário');
+
+      setLoading(false);
+    })();
+  }, [params]);
+
+  if (loading) return <div className="p-6">Carregando...</div>;
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="flex flex-col h-screen">
       <Link
-        href={isClient ? `/dashboard/projects/${thread.project.id}` : "/dashboard/proposals"}
-        className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900"
+        href="/dashboard"
+        className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 p-4"
       >
         <ArrowLeft className="size-4" />
         Voltar
       </Link>
 
-      <h1 className="mt-3 text-2xl font-bold text-slate-900">{thread.project.title}</h1>
-      <p className="mt-1 text-sm text-slate-500">Conversa com {otherPartyName}</p>
-
-      {isFreelancer && thread.status === "accepted" && (
-        <div className="mt-6">
-          <ContactReveal projectId={thread.project.id} />
-        </div>
-      )}
-
-      <Card className="mt-6 p-4">
-        <MessageThread
-          proposalId={proposalId}
-          messages={messages}
-          currentUserId={user.id}
-        />
-      </Card>
+      <RealtimeChat
+        proposalId={proposalId}
+        currentUserId={currentUserId}
+        otherPartyName={otherPartyName}
+        initialMessages={messages}
+      />
     </div>
   );
 }

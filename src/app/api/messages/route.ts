@@ -1,71 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { getAuthenticatedUser, getProfile } from "@/lib/auth/getUser";
-import { getUserEmailById } from "@/lib/supabase/admin";
-import { sendNewMessageEmail } from "@/lib/email/resend";
+import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
-  const user = await getAuthenticatedUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+export async function GET(req: NextRequest) {
+  const supabase = await createClient();
+  const { searchParams } = new URL(req.url);
+  const proposalId = searchParams.get('proposal_id');
 
-  try {
-    const body = await request.json();
-    const proposalId = body.proposalId as string;
-    const messageBody = (body.body as string)?.trim();
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('proposal_id', proposalId)
+    .order('created_at', { ascending: true });
 
-    if (!messageBody) {
-      return NextResponse.json({ error: "Escreva uma mensagem." }, { status: 400 });
-    }
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ messages: data });
+}
 
-    const supabase = await createClient();
+export async function POST(req: NextRequest) {
+  const supabase = await createClient();
+  const { proposal_id, content } = await req.json();
 
-    const { data: proposal } = await supabase
-      .from("proposals")
-      .select("id, freelancer_id, project:projects(client_id, title)")
-      .eq("id", proposalId)
-      .single();
+  const { data: user } = await supabase.auth.getUser();
+  if (!user.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const project = proposal?.project as unknown as { client_id: string; title: string } | null;
-    const isParticipant =
-      proposal &&
-      (proposal.freelancer_id === user.id || project?.client_id === user.id);
+  const { data, error } = await supabase
+    .from('messages')
+    .insert([{ proposal_id, sender_id: user.user.id, content }])
+    .select()
+    .single();
 
-    if (!proposal || !isParticipant) {
-      return NextResponse.json(
-        { error: "Você não faz parte desta conversa." },
-        { status: 403 }
-      );
-    }
-
-    const { error } = await supabase.from("messages").insert({
-      proposal_id: proposalId,
-      sender_id: user.id,
-      body: messageBody,
-    });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    const recipientId = user.id === proposal.freelancer_id ? project?.client_id : proposal.freelancer_id;
-    if (recipientId && project) {
-      const [recipientEmail, senderProfile] = await Promise.all([
-        getUserEmailById(recipientId),
-        getProfile(),
-      ]);
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-      await sendNewMessageEmail({
-        to: recipientEmail,
-        senderName: senderProfile?.full_name ?? "Alguém",
-        projectTitle: project.title,
-        threadUrl: `${siteUrl}/dashboard/messages/${proposalId}`,
-      });
-    }
-
-    return NextResponse.json({ success: true }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ message: data });
 }
