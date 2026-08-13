@@ -11,6 +11,7 @@ import { ProjectOfDay } from './ProjectOfDay';
 import { VisitHistory } from './VisitHistory';
 import { ConsistencyBadgeDisplay } from './ConsistencyBadgeDisplay';
 import { LeaderboardCard } from './LeaderboardCard';
+import { CampaignROICard } from './CampaignROICard';
 
 export function BusinessDashboard() {
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,10 @@ export function BusinessDashboard() {
         <ResponseRateCard metrics={data.responseRate} />
       </div>
 
-      {/* Row 3: Histórico de Visitas + Leaderboard */}
+      {/* Row 3: ROI de Campanhas */}
+      <CampaignROICard />
+
+      {/* Row 4: Histórico de Visitas + Leaderboard */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <VisitHistory />
         <LeaderboardCard city="São Paulo" />
