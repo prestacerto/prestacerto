@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'remote-collab-spaces',
     status: 'operational',
-    description: 'Daycare',
+    description: 'Virtual coworking',
   });
 }
 
 export async function POST(req) {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'remote-collab-spaces',
     status: 'processed',
   });
 }

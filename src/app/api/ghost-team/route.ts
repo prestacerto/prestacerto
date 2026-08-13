@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'ghost-team',
     status: 'operational',
-    description: 'Daycare',
+    description: 'We deliver',
   });
 }
 
 export async function POST(req) {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'ghost-team',
     status: 'processed',
   });
 }

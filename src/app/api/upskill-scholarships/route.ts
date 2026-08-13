@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'upskill-scholarships',
     status: 'operational',
-    description: 'Daycare',
+    description: 'Scholarships',
   });
 }
 
 export async function POST(req) {
   return NextResponse.json({
     success: true,
-    feature: 'childcare',
+    feature: 'upskill-scholarships',
     status: 'processed',
   });
 }
