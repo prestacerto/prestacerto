@@ -13,7 +13,6 @@ const nextConfig = {
 
   // Production optimizations
   productionBrowserSourceMaps: false,
-  swcMinify: true,
 
   // Enable experimental features
   experimental: {
