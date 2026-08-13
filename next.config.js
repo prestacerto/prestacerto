@@ -18,18 +18,10 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
   },
   // Performance optimizations
-  swcMinify: true,
   productionBrowserSourceMaps: false,
-  // Optimized package imports
-  optimizePackageImports: [
-    'lucide-react',
-    'recharts',
-    '@base-ui/react',
-  ],
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    optimizeServerComponents: true,
     taint: true,
   },
   // Headers for caching static assets

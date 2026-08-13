@@ -11,3 +11,13 @@ export function cn(...inputs: ClassValue[]) {
 export function daysUntil(dateIso: string): number {
   return Math.max(1, Math.ceil((new Date(dateIso).getTime() - Date.now()) / (24 * 60 * 60 * 1000)))
 }
+
+export function formatCurrency(value: number | undefined | null): string {
+  if (value === undefined || value === null) return 'R$ 0,00'
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+}
