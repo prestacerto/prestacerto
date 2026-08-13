@@ -3,13 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const webpush = require('web-push');
 
-if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
-  webpush.setVapidDetails(
-    'mailto:contato@prestacerto.com',
-    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-    process.env.VAPID_PRIVATE_KEY
-  );
-}
+// VAPID setup will be configured in production
+// if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+//   webpush.setVapidDetails(
+//     'mailto:contato@prestacerto.com',
+//     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+//     process.env.VAPID_PRIVATE_KEY
+//   );
+// }
 
 export async function POST(request: NextRequest) {
   try {
