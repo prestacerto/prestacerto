@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: prestacerto
+    env: env_group_prod
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    numInstances: 1
+    plan: standard
+    region: sfo
+    autoDeploy: true
+
+envGroups:
+  - name: env_group_prod
+    envVars:
+      - key: NEXT_PUBLIC_SUPABASE_URL
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+      - key: SUPABASE_SERVICE_ROLE_KEY
+      - key: ANTHROPIC_API_KEY
+      - key: NEXT_PUBLIC_APP_URL
+      - key: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_SECRET
+      - key: NEXT_PUBLIC_GA_ID
+      - key: NEXT_PUBLIC_FACEBOOK_PIXEL_ID
+      - key: NEXT_PUBLIC_LINKEDIN_CLIENT_ID
+      - key: LINKEDIN_CLIENT_SECRET
+      - key: NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY
+      - key: MERCADO_PAGO_ACCESS_TOKEN
