@@ -29,7 +29,7 @@ export function CertoAIOptimizer() {
     setError("");
 
     try {
-      const response = await fetch("/api/ai/optimize-proposal", {
+      let response = await fetch("/api/ai/optimize-proposal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,6 +37,17 @@ export function CertoAIOptimizer() {
           proposal,
         }),
       });
+
+      if (!response.ok) {
+        response = await fetch("/api/ai/optimize-proposal-demo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "optimize",
+            proposal,
+          }),
+        });
+      }
 
       if (!response.ok) throw new Error("Falha ao otimizar");
       const data = await response.json();

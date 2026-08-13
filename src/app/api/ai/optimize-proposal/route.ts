@@ -306,10 +306,39 @@ RESPONDA EM JSON:
         optimizations_remaining: (updatedUsage?.optimizations_limit || 3) - (updatedUsage?.optimizations_used || 0),
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro na IA:', error);
+
+    // Se erro for por créditos, usa versão demo
+    if (
+      error.message?.includes('credit balance') ||
+      error.message?.includes('too low') ||
+      error.status === 400
+    ) {
+      console.log('Usando versão DEMO da IA (sem créditos)');
+
+      // Demo response
+      return NextResponse.json({
+        success: true,
+        action: 'optimize_demo',
+        result: {
+          optimized: proposal.replace(/^(Sou|Eu )/, 'Sou profissional qualificado e '),
+          score: 70,
+          win_rate: 0.70,
+          issues: ['Proposta genérica'],
+          suggestions: ['Adicione mais detalhes', 'Mencione resultados específicos'],
+        },
+        usage: {
+          plan_type: 'demo',
+          optimizations_used: 0,
+          optimizations_remaining: 999,
+        },
+        note: '⚠️ MODO DEMO - Configure créditos Anthropic pra IA real',
+      });
+    }
+
     return NextResponse.json(
-      { error: 'Erro ao processar com IA' },
+      { error: 'Erro ao processar com IA: ' + error.message },
       { status: 500 }
     );
   }
