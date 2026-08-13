@@ -1,72 +1,46 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function POST() {
   try {
-    // Create projects table
-    const { error: projectsError } = await supabase.rpc('exec_sql', {
-      sql: `
-        CREATE TABLE IF NOT EXISTS projects (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          title TEXT NOT NULL,
-          description TEXT NOT NULL,
-          budget_cents INTEGER NOT NULL,
-          deadline TIMESTAMP,
-          skills TEXT[] DEFAULT '{}',
-          category TEXT DEFAULT 'geral',
-          status TEXT DEFAULT 'aberto',
-          client_id UUID NOT NULL,
-          created_at TIMESTAMP DEFAULT NOW(),
-          updated_at TIMESTAMP DEFAULT NOW()
-        );
-        CREATE INDEX IF NOT EXISTS idx_projects_client ON projects(client_id);
-      `
-    }).catch(() => ({ error: null }));
+    // Verifica se tabelas existem tentando fazer um SELECT
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // Create proposals table
-    const { error: proposalsError } = await supabase.rpc('exec_sql', {
-      sql: `
-        CREATE TABLE IF NOT EXISTS proposals (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          project_id UUID REFERENCES projects(id),
-          freelancer_id UUID NOT NULL,
-          content TEXT NOT NULL,
-          price_cents INTEGER NOT NULL,
-          ai_optimized_content TEXT,
-          ai_score INTEGER,
-          status TEXT DEFAULT 'pendente',
-          created_at TIMESTAMP DEFAULT NOW()
-        );
-        CREATE INDEX IF NOT EXISTS idx_proposals_project ON proposals(project_id);
-        CREATE INDEX IF NOT EXISTS idx_proposals_freelancer ON proposals(freelancer_id);
-      `
-    }).catch(() => ({ error: null }));
+    if (!supabaseUrl || !serviceKey) {
+      return NextResponse.json(
+        { error: 'Supabase não configurado', success: false },
+        { status: 500 }
+      );
+    }
 
-    // Create transactions table
-    const { error: transError } = await supabase.rpc('exec_sql', {
-      sql: `
-        CREATE TABLE IF NOT EXISTS transactions (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          project_id UUID REFERENCES projects(id),
-          freelancer_id UUID NOT NULL,
-          amount_cents INTEGER NOT NULL,
-          status TEXT DEFAULT 'pendente',
-          escrow_status TEXT DEFAULT 'locked',
-          created_at TIMESTAMP DEFAULT NOW()
-        );
-        CREATE INDEX IF NOT EXISTS idx_transactions_project ON transactions(project_id);
-      `
-    }).catch(() => ({ error: null }));
+    // Faz um test select em cada tabela
+    const tables = ['projects', 'proposals', 'transactions'];
+    const results = [];
+
+    for (const table of tables) {
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/${table}?limit=1`, {
+          headers: {
+            'Authorization': `Bearer ${serviceKey}`,
+            'apikey': serviceKey,
+          },
+        });
+
+        results.push({
+          table,
+          exists: res.ok,
+          status: res.status,
+        });
+      } catch (e) {
+        results.push({ table, exists: false, error: String(e) });
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Tabelas criadas/verificadas',
-      errors: [projectsError, proposalsError, transError].filter(Boolean),
+      message: 'Verificação de tabelas completa',
+      tables: results,
+      note: 'Execute migrations.sql no Supabase SQL Editor se tabelas não existem',
     });
   } catch (error: any) {
     return NextResponse.json(
