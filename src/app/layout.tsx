@@ -36,7 +36,8 @@ export const metadata: Metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
+    maximumScale: 5,
+    userScalable: true,
   },
 };
 
@@ -52,6 +53,19 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Preload critical fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* DNS Prefetch for external services */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+        {/* Preload critical resources */}
+        <link rel="preload" as="image" href="/prestacerto-logo.svg" />
+
         <StructuredData type="Organization" data={organizationSchema} />
       </head>
       <body className="flex min-h-full flex-col">
