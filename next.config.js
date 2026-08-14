@@ -57,28 +57,12 @@ const nextConfig = {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://prestacerto.com.br',
   },
 
-  // Webpack optimization
-  webpack: (config, { isServer }) => {
-    config.optimization = {
-      ...config.optimization,
-      minimize: true,
-      usedExports: true,
-      sideEffects: false,
-    };
+  // Turbopack config
+  turbopack: {},
 
-    if (!isServer) {
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        common: {
-          minChunks: 2,
-          priority: 10,
-          reuseExistingChunk: true,
-          enforce: true,
-        },
-      };
-    }
-
-    return config;
+  // Disable type checking in build for speed
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 

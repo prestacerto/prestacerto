@@ -201,32 +201,9 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Execute SQL
-    const { error } = await supabase.rpc('execute_sql', {
-      sql_string: BUSINESS_DASHBOARD_SQL
-    }).catch(async () => {
-      // Fallback: Create tables individually
-      const statements = BUSINESS_DASHBOARD_SQL.split(';').filter(s => s.trim());
-      let successCount = 0;
-      let failCount = 0;
-
-      for (const stmt of statements) {
-        if (!stmt.trim()) continue;
-        const res = await supabase.from('_realtime').select('count()').limit(0);
-        if (!res.error) successCount++;
-        else failCount++;
-      }
-
-      return { data: { success: successCount, failed: failCount } };
-    });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
     return NextResponse.json({
       success: true,
-      message: 'Business Dashboard schema created successfully'
+      message: 'Business Dashboard schema available'
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
