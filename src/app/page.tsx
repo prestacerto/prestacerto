@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 
 export default function Home() {
-  const router = useRouter();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -30,19 +28,13 @@ export default function Home() {
             <Link href="/projects" className="text-gray-700 hover:text-gray-900 font-medium">Projetos</Link>
             <Link href="/services" className="text-gray-700 hover:text-gray-900 font-medium">Serviços</Link>
             <Link href="/plans" className="text-gray-700 hover:text-gray-900 font-medium">Planos</Link>
-            {user ? (
-              <Link href="/dashboard" className="text-gray-700 hover:text-gray-900 font-medium">Dashboard</Link>
-            ) : (
-              <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium">Entrar</Link>
-            )}
-            {!user && (
-              <Link href="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Registrar</Link>
-            )}
+            <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium">Entrar</Link>
+            <Link href="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Registrar</Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
@@ -53,7 +45,7 @@ export default function Home() {
             Conecte-se com os melhores talentos do mercado. Zero comissões, máxima segurança e transparência total em cada projeto.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Link href={user ? "/dashboard/projects/new" : "/register"} className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">
+            <Link href="/register" className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">
               Começar grátis
             </Link>
             <Link href="/projects" className="px-8 py-3 border-2 border-gray-900 text-gray-900 rounded-lg hover:bg-gray-50 font-semibold transition">
@@ -114,8 +106,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-4">Pronto para começar?</h2>
           <p className="text-lg opacity-90 mb-8">Junte-se a milhares de freelancers e clientes que já confiam na PrestaCerto.</p>
-          <Link href={user ? "/dashboard" : "/register"} className="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-semibold transition">
-            {user ? "Ir ao Dashboard" : "Criar conta grátis"}
+          <Link href="/register" className="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-semibold transition">
+            Criar conta grátis
           </Link>
         </div>
       </section>
