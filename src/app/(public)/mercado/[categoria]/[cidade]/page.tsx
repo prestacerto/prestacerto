@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 "use dynamic";
 
 import Link from "next/link";
