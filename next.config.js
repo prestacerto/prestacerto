@@ -8,7 +8,7 @@ const nextConfig = {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
     domains: ['cdn.prestacerto.com', 'images.unsplash.com'],
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
+    minimumCacheTTL: 0, // no cache
   },
 
   // Production optimizations
@@ -25,9 +25,15 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate' },
+        ],
+      },
+      {
         source: '/api/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=60, stale-while-revalidate=120' },
+          { key: 'Cache-Control', value: 'no-store, no-cache' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
@@ -36,7 +42,7 @@ const nextConfig = {
       {
         source: '/static/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Cache-Control', value: 'public, max-age=3600' },
         ],
       },
     ];
