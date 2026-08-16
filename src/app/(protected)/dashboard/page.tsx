@@ -12,6 +12,25 @@ export default function DashboardPage() {
         <p className="text-gray-600">Bem-vindo ao PrestaCerto!</p>
       </div>
 
+      {/* Certo AI Hero Banner */}
+      <div className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 rounded-lg p-8 text-white shadow-lg">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-3xl">⚡</span>
+              <h2 className="text-3xl font-bold">Certo AI</h2>
+              <span className="bg-white text-orange-500 px-3 py-1 rounded-full text-sm font-bold">NOVO</span>
+            </div>
+            <p className="text-lg mb-2 opacity-95">Otimize suas propostas com inteligência artificial</p>
+            <p className="mb-6 opacity-90">Ganhe mais projetos, melhore seu texto, aumente sua taxa de conversão em até 78%</p>
+            <Link href="/dashboard/certo-ai" className="bg-white text-orange-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition inline-block text-lg">
+              Usar Certo AI Agora →
+            </Link>
+          </div>
+          <div className="text-6xl hidden md:block opacity-20">⚡</div>
+        </div>
+      </div>
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-lg text-white">
