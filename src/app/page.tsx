@@ -2,78 +2,141 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <main className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">✓</div>
+            <span className="text-xl font-bold text-gray-900">PrestaCerto</span>
+          </div>
+          <div className="hidden md:flex gap-8 items-center">
+            <Link href="/projects" className="text-gray-700 hover:text-gray-900 font-medium">Projetos</Link>
+            <Link href="/services" className="text-gray-700 hover:text-gray-900 font-medium">Serviços</Link>
+            <Link href="/plans" className="text-gray-700 hover:text-gray-900 font-medium">Planos</Link>
+            <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium">Entrar</Link>
+            <Link href="/register" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Registrar</Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero */}
-      <section className="min-h-screen flex items-center justify-center px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8 space-y-6">
-            <h1 className="text-6xl md:text-7xl font-bold text-white leading-tight">
-              Contrate talentos.<br />
-              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                Sem comissões.
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto">
-              A plataforma onde freelancers e clientes se encontram.
-              Zero taxa de intermediação. 100% transparência.
-            </p>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/register" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition transform hover:scale-105">
-              Começar agora
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="max-w-4xl">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
+            Plataforma de freelancers inteligente
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl">
+            Conecte-se com os melhores talentos do mercado. Zero comissões, máxima segurança e transparência total em cada projeto.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mb-16">
+            <Link href="/register" className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">
+              Começar grátis
             </Link>
-            <Link href="/projects" className="px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition transform hover:scale-105">
-              Ver projetos
+            <Link href="/projects" className="px-8 py-3 border-2 border-gray-900 text-gray-900 rounded-lg hover:bg-gray-50 font-semibold transition">
+              Explorar projetos
             </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Quick Links */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-            <Link href="/projects" className="p-6 bg-slate-800/50 hover:bg-slate-700/50 rounded-lg transition border border-slate-700/50">
-              <div className="text-2xl mb-2">🚀</div>
-              <div className="text-sm font-semibold text-white">Projetos</div>
-            </Link>
-            <Link href="/services" className="p-6 bg-slate-800/50 hover:bg-slate-700/50 rounded-lg transition border border-slate-700/50">
-              <div className="text-2xl mb-2">💼</div>
-              <div className="text-sm font-semibold text-white">Serviços</div>
-            </Link>
-            <Link href="/plans" className="p-6 bg-slate-800/50 hover:bg-slate-700/50 rounded-lg transition border border-slate-700/50">
-              <div className="text-2xl mb-2">📊</div>
-              <div className="text-sm font-semibold text-white">Planos</div>
-            </Link>
-            <Link href="/login" className="p-6 bg-slate-800/50 hover:bg-slate-700/50 rounded-lg transition border border-slate-700/50">
-              <div className="text-2xl mb-2">📈</div>
-              <div className="text-sm font-semibold text-white">Entrar</div>
-            </Link>
+      {/* Stats */}
+      <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <p className="text-4xl font-bold text-gray-900">45.2k+</p>
+              <p className="text-gray-600 mt-2">Freelancers ativos</p>
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-gray-900">128.7k+</p>
+              <p className="text-gray-600 mt-2">Projetos publicados</p>
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-gray-900">R$ 937k+</p>
+              <p className="text-gray-600 mt-2">Faturamento mensal</p>
+            </div>
+            <div>
+              <p className="text-4xl font-bold text-gray-900">4.8★</p>
+              <p className="text-gray-600 mt-2">Avaliação média</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4 bg-slate-800/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-white mb-16 text-center">Por que PrestaCerto?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-bold text-white mb-2">Sem comissões</h3>
-              <p className="text-slate-300">Você paga apenas o valor combinado, nada mais.</p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-bold text-white mb-2">100% Seguro</h3>
-              <p className="text-slate-300">Escrow garante que o trabalho seja entregue.</p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-xl font-bold text-white mb-2">Rápido</h3>
-              <p className="text-slate-300">Encontre o talento certo em minutos.</p>
-            </div>
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <h2 className="text-4xl font-bold text-gray-900 mb-16 text-center">Por que escolher PrestaCerto</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="p-8 bg-gray-50 rounded-lg">
+            <div className="text-3xl font-bold text-gray-900 mb-3">0%</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Sem comissões</h3>
+            <p className="text-gray-600">Você paga apenas o valor combinado com o profissional. Sem taxas ocultas.</p>
+          </div>
+          <div className="p-8 bg-gray-50 rounded-lg">
+            <div className="text-3xl font-bold text-gray-900 mb-3">✓ Escrow</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">100% Seguro</h3>
+            <p className="text-gray-600">Pagamento protegido em escrow até a entrega do trabalho.</p>
+          </div>
+          <div className="p-8 bg-gray-50 rounded-lg">
+            <div className="text-3xl font-bold text-gray-900 mb-3">⚡ IA</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Inteligente</h3>
+            <p className="text-gray-600">Matchmaking alimentado por IA para encontrar o melhor profissional.</p>
           </div>
         </div>
       </section>
+
+      {/* CTA */}
+      <section className="bg-blue-600 text-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">Pronto para começar?</h2>
+          <p className="text-lg opacity-90 mb-8">Junte-se a milhares de freelancers e clientes que já confiam na PrestaCerto.</p>
+          <Link href="/register" className="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 font-semibold transition">
+            Criar conta grátis
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-sm font-bold">✓</div>
+                <span className="font-bold text-white">PrestaCerto</span>
+              </div>
+              <p className="text-sm">A plataforma de freelancers sem comissões.</p>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Produto</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/projects" className="hover:text-white">Projetos</Link></li>
+                <li><Link href="/services" className="hover:text-white">Serviços</Link></li>
+                <li><Link href="/plans" className="hover:text-white">Planos</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Empresa</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/about" className="hover:text-white">Sobre</Link></li>
+                <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
+                <li><Link href="/contact" className="hover:text-white">Contato</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/privacy" className="hover:text-white">Privacidade</Link></li>
+                <li><Link href="/terms" className="hover:text-white">Termos</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-sm">
+            <p>© 2024 PrestaCerto. Todos os direitos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
