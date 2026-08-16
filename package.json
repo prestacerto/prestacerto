@@ -12,6 +12,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
     "@base-ui/react": "^1.6.0",
+    "@builder.io/partytown": "^0.10.3",
     "@hookform/resolvers": "^5.5.7",
     "@mercadopago/sdk-react": "^1.0.7",
     "@supabase/auth-helpers-nextjs": "^0.15.0",

@@ -1,5 +1,4 @@
-'use client';
-
+export const dynamic = 'force-dynamic';
 import { DashboardSidebarNav } from "@/components/dashboard/sidebar-nav";
 
 const navItems = [
