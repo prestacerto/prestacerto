@@ -24,7 +24,8 @@ export default function Home() {
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-            🚀 PrestaCerto - Freelancers sem comissão
+            Contrate talentos.<br />
+            <span className="text-blue-600">Sem comissões.</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl">
             Conecte-se com os melhores talentos do mercado. Zero comissões, máxima segurança e transparência total em cada projeto.
