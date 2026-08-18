@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Use standalone output for better Vercel compatibility
+  output: 'standalone',
+
   // Enable compression
   compress: true,
 
