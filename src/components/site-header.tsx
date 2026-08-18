@@ -18,7 +18,13 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur transition-colors dark:border-white/10 dark:bg-slate-950/90">
       <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Logo inverse />
+        <Link
+          href="/"
+          aria-label="Voltar para a página inicial do PrestaCerto"
+          className="shrink-0 rounded-xl transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+        >
+          <Logo inverse />
+        </Link>
 
         <nav className="hidden items-center gap-5 lg:flex">
           {navItems.map((item) => (
