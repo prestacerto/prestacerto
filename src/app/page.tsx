@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   BriefcaseBusiness,
+  Brain,
   Check,
   ChevronRight,
   Code2,
@@ -13,10 +14,14 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
+  Stethoscope,
   Store,
   Wrench,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { HomePriceCalculator } from "@/components/home/home-price-calculator";
+import { PLANS } from "@/lib/plans-data";
+import { StructuredData } from "@/components/structured-data";
 
 const categories: Array<{
   title: string;
@@ -72,6 +77,18 @@ const categories: Array<{
     icon: Store,
     tone: "bg-red-50 text-red-600",
   },
+  {
+    title: "Psicologia",
+    description: "Atendimento, orientação e saúde emocional",
+    icon: Brain,
+    tone: "bg-cyan-50 text-cyan-700",
+  },
+  {
+    title: "Odontologia",
+    description: "Avaliação, prevenção e cuidados odontológicos",
+    icon: Stethoscope,
+    tone: "bg-sky-50 text-sky-700",
+  },
 ];
 
 const featuredProviders = [
@@ -117,6 +134,33 @@ const featuredProviders = [
   },
 ];
 
+const homeFaqs = [
+  {
+    question: "Como funciona o PrestaCerto?",
+    answer: "Você pode publicar um projeto, encontrar profissionais por categoria ou contratar serviços recorrentes. O cliente compara informações antes de decidir e o freelancer acompanha oportunidades compatíveis.",
+  },
+  {
+    question: "Como publicar um projeto?",
+    answer: "Descreva o que precisa em linguagem natural. O Certo Brief ajuda a organizar a ideia em título, descrição, entregáveis e skills; você revisa tudo antes de publicar.",
+  },
+  {
+    question: "O freelancer paga comissão sobre o projeto?",
+    answer: "A proposta do PrestaCerto é não descontar comissão do valor combinado do freelancer. Planos, adicionais e eventuais condições ficam visíveis antes da contratação ou pagamento.",
+  },
+  {
+    question: "Como escolher um profissional?",
+    answer: "Compare especialidade, portfólio, avaliações, disponibilidade e informações de compatibilidade. O Certo Match pode explicar por que um perfil foi recomendado, sem prometer contratação.",
+  },
+  {
+    question: "O que é o Certo AI?",
+    answer: "É um conjunto de ferramentas que ajuda freelancers e clientes a organizar propostas, preços, briefings e decisões. A IA sugere; a pessoa revisa e decide.",
+  },
+  {
+    question: "Quais serviços posso encontrar?",
+    answer: "A plataforma reúne tecnologia, design, marketing, conteúdo, consultoria, reformas, aulas, eventos, Psicologia, Odontologia e outras categorias, conforme a oferta disponível.",
+  },
+];
+
 const howItWorks = [
   {
     number: "01",
@@ -147,11 +191,11 @@ export default function Home() {
             <h1 className="max-w-3xl text-5xl font-black leading-[0.98] tracking-[-0.055em] text-slate-950 dark:text-white sm:text-6xl lg:text-[4.6rem]">
               Contrate talentos.
               <br />
-              <span className="text-blue-600">Sem comissões.</span>
+              <span className="text-blue-600">Freelancer fica com 100%.</span>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600 dark:text-slate-300 sm:text-xl">
               Encontre profissionais confiáveis para tirar seu projeto do papel —
-              com avaliações reais, negociação transparente e sem taxas escondidas.
+              com avaliações reais, negociação transparente e o freelancer recebendo 100% do valor combinado.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -173,11 +217,11 @@ export default function Home() {
             <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-2">
                 <Check className="size-4 text-emerald-600" />
-                Sem comissão por projeto
+                Sem comissão descontada do freelancer
               </span>
               <span className="inline-flex items-center gap-2">
                 <ShieldCheck className="size-4 text-emerald-600" />
-                Negociação transparente
+                Valor combinado antes de contratar
               </span>
             </div>
           </div>
@@ -209,10 +253,10 @@ export default function Home() {
                       {provider.initials}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-bold text-slate-900 dark:text-white">
+                      <span className="block truncate text-sm font-bold !text-[#0f172a] dark:!text-white">
                         {provider.name}
                       </span>
-                      <span className="block truncate text-xs text-slate-500 dark:text-slate-400">
+                      <span className="block truncate text-xs !text-[#64748b] dark:!text-slate-400">
                         {provider.area}
                       </span>
                     </span>
@@ -290,10 +334,10 @@ export default function Home() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Prestadores em destaque</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">Profissionais que entregam</h2>
-              <p className="mt-3 text-slate-500 dark:text-slate-400">Perfis claros para você decidir com segurança.</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight !text-[#0b1220] dark:!text-white sm:text-4xl">Profissionais que entregam</h2>
+              <p className="mt-3 !text-[#64748b] dark:!text-slate-400">Perfis claros para você decidir com segurança.</p>
             </div>
-            <Link href="/services" className="inline-flex items-center text-sm font-bold text-slate-900 hover:text-blue-600 dark:text-slate-200 dark:hover:text-blue-300">
+            <Link href="/services" className="inline-flex items-center text-sm font-bold !text-[#0b1220] hover:!text-blue-600 dark:!text-slate-200 dark:hover:!text-blue-300">
               Ver todos <ArrowRight className="ml-2 size-4" />
             </Link>
           </div>
@@ -356,6 +400,56 @@ export default function Home() {
           <Link href="/plans" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-blue-500">
             Conhecer o Certo AI <ArrowRight className="ml-2 size-4" />
           </Link>
+        </div>
+      </section>
+
+      <HomePriceCalculator />
+
+      <section className="border-y border-slate-200 bg-[#f4f7ff] dark:border-white/10 dark:bg-slate-900/70">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Planos transparentes</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">Escolha como quer crescer</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">Comece sem compromisso e evolua quando as ferramentas fizerem sentido para o seu momento.</p>
+          </div>
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {PLANS.map((plan) => (
+              <article key={plan.id} className={`relative flex flex-col rounded-2xl border p-6 ${plan.popular ? "border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-900/20" : "border-slate-200 bg-white text-slate-950 dark:border-white/10 dark:bg-slate-950 dark:text-white"}`}>
+                {plan.popular && <span className="absolute -top-3 left-6 rounded-full bg-amber-400 px-3 py-1 text-xs font-black text-slate-950">MAIS POPULAR</span>}
+                <p className="text-lg font-black">{plan.name}</p>
+                <p className="mt-3 text-3xl font-black">R$ {plan.priceMonthly}<span className={`text-base font-medium ${plan.popular ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}>/mês</span></p>
+                <p className={`mt-2 text-sm ${plan.popular ? "text-blue-100" : "text-slate-600 dark:text-slate-300"}`}>{plan.description}</p>
+                <ul className="mt-6 flex-1 space-y-3">
+                  {plan.features.slice(0, 4).map((feature) => <li key={feature} className="flex items-start gap-2 text-sm"><Check className={`mt-0.5 size-4 shrink-0 ${plan.popular ? "text-blue-200" : "text-blue-600"}`} /><span className={plan.popular ? "text-white" : "text-slate-700 dark:text-slate-300"}>{feature}</span></li>)}
+                </ul>
+                <Link href={plan.id === "free" ? "/register" : "/plans"} className={`mt-7 inline-flex items-center justify-center rounded-xl px-4 py-3 text-sm font-bold transition ${plan.popular ? "bg-white text-blue-700 hover:bg-blue-50" : "bg-slate-950 text-white hover:bg-blue-600 dark:bg-white dark:text-slate-950 dark:hover:bg-blue-100"}`}>
+                  {plan.id === "free" ? "Começar grátis" : "Ver plano"}<ArrowRight className="ml-2 size-4" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950">
+        <StructuredData type="FAQPage" data={{ mainEntity: homeFaqs.map((faq) => ({ "@type": "Question", name: faq.question, acceptedAnswer: { "@type": "Answer", text: faq.answer } })) }} />
+        <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-20">
+          <div className="text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Dúvidas frequentes</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">Tudo mastigado para você começar</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">Respostas rápidas para contratar, trabalhar e usar as ferramentas do PrestaCerto.</p>
+          </div>
+          <div className="mt-9 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white dark:divide-white/10 dark:border-white/10 dark:bg-slate-900">
+            {homeFaqs.map((faq) => (
+              <details key={faq.question} className="group px-5 py-5 first:rounded-t-2xl last:rounded-b-2xl">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-bold text-slate-950 marker:hidden dark:text-white">
+                  {faq.question}
+                  <span className="text-2xl font-normal text-blue-600 transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="max-w-2xl pr-8 pt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
