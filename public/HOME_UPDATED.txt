@@ -1,0 +1,4 @@
+HOME PAGE REBUILT - FRESH DEPLOYMENT REQUIRED
+Timestamp: 2026-08-18 06:50 UTC
+Status: Ready for Vercel deployment
+Content: Contrate talentos. Sem comissões.
