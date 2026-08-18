@@ -6,7 +6,6 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
-import { FacebookPixel } from "@/components/facebook-pixel";
 import { PWAInstaller } from "@/components/pwa-installer";
 import { PushNotificationManager } from "@/components/push-notification-manager";
 import { StructuredData, organizationSchema, websiteSchema } from "@/components/structured-data";
@@ -72,7 +71,6 @@ export default function RootLayout({
           <SiteFooter />
           <Toaster />
           <Analytics />
-          <FacebookPixel />
           <PWAInstaller />
           <PushNotificationManager />
         </ThemeProvider>
