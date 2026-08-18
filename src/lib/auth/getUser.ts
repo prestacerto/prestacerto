@@ -29,11 +29,24 @@ export async function getProfile() {
       return null;
     }
 
-    return {
+    const supabase = await createClient();
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("[getProfile] Failed to load profile:", error);
+    }
+
+    // Fallback transitório para contas antigas enquanto a migration/backfill
+    // ainda não foi aplicada no projeto Supabase.
+    return profile ?? {
       id: user.id,
-      email: user.email,
-      role: "freelancer",
-      full_name: user.user_metadata?.full_name || "User",
+      email: user.email ?? null,
+      role: user.user_metadata?.role === "client" ? "client" : "freelancer",
+      full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "Novo usuário",
     };
   } catch (error) {
     console.error("[getProfile] Unexpected error:", error);

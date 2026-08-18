@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use standalone output for better Vercel compatibility
   output: 'standalone',
-
   // Enable compression
   compress: true,
 
@@ -10,8 +8,11 @@ const nextConfig = {
   images: {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    domains: ['cdn.prestacerto.com', 'images.unsplash.com'],
-    minimumCacheTTL: 0, // no cache
+    remotePatterns: [
+      { protocol: 'https', hostname: 'cdn.prestacerto.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+    ],
+    minimumCacheTTL: 600,
   },
 
   // Production optimizations
@@ -28,9 +29,9 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: '/_next/static/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
@@ -45,33 +46,23 @@ const nextConfig = {
       {
         source: '/static/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600' },
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
         ],
-      },
-    ];
-  },
-
-  // Rewrites
-  async rewrites() {
-    return [
-      {
-        source: '/api/health',
-        destination: '/api/health',
       },
     ];
   },
 
   // Environmental variables
   env: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://prestacerto.com.br',
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'https://www.prestacerto.com.br',
   },
 
   // Turbopack config
   turbopack: {},
 
-  // Disable type checking in build for speed
+  // Never ship a production build that hides type errors.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 };
 

@@ -5,10 +5,10 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
 const navItems = [
-  { href: "/services", label: "Serviços" },
+  { href: "/services", label: "Buscar prestadores" },
   { href: "/projects", label: "Projetos" },
-  { href: "/aprenda", label: "Aprenda" },
-  { href: "/vagas", label: "Vagas", badge: "NOVO" },
+  { href: "/como-funciona", label: "Como funciona" },
+  { href: "/certo-ai", label: "Certo AI" },
   { href: "/plans", label: "Planos" },
 ];
 
@@ -16,31 +16,31 @@ export async function SiteHeader() {
   const user = await getAuthenticatedUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#3f4451]">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Logo />
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur transition-colors dark:border-white/10 dark:bg-slate-950/90">
+      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <Logo inverse />
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-5 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-1.5 text-sm text-slate-300 transition-colors hover:text-white"
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-white"
             >
               {item.label}
-              {item.badge && (
-                <span className="rounded bg-blue-500 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
-                  {item.badge}
-                </span>
-              )}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <ThemeToggle />
           {user ? (
-            <LinkButton href="/dashboard" variant="secondary" size="sm">
+            <LinkButton
+              href="/dashboard"
+              variant="ghost"
+              size="sm"
+              className="text-slate-700 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
+            >
               Dashboard
             </LinkButton>
           ) : (
@@ -48,7 +48,7 @@ export async function SiteHeader() {
               href="/login"
               variant="ghost"
               size="sm"
-              className="text-slate-200 hover:text-white"
+              className="hidden text-slate-700 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white sm:inline-flex"
             >
               Entrar
             </LinkButton>
@@ -56,9 +56,10 @@ export async function SiteHeader() {
           <LinkButton
             href={user ? "/dashboard/projects/new" : "/register"}
             size="sm"
-            className="bg-blue-600 hover:bg-blue-500"
+            className="bg-blue-600 font-bold text-white shadow-sm shadow-blue-600/15 hover:bg-blue-700"
           >
-            Publicar projeto
+            <span className="hidden sm:inline">{user ? "Publicar projeto" : "Cadastre-se grátis"}</span>
+            <span className="sm:hidden">Cadastrar</span>
           </LinkButton>
         </div>
       </div>

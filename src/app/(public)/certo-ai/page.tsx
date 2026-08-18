@@ -1,228 +1,164 @@
-import { Wand2, TrendingUp, Users, Zap, CheckCircle, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CheckCircle2,
+  EyeOff,
+  FileText,
+  PenLine,
+  ShieldCheck,
+  Sparkles,
+  WandSparkles,
+} from "lucide-react";
 
-export const metadata = {
-  title: "Certo AI — Assistente de Propostas com IA | PrestaCerto",
-  description: "Aumentar suas chances de ganhar projetos em 35% com Certo AI. Otimizador de propostas com inteligência artificial.",
+export const metadata: Metadata = {
+  title: "Certo AI — Propostas melhores, mantendo sua voz",
+  description:
+    "Copiloto de propostas para freelancers: escreva do seu jeito, receba uma sugestão mais clara e revise antes de enviar.",
+  alternates: { canonical: "/certo-ai" },
+  openGraph: {
+    title: "Certo AI — Propostas melhores, mantendo sua voz",
+    description:
+      "Melhore clareza, estrutura e especificidade das suas propostas sem inventar informações.",
+    url: "/certo-ai",
+  },
 };
+
+const steps = [
+  {
+    number: "01",
+    icon: PenLine,
+    title: "Escreva do seu jeito",
+    description: "Comece com qualquer rascunho. Você não precisa encontrar as palavras perfeitas de primeira.",
+  },
+  {
+    number: "02",
+    icon: WandSparkles,
+    title: "Receba uma sugestão",
+    description: "O Certo AI organiza a mensagem, destaca o que é relevante e deixa o texto mais fácil de entender.",
+  },
+  {
+    number: "03",
+    icon: BadgeCheck,
+    title: "Revise e envie",
+    description: "Compare as versões, edite o que quiser e só envie quando a proposta representar você.",
+  },
+];
+
+const benefits = [
+  "Mantém seu tom natural",
+  "Não inventa experiência ou resultados",
+  "Sugere uma abertura específica para o projeto",
+  "Ajuda a explicar sua forma de trabalhar",
+  "Organiza prazo, escopo e próximo passo",
+  "Funciona antes do envio da proposta",
+];
 
 export default function CertoAILanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Hero */}
-      <section className="px-4 py-16 md:py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full mb-6">
-            <Wand2 size={16} />
-            <span className="text-sm font-semibold">Novo em PrestaCerto</span>
-          </div>
-
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Propostas que <span className="text-blue-600">Ganham</span>
-          </h1>
-
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Certo AI reescreve suas propostas com inteligência artificial. Resultado: +35% de taxa de ganho e mais projetos contratados.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link
-              href="/dashboard/certo-ai"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2"
-            >
-              Testar Grátis <ArrowRight size={20} />
-            </Link>
-            <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-900 px-8 py-3 rounded-lg font-bold">
-              Ver Demo
-            </button>
-          </div>
-
-          {/* Social Proof */}
-          <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <Users size={16} className="text-blue-600" />
-              <span>1,200+ freelancers ativos</span>
+    <div className="bg-[#f7f9ff] text-slate-950">
+      <section className="border-b border-blue-100 bg-gradient-to-br from-[#eef4ff] via-white to-[#f8fbff]">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-bold text-blue-700 shadow-sm">
+              <Sparkles className="size-4" /> Copiloto de propostas para freelancers
             </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp size={16} className="text-green-600" />
-              <span>50K+ propostas otimizadas</span>
+            <h1 className="mt-7 text-4xl font-black tracking-[-0.04em] text-slate-950 sm:text-6xl">
+              Propostas melhores.
+              <br />
+              <span className="text-blue-600">Sua voz continua.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
+              Escreva livremente e receba uma sugestão mais clara, específica e profissional. Você revisa tudo antes de enviar.
+            </p>
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Link href="/register" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700">
+                Começar grátis <ArrowRight className="ml-2 size-4" />
+              </Link>
+              <Link href="#como-funciona" className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-bold text-slate-800 transition hover:border-blue-300 hover:bg-blue-50">
+                Ver como funciona
+              </Link>
             </div>
-            <div className="flex items-center gap-2">
-              <Zap size={16} className="text-yellow-600" />
-              <span>99.9% uptime</span>
+            <div className="mt-7 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-medium text-slate-500">
+              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-emerald-600" /> Revisão antes do envio</span>
+              <span className="inline-flex items-center gap-1.5"><EyeOff className="size-3.5 text-emerald-600" /> Não aparece para o cliente</span>
+              <span className="inline-flex items-center gap-1.5"><FileText className="size-3.5 text-emerald-600" /> Texto editável</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="px-4 py-16 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Como Funciona</h2>
+      <section id="como-funciona" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Simples por design</p>
+          <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Você escreve. O Certo AI organiza.</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-500">Uma ajuda prática no momento em que uma boa proposta pode fazer diferença.</p>
+        </div>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {steps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <article key={step.number} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black tracking-[0.18em] text-blue-600">{step.number}</span>
+                  <span className="flex size-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><Icon className="size-5" /></span>
+                </div>
+                <h3 className="mt-8 text-lg font-bold text-slate-950">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-500">{step.description}</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: "✍️",
-                title: "Cole sua proposta",
-                description: "Escreva normalmente, do seu jeito.",
-              },
-              {
-                icon: "🤖",
-                title: "IA reescreve",
-                description: "Certo AI melhora tom, clareza e persuasão.",
-              },
-              {
-                icon: "📈",
-                title: "Ganhe mais projetos",
-                description: "Taxa de ganho +35% vs. propostas normais.",
-              },
-            ].map((feature, i) => (
-              <div key={i} className="text-center">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
-              </div>
+      <section className="border-y border-slate-200 bg-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-20">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700"><ShieldCheck className="size-3.5" /> Controle continua com você</div>
+            <h2 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl">A IA ajuda nos bastidores. A proposta é sua.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-slate-600">O cliente recebe a proposta final que você revisou. O Certo AI não envia nada sozinho, não altera seu perfil e não inventa fatos para parecer mais convincente.</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {benefits.map((benefit) => (
+              <div key={benefit} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-700"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" />{benefit}</div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features List */}
-      <section className="px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Recursos Inclusos</h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {[
-              "✨ Otimizador de Propostas — Reescreve com IA",
-              "⚖️ Comparar Propostas — Vê qual é melhor",
-              "📊 Padrões de Vencedores — Aprenda o que funciona",
-              "💡 Sugestões de Melhoria — Feedback automático",
-              "🔥 Taxa de Ganho Estimada — Sabe antes de enviar",
-              "📱 Mobile-friendly — Otimize de qualquer lugar",
-            ].map((feature, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <CheckCircle className="text-green-600 flex-shrink-0 mt-1" size={20} />
-                <p className="text-gray-700">{feature}</p>
-              </div>
-            ))}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Comece sem complicação</p>
+          <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Uma ferramenta útil no seu ritmo</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-500">Teste a experiência e escolha o plano que faz sentido para a sua rotina.</p>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+            <h3 className="text-xl font-bold">Comece grátis</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-500">Conheça o fluxo de melhoria e envie propostas com mais clareza.</p>
+            <ul className="mt-6 space-y-3 text-sm text-slate-700">
+              {["Sugestões de texto", "Revisão antes do envio", "Proposta sempre editável"].map((item) => <li key={item} className="flex items-center gap-2"><CheckCircle2 className="size-4 text-emerald-600" />{item}</li>)}
+            </ul>
+            <Link href="/register" className="mt-7 inline-flex w-full items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 transition hover:bg-blue-100">Criar conta</Link>
+          </div>
+          <div className="relative rounded-2xl border-2 border-blue-600 bg-slate-950 p-7 text-white shadow-xl shadow-blue-900/10">
+            <span className="absolute -top-3 right-5 rounded-full bg-blue-600 px-3 py-1 text-[11px] font-black uppercase tracking-wide">Para quem envia sempre</span>
+            <h3 className="text-xl font-bold">Certo AI Pro</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-300">Mais recursos para freelancers que querem criar propostas com consistência.</p>
+            <ul className="mt-6 space-y-3 text-sm text-slate-200">
+              {["Otimizações ampliadas", "Insights de melhoria", "Recursos premium do marketplace"].map((item) => <li key={item} className="flex items-center gap-2"><CheckCircle2 className="size-4 text-blue-300" />{item}</li>)}
+            </ul>
+            <Link href="/plans" className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-500">Ver planos</Link>
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="px-4 py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Planos Simples</h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Free */}
-            <div className="bg-white rounded-lg border-2 border-gray-200 p-8">
-              <h3 className="text-2xl font-bold mb-2">Grátis</h3>
-              <p className="text-gray-600 mb-6">Teste sem compromisso</p>
-              <p className="text-4xl font-bold mb-6">
-                R$ 0 <span className="text-lg text-gray-600">/mês</span>
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>3 otimizações/mês</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>Comparar propostas</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>Insights básicos</span>
-                </li>
-              </ul>
-              <button className="w-full border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-bold hover:bg-blue-50">
-                Começar Grátis
-              </button>
-            </div>
-
-            {/* Premium */}
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-8 text-white relative border-4 border-blue-600 md:scale-105">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-4 py-1 rounded-full font-bold text-sm">
-                POPULAR
-              </div>
-
-              <h3 className="text-2xl font-bold mb-2">Premium</h3>
-              <p className="text-blue-100 mb-6">Melhor relação custo-benefício</p>
-              <p className="text-4xl font-bold mb-6">
-                R$ 19,90 <span className="text-lg text-blue-100">/mês</span>
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-300" />
-                  <span>Otimizações ilimitadas</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-300" />
-                  <span>Análise de concorrência</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-300" />
-                  <span>Insights avançados</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-300" />
-                  <span>Suporte prioritário</span>
-                </li>
-              </ul>
-              <button className="w-full bg-white text-blue-600 py-2 rounded-lg font-bold hover:bg-gray-100">
-                Assinar Agora
-              </button>
-            </div>
-
-            {/* Enterprise */}
-            <div className="bg-white rounded-lg border-2 border-gray-200 p-8">
-              <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-              <p className="text-gray-600 mb-6">Para agências e times</p>
-              <p className="text-4xl font-bold mb-6">
-                Custom <span className="text-lg text-gray-600">/mês</span>
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>Tudo do Premium</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>Múltiplas contas</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>API custom</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle size={16} className="text-green-600" />
-                  <span>Dedicado Account Manager</span>
-                </li>
-              </ul>
-              <button className="w-full border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-bold hover:bg-blue-50">
-                Contatar Sales
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final */}
-      <section className="px-4 py-16 bg-blue-600 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">Pronto para Ganhar Mais?</h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Comece grátis. Sem cartão de crédito. Sem compromisso.
-          </p>
-          <Link
-            href="/dashboard/certo-ai"
-            className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100"
-          >
-            Testar Agora <ArrowRight size={20} />
-          </Link>
+      <section className="bg-blue-600 text-white">
+        <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6 lg:py-16">
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Sua próxima proposta pode começar melhor.</h2>
+          <p className="mx-auto mt-3 max-w-xl text-blue-100">Crie sua conta e experimente uma forma mais simples de revisar o que você já sabe fazer.</p>
+          <Link href="/register" className="mt-7 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-blue-700 transition hover:bg-blue-50">Começar agora <ArrowRight className="ml-2 size-4" /></Link>
         </div>
       </section>
     </div>

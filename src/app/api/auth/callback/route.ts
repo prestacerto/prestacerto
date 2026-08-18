@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
 
-  let response = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  let response: NextResponse = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

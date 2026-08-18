@@ -9,7 +9,7 @@ import { Analytics } from "@/components/analytics";
 import { FacebookPixel } from "@/components/facebook-pixel";
 import { PWAInstaller } from "@/components/pwa-installer";
 import { PushNotificationManager } from "@/components/push-notification-manager";
-import { StructuredData, organizationSchema } from "@/components/structured-data";
+import { StructuredData, organizationSchema, websiteSchema } from "@/components/structured-data";
 import { defaultMetadata } from "@/lib/seo/metadata";
 
 const geistSans = Geist({
@@ -25,6 +25,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   ...defaultMetadata,
   manifest: "/manifest.json",
+  icons: {
+    icon: [{ url: "/prestacerto-logo-icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/prestacerto-logo-icon.svg"],
+    apple: [{ url: "/prestacerto-logo-icon.svg" }],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -53,12 +58,13 @@ export default function RootLayout({
     >
       <head>
         <StructuredData type="Organization" data={organizationSchema} />
+        <StructuredData type="WebSite" data={websiteSchema} />
       </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <SiteHeader />

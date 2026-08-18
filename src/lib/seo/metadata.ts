@@ -1,10 +1,17 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://prestacerto.com.br";
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "https://www.prestacerto.com.br"
+).replace(/\/$/, "");
 const siteName = "PrestaCerto";
-const siteDescription = "A plataforma que conecta freelancers e clientes com um modelo justo: assinatura fixa, pagamento direto, sem surpresas.";
+const siteDescription =
+  "Marketplace brasileiro para encontrar freelancers, publicar projetos e contratar talentos com negociação transparente e sem comissões escondidas.";
+const socialImage = `${siteUrl}/prestacerto-logo.svg`;
 
 export const defaultMetadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "PrestaCerto — Contrate talentos. Sem comissões.",
     template: "%s | PrestaCerto",
@@ -12,16 +19,24 @@ export const defaultMetadata: Metadata = {
   description: siteDescription,
   keywords: [
     "freelancer",
-    "marketplace",
-    "serviços",
-    "projetos",
-    "contratação",
-    "Brasil",
+    "freelancers no Brasil",
+    "contratar freelancer",
+    "prestador de serviço",
+    "marketplace de serviços",
+    "projetos freelance",
+    "trabalho freelancer",
+    "serviços profissionais",
     "sem comissão",
+    "PrestaCerto",
   ],
-  authors: [{ name: "PrestaCerto" }],
-  creator: "PrestaCerto",
-  publisher: "PrestaCerto",
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  applicationName: siteName,
+  category: "Business",
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
@@ -31,20 +46,18 @@ export const defaultMetadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: siteName,
-        type: "image/png",
+        url: socialImage,
+        width: 512,
+        height: 512,
+        alt: "Logo do PrestaCerto",
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "PrestaCerto — Contrate talentos. Sem comissões.",
     description: siteDescription,
-    images: [`${siteUrl}/og-image.png`],
-    creator: "@prestacerto",
+    images: [socialImage],
   },
   robots: {
     index: true,
@@ -57,26 +70,28 @@ export const defaultMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
-  },
-  alternates: {
-    canonical: siteUrl,
-  },
-  category: "Business",
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export function getPageMetadata(
   title: string,
   description: string,
-  path?: string,
-  image?: string
+  path = "/",
+  image?: string,
 ): Metadata {
-  const url = path ? `${siteUrl}${path}` : siteUrl;
+  const url = `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  const imageUrl = image
+    ? image.startsWith("http")
+      ? image
+      : `${siteUrl}${image.startsWith("/") ? image : `/${image}`}`
+    : socialImage;
 
   return {
     title,
     description,
+    alternates: { canonical: url },
     openGraph: {
       type: "website",
       locale: "pt_BR",
@@ -84,32 +99,13 @@ export function getPageMetadata(
       siteName,
       title,
       description,
-      images: image
-        ? [
-            {
-              url: `${siteUrl}${image}`,
-              width: 1200,
-              height: 630,
-              alt: title,
-            },
-          ]
-        : [
-            {
-              url: `${siteUrl}/og-image.png`,
-              width: 1200,
-              height: 630,
-              alt: siteName,
-            },
-          ],
+      images: [{ url: imageUrl, alt: title }],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title,
       description,
-      images: image ? [`${siteUrl}${image}`] : [`${siteUrl}/og-image.png`],
-    },
-    alternates: {
-      canonical: url,
+      images: [imageUrl],
     },
   };
 }
@@ -118,48 +114,16 @@ export function getArticleMetadata(
   title: string,
   description: string,
   publishedTime: string,
-  path?: string,
-  image?: string
+  path = "/",
+  image?: string,
 ): Metadata {
-  const url = path ? `${siteUrl}${path}` : siteUrl;
-
+  const pageMetadata = getPageMetadata(title, description, path, image);
   return {
-    title,
-    description,
+    ...pageMetadata,
     openGraph: {
+      ...pageMetadata.openGraph,
       type: "article",
-      locale: "pt_BR",
-      url,
-      siteName,
-      title,
-      description,
       publishedTime,
-      images: image
-        ? [
-            {
-              url: `${siteUrl}${image}`,
-              width: 1200,
-              height: 630,
-              alt: title,
-            },
-          ]
-        : [
-            {
-              url: `${siteUrl}/og-image.png`,
-              width: 1200,
-              height: 630,
-              alt: siteName,
-            },
-          ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: image ? [`${siteUrl}${image}`] : [`${siteUrl}/og-image.png`],
-    },
-    alternates: {
-      canonical: url,
     },
   };
 }

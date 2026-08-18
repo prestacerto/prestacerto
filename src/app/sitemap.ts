@@ -1,52 +1,60 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+import { getAllLandingCombinations } from "@/lib/data/landing-data";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://prestacerto.com.br";
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "https://www.prestacerto.com.br"
+).replace(/\/$/, "");
+
+export const revalidate = 3600;
+
+const routes: Array<{
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+}> = [
+  { path: "/", priority: 1, changeFrequency: "daily" },
+  { path: "/services", priority: 0.95, changeFrequency: "hourly" },
+  { path: "/projects", priority: 0.95, changeFrequency: "hourly" },
+  { path: "/como-funciona", priority: 0.85, changeFrequency: "monthly" },
+  { path: "/certo-ai", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/mercado", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/vagas", priority: 0.8, changeFrequency: "daily" },
+  { path: "/aprenda", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/ferramentas/calculadora", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/ferramentas/benchmark", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/plans", priority: 0.75, changeFrequency: "weekly" },
+  { path: "/ajuda", priority: 0.65, changeFrequency: "monthly" },
+  { path: "/contato", priority: 0.55, changeFrequency: "monthly" },
+  { path: "/indicacoes", priority: 0.55, changeFrequency: "weekly" },
+  { path: "/termos", priority: 0.35, changeFrequency: "yearly" },
+  { path: "/privacidade", priority: 0.35, changeFrequency: "yearly" },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${siteUrl}/`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${siteUrl}/services`,
-      lastModified: new Date(),
-      changeFrequency: "hourly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/projects`,
-      lastModified: new Date(),
-      changeFrequency: "hourly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/plans`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/aprenda`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/termos`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/privacidade`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-  ];
+  const lastModified = new Date();
+  const staticEntries = routes.map(({ path, priority, changeFrequency }) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  }));
 
-  return baseRoutes;
+  const localEntries = getAllLandingCombinations().flatMap(({ categoria, cidade }) => [
+    {
+      url: `${SITE_URL}/contratar/${categoria}/${cidade}`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.78,
+    },
+    {
+      url: `${SITE_URL}/mercado/${categoria}/${cidade}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.68,
+    },
+  ]);
+
+  return [...staticEntries, ...localEntries];
 }

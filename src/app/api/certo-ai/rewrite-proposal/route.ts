@@ -1,121 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/service";
+import { z } from "zod";
+import { getAuthenticatedUser } from "@/lib/auth/getUser";
+import { checkRateLimit, rateLimitResponse, rateLimiters } from "@/lib/rate-limit";
+import { improveProposalDraft } from "@/lib/ai/certo-ai";
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+const bodySchema = z.object({
+  proposalText: z
+    .string()
+    .trim()
+    .min(10, "Escreva uma proposta um pouco mais completa")
+    .max(5000, "Sua proposta ficou muito longa para otimizar de uma vez"),
+  category: z.string().trim().max(100).optional(),
+  budget: z.number().finite().positive().optional(),
+});
 
 export async function POST(req: NextRequest) {
-  try {
-    if (!OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: "OpenAI API key not configured" },
-        { status: 500 }
-      );
-    }
-
-    const { userId, proposalText, category, budget } = await req.json();
-    const db = createServiceClient();
-
-    // Validar usuário (verificar se tem subscription ativa ou créditos)
-    const { data: profile } = await db
-      .from("profiles")
-      .select("plan, subscription_status")
-      .eq("id", userId)
-      .single();
-
-    if (!profile) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
-    // Verificar se é premium ou tem créditos
-    const isPremium =
-      profile.plan === "pro" || profile.subscription_status === "active";
-
-    if (!isPremium) {
-      return NextResponse.json(
-        { error: "Premium feature - upgrade to use Certo AI", locked: true },
-        { status: 403 }
-      );
-    }
-
-    // Chamar OpenAI pra reescrever
-    const systemPrompt = `Você é Certo AI, especialista em propostas vencedoras para freelancers no Brasil.
-Sua missão é reescrever propostas para ser mais persuasiva e profissional.
-
-Regras:
-- Mantenha a ideia principal
-- Aumente profissionalismo
-- Destaque experiência relevante
-- Seja conciso (200-300 palavras)
-- Tom: confiante mas não arrogante
-- Mencione se relevante: prazos, metodologia, suporte pós-projeto
-${category ? `- Categoria: ${category}` : ""}
-${budget ? `- Orçamento esperado: R$ ${budget}` : ""}
-
-Responda APENAS com a proposta reescrita, sem explicações.`;
-
-    const response = await fetch(OPENAI_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          {
-            role: "user",
-            content: `Reescreva esta proposta:\n\n${proposalText}`,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("OpenAI Error:", error);
-      return NextResponse.json(
-        { error: "Failed to rewrite proposal" },
-        { status: response.status }
-      );
-    }
-
-    const data = (await response.json()) as any;
-    const rewrittenText =
-      data.choices?.[0]?.message?.content || proposalText;
-
-    // Salvar histórico (opcional)
-    await db.from("proposal_rewrites").insert({
-      user_id: userId,
-      original_text: proposalText,
-      rewritten_text: rewrittenText,
-      category,
-      tokens_used: data.usage?.total_tokens || 0,
-      created_at: new Date(),
-    });
-
-    // Decrementar crédito se pagar por uso
-    // (implementar depois se necessário)
-
-    return NextResponse.json({
-      success: true,
-      rewrittenText,
-      tokensUsed: data.usage?.total_tokens,
-    });
-  } catch (error) {
-    console.error("Certo AI Error:", error);
+  const user = await getAuthenticatedUser();
+  if (!user) {
     return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 }
+      { error: "Entre na sua conta para usar o Certo AI." },
+      { status: 401 },
+    );
+  }
+
+  const rateLimitCheck = await checkRateLimit(rateLimiters.ai, user.id);
+  if (!rateLimitCheck.success) {
+    return rateLimitResponse(rateLimitCheck.reset);
+  }
+
+  const parsed = bodySchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Dados inválidos" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const rewrittenText = await improveProposalDraft(
+      parsed.data.proposalText,
+      parsed.data.category || "projeto do cliente",
+    );
+
+    return NextResponse.json({ success: true, rewrittenText });
+  } catch (error) {
+    console.error("Certo AI rewrite falhou:", error);
+    return NextResponse.json(
+      { error: "Não foi possível melhorar a proposta agora." },
+      { status: 502 },
     );
   }
 }

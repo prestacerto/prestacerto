@@ -1,6 +1,15 @@
-export interface StructuredDataProps {
-  type: "Organization" | "WebPage" | "LocalBusiness" | "BreadcrumbList";
-  data: Record<string, any>;
+type SchemaType =
+  | "Organization"
+  | "WebPage"
+  | "WebSite"
+  | "WebApplication"
+  | "LocalBusiness"
+  | "BreadcrumbList"
+  | "FAQPage";
+
+interface StructuredDataProps {
+  type: SchemaType;
+  data: Record<string, unknown>;
 }
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -18,29 +27,38 @@ export function StructuredData({ type, data }: StructuredDataProps) {
   );
 }
 
-// Organization Schema
 export const organizationSchema = {
   name: "PrestaCerto",
   description:
-    "A plataforma que conecta freelancers e clientes com um modelo justo: assinatura fixa, pagamento direto, sem surpresas.",
-  url: "https://prestacerto.com.br",
-  logo: "https://prestacerto.com.br/logo.png",
-  sameAs: [
-    "https://twitter.com/prestacerto",
-    "https://linkedin.com/company/prestacerto",
-    "https://instagram.com/prestacerto",
-  ],
+    "Marketplace brasileiro que conecta clientes a freelancers e prestadores de serviços com negociação transparente.",
+  url: "https://www.prestacerto.com.br",
+  logo: "https://www.prestacerto.com.br/prestacerto-logo.svg",
   contactPoint: {
     "@type": "ContactPoint",
-    contactType: "Customer Support",
-    email: "support@prestacerto.com.br",
-    availableLanguage: ["pt-BR", "en"],
+    contactType: "customer support",
+    email: "contato@prestacerto.com.br",
+    availableLanguage: "pt-BR",
   },
 };
 
-// Breadcrumb Schema
+export const websiteSchema = {
+  name: "PrestaCerto",
+  url: "https://www.prestacerto.com.br",
+  description:
+    "Encontre freelancers, publique projetos e contrate talentos sem comissões escondidas.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate:
+        "https://www.prestacerto.com.br/services?search={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export function getBreadcrumbSchema(
-  items: Array<{ name: string; url?: string }>
+  items: Array<{ name: string; url?: string }>,
 ) {
   return {
     "@context": "https://schema.org",
@@ -49,37 +67,26 @@ export function getBreadcrumbSchema(
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url || undefined,
+      ...(item.url ? { item: item.url } : {}),
     })),
   };
 }
 
-// LocalBusiness Schema
 export const localBusinessSchema = {
-  "@type": "LocalBusiness",
+  "@type": "Organization",
   name: "PrestaCerto",
-  image: "https://prestacerto.com.br/logo.png",
+  image: "https://www.prestacerto.com.br/prestacerto-logo.svg",
   description:
-    "Marketplace de freelancers sem comissões. Conectamos talentos com oportunidades.",
+    "Marketplace brasileiro de freelancers e serviços profissionais.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "BR",
-    addressLocality: "Brasil",
-    addressRegion: "Brasil",
   },
-  priceRange: "$$",
-  telephone: "+55 (11) 9999-9999",
-  email: "support@prestacerto.com.br",
-  url: "https://prestacerto.com.br",
-  sameAs: [
-    "https://twitter.com/prestacerto",
-    "https://linkedin.com/company/prestacerto",
-  ],
+  url: "https://www.prestacerto.com.br",
 };
 
-// FAQPage Schema
 export function getFAQSchema(
-  faqs: Array<{ question: string; answer: string }>
+  faqs: Array<{ question: string; answer: string }>,
 ) {
   return {
     "@context": "https://schema.org",

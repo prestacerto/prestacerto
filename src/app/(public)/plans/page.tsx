@@ -1,4 +1,5 @@
 import { PlansSection } from "@/components/plans-section";
+import { CertoGrowthCatalog } from "@/components/monetization/certo-growth-catalog";
 
 export const metadata = { title: "Planos — PrestaCerto" };
 
@@ -36,6 +37,8 @@ export default function PlansPage() {
       <div className="mt-12">
         <PlansSection />
       </div>
+
+      <CertoGrowthCatalog />
 
       <div className="mx-auto mt-20 max-w-2xl">
         <h2 className="text-center text-2xl font-bold text-slate-900">

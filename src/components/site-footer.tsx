@@ -27,17 +27,17 @@ const columns = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-slate-200 bg-white">
+    <footer className="border-t border-slate-200 bg-white transition-colors dark:border-white/10 dark:bg-slate-950">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <p className="text-lg font-bold text-slate-900">PrestaCerto</p>
-            <p className="mt-2 max-w-xs text-sm text-slate-500">
+            <p className="text-lg font-bold text-slate-900 dark:text-white">PrestaCerto</p>
+            <p className="mt-2 max-w-xs text-sm text-slate-500 dark:text-slate-400">
               A plataforma de freelancers com modelo justo por assinatura.
             </p>
             <a
               href="mailto:contato@prestacerto.com.br"
-              className="mt-3 inline-block text-sm text-slate-500 hover:text-slate-900"
+              className="mt-3 inline-block text-sm text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white"
             >
               contato@prestacerto.com.br
             </a>
@@ -45,7 +45,7 @@ export function SiteFooter() {
 
           {columns.map((column) => (
             <div key={column.title}>
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 {column.title}
               </p>
               <ul className="mt-3 space-y-2">
@@ -53,7 +53,7 @@ export function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-500 hover:text-slate-900"
+                      className="text-sm text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -64,7 +64,7 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <p className="mt-10 border-t border-slate-100 pt-6 text-xs text-slate-400">
+        <p className="mt-10 border-t border-slate-100 pt-6 text-xs text-slate-400 dark:border-white/10 dark:text-slate-500">
           © {new Date().getFullYear()} PrestaCerto. Todos os direitos
           reservados.
         </p>

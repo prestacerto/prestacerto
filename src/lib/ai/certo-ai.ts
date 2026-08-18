@@ -1,6 +1,19 @@
-import Anthropic from "@anthropic-ai/sdk";
+type ChatMessage = {
+  role: "system" | "user";
+  content: string;
+};
 
-const client = new Anthropic();
+type ChatCompletionResponse = {
+  choices?: Array<{
+    message?: {
+      content?: string | null;
+    };
+  }>;
+};
+
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_API_URL = process.env.OPENAI_API_URL ?? "https://api.openai.com/v1/chat/completions";
+const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
 
 export interface ProjectBriefSuggestion {
   title: string;
@@ -11,68 +24,127 @@ export interface ProjectBriefSuggestion {
   deadline_days: number | null;
 }
 
+function getTextContent(response: ChatCompletionResponse) {
+  return response.choices?.[0]?.message?.content?.trim() ?? "";
+}
+
+async function complete(messages: ChatMessage[], maxTokens: number) {
+  if (!OPENAI_API_KEY) {
+    throw new Error("Certo AI ainda não foi configurado no servidor.");
+  }
+
+  const response = await fetch(OPENAI_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      messages,
+      temperature: 0.55,
+      max_tokens: maxTokens,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const details = await response.text().catch(() => "");
+    console.error("Certo AI provider error:", response.status, details.slice(0, 500));
+    throw new Error("O serviço de IA não respondeu agora.");
+  }
+
+  return (await response.json()) as ChatCompletionResponse;
+}
+
 /**
- * Copiloto "Certo AI" — ajuda o cliente a transformar uma ideia solta num
- * briefing estruturado. Não decide nada sozinho: só sugere, o cliente revisa
- * e edita antes de publicar.
+ * Copiloto para clientes: transforma uma ideia solta em um briefing estruturado.
+ * A IA apenas sugere; o cliente revisa antes de publicar.
  */
 export async function structureProjectBrief(
   rawIdea: string,
-  categoryHint?: string
+  categoryHint?: string,
 ): Promise<ProjectBriefSuggestion> {
-  const prompt = `Você ajuda clientes de uma plataforma de freelancers brasileira a transformar uma ideia solta num briefing de projeto claro.
+  const response = await complete(
+    [
+      {
+        role: "system",
+        content:
+          "Você ajuda clientes de uma plataforma brasileira de freelancers a escrever briefings claros. Nunca invente orçamento, prazo, experiência ou requisitos que não estejam no texto. Responda apenas com JSON válido, sem markdown.",
+      },
+      {
+        role: "user",
+        content: `Transforme esta ideia em um briefing objetivo.
 
-Ideia do cliente${categoryHint ? ` (categoria sugerida: ${categoryHint})` : ""}:
-"${rawIdea}"
+Categoria sugerida: ${categoryHint || "não informada"}
+Ideia do cliente:
+${rawIdea}
 
-Gere um briefing estruturado. Se o orçamento não for mencionado, deixe null (não invente número). Responda APENAS em JSON, sem explicação:
+Formato obrigatório:
 {
-  "title": "título curto e claro, até 80 caracteres",
-  "description": "descrição detalhada do escopo, em português, 3-5 frases",
+  "title": "título curto, até 80 caracteres",
+  "description": "descrição em português, 3 a 5 frases",
   "skills": ["habilidade1", "habilidade2"],
   "budget_min": number ou null,
   "budget_max": number ou null,
   "deadline_days": number ou null
-}`;
+}`,
+      },
+    ],
+    500,
+  );
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-5",
-    max_tokens: 500,
-    messages: [{ role: "user", content: prompt }],
-  });
+  const text = getTextContent(response).replace(/^```json\s*|\s*```$/g, "");
+  let parsed: Partial<ProjectBriefSuggestion> = {};
 
-  const text = message.content[0].type === "text" ? message.content[0].text : "{}";
-  const parsed = JSON.parse(text) as ProjectBriefSuggestion;
+  try {
+    parsed = JSON.parse(text) as Partial<ProjectBriefSuggestion>;
+  } catch {
+    parsed = {};
+  }
 
   return {
-    title: parsed.title ?? "",
-    description: parsed.description ?? rawIdea,
-    skills: parsed.skills ?? [],
-    budget_min: parsed.budget_min ?? null,
-    budget_max: parsed.budget_max ?? null,
-    deadline_days: parsed.deadline_days ?? null,
+    title: typeof parsed.title === "string" ? parsed.title : "",
+    description:
+      typeof parsed.description === "string" ? parsed.description : rawIdea,
+    skills: Array.isArray(parsed.skills)
+      ? parsed.skills.filter((skill): skill is string => typeof skill === "string")
+      : [],
+    budget_min: typeof parsed.budget_min === "number" ? parsed.budget_min : null,
+    budget_max: typeof parsed.budget_max === "number" ? parsed.budget_max : null,
+    deadline_days:
+      typeof parsed.deadline_days === "number" ? parsed.deadline_days : null,
   };
 }
 
 /**
- * Ajuda o freelancer a melhorar o texto de uma proposta antes de enviar.
+ * Melhora uma proposta mantendo a voz e os fatos informados pelo freelancer.
+ * O resultado é sempre uma sugestão: o freelancer deve revisar antes do envio.
  */
 export async function improveProposalDraft(
   draft: string,
-  projectTitle: string
+  projectTitle: string,
 ): Promise<string> {
-  const prompt = `Você ajuda freelancers brasileiros a escrever proposta melhor pra um projeto numa plataforma de freelancer.
+  const response = await complete(
+    [
+      {
+        role: "system",
+        content:
+          "Você é o Certo AI, um editor invisível de propostas para freelancers brasileiros. Melhore clareza, especificidade e organização, mantendo o tom natural da pessoa. Preserve rigorosamente todos os fatos fornecidos. Não invente clientes, números, anos de experiência, portfólio, certificações, prazos, garantias ou resultados. Se faltar informação, escreva de forma honesta e genérica. Responda apenas com a proposta final em português, sem aspas, introdução ou explicação. Use no máximo 180 palavras.",
+      },
+      {
+        role: "user",
+        content: `Projeto: ${projectTitle}
 
-Projeto: "${projectTitle}"
-Rascunho do freelancer: "${draft}"
+Rascunho do freelancer:
+${draft}
 
-Reescreva de forma mais persuasiva e profissional, mantendo o tom natural da pessoa (não deixe robótico), em português, no máximo 150 palavras. Responda APENAS com o texto da proposta reescrita, sem explicação nem aspas.`;
+Organize a proposta com uma abertura específica para o projeto, uma breve explicação de como a pessoa pode ajudar e um próximo passo claro. Não transforme o texto em uma promessa que o rascunho não sustenta.`,
+      },
+    ],
+    400,
+  );
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-5",
-    max_tokens: 400,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  return message.content[0].type === "text" ? message.content[0].text.trim() : draft;
+  const improved = getTextContent(response);
+  return improved || draft;
 }

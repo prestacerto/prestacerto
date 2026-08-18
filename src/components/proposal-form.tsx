@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Sparkles } from "lucide-react";
+import { Check, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,8 @@ export function ProposalForm({
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [improving, setImproving] = useState(false);
+  const [suggestedText, setSuggestedText] = useState<string | null>(null);
+  const [originalDraft, setOriginalDraft] = useState<string | null>(null);
 
   const {
     register,
@@ -47,22 +49,47 @@ export function ProposalForm({
     }
 
     setImproving(true);
-    const res = await fetch("/api/ai/improve-proposal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ draft, projectTitle }),
-    });
-    setImproving(false);
+    try {
+      const res = await fetch("/api/ai/improve-proposal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ draft, projectTitle }),
+      });
 
-    if (!res.ok) {
       const body = await res.json().catch(() => null);
-      toast.error("Não foi possível melhorar o texto", { description: body?.error });
-      return;
-    }
+      if (!res.ok) {
+        toast.error("Não foi possível melhorar o texto", {
+          description: body?.error,
+        });
+        return;
+      }
 
-    const { improved } = await res.json();
-    setValue("message", improved);
-    toast.success("Texto melhorado — revise antes de enviar");
+      setOriginalDraft(draft);
+      setSuggestedText(body.improved);
+      toast.success("Sugestão pronta — revise antes de usar");
+    } catch {
+      toast.error("Não foi possível conectar ao Certo AI", {
+        description: "Sua proposta original continua salva no formulário.",
+      });
+    } finally {
+      setImproving(false);
+    }
+  }
+
+  function acceptSuggestion() {
+    if (!suggestedText) return;
+    setValue("message", suggestedText, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setSuggestedText(null);
+    setOriginalDraft(null);
+    toast.success("Sugestão aplicada — você ainda pode editar antes de enviar");
+  }
+
+  function discardSuggestion() {
+    setSuggestedText(null);
+    setOriginalDraft(null);
   }
 
   async function onSubmit(values: ProposalValues) {
@@ -117,10 +144,13 @@ export function ProposalForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="message">Mensagem</Label>
+        <div className="flex items-center justify-between gap-3">
+          <Label htmlFor="message">Mensagem</Label>
+          <span className="text-[11px] text-slate-400">Você revisa antes de enviar</span>
+        </div>
         <Textarea
           id="message"
-          rows={4}
+          rows={5}
           placeholder="Conte por que você é a pessoa certa pra esse projeto..."
           {...register("message")}
         />
@@ -131,12 +161,61 @@ export function ProposalForm({
           type="button"
           onClick={handleImprove}
           disabled={improving}
-          className="flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline disabled:opacity-50"
+          className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 transition hover:text-blue-700 hover:underline disabled:opacity-50"
         >
           <Sparkles className="size-3.5" />
-          {improving ? "Melhorando..." : "Melhorar com Certo AI"}
+          {improving ? "Certo AI está organizando sua proposta..." : "Melhorar com Certo AI"}
         </button>
       </div>
+
+      {suggestedText && (
+        <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="flex items-center gap-1.5 text-sm font-bold text-blue-950">
+                <Sparkles className="size-4 text-blue-600" /> Sugestão do Certo AI
+              </p>
+              <p className="mt-1 text-xs leading-5 text-blue-800/70">
+                A ferramenta reorganizou o texto sem inventar informações. Compare e escolha.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={discardSuggestion}
+              className="rounded-md p-1 text-blue-700/60 transition hover:bg-blue-100 hover:text-blue-900"
+              aria-label="Fechar sugestão"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Seu rascunho</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">{originalDraft}</p>
+            </div>
+            <div className="rounded-lg border border-blue-200 bg-white p-3">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-blue-600">Versão sugerida</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">{suggestedText}</p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={discardSuggestion}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Manter meu texto
+            </button>
+            <button
+              type="button"
+              onClick={acceptSuggestion}
+              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-700"
+            >
+              <Check className="mr-1.5 size-4" /> Usar esta sugestão
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-1.5">
         <Label htmlFor="proposedPrice">Valor da proposta (R$, opcional)</Label>

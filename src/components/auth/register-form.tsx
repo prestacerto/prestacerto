@@ -26,7 +26,10 @@ export function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const referrerId = searchParams.get("ref");
-  const [role, setRole] = useState<"freelancer" | "client">("freelancer");
+  const requestedRole = searchParams.get("role");
+  const [role, setRole] = useState<"freelancer" | "client">(
+    requestedRole === "client" ? "client" : "freelancer",
+  );
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 

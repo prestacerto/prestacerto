@@ -37,6 +37,8 @@ RESULTADO DEVE SER:
 SEMPRE em português PT-BR. Sem menção a IA, automação, revisão, etc.`;
 
 export async function POST(req: NextRequest) {
+  let proposalForDemo = "";
+
   try {
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
@@ -64,6 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { action, proposal, proposal2 } = await req.json();
+    proposalForDemo = typeof proposal === "string" ? proposal : "";
 
     if (!action || !proposal) {
       return NextResponse.json(
@@ -322,7 +325,7 @@ RESPONDA EM JSON:
         success: true,
         action: 'optimize_demo',
         result: {
-          optimized: proposal.replace(/^(Sou|Eu )/, 'Sou profissional qualificado e '),
+          optimized: proposalForDemo.replace(/^(Sou|Eu )/, 'Sou profissional qualificado e '),
           score: 70,
           win_rate: 0.70,
           issues: ['Proposta genérica'],

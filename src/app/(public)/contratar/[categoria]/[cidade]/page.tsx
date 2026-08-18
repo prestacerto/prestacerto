@@ -9,6 +9,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/link-button";
 import { CIDADES, CATEGORIAS, getAllLandingCombinations } from "@/lib/data/landing-data";
+import { RegionalLeadForm } from "@/components/regional-lead-form";
 
 export const revalidate = 3600;
 
@@ -196,6 +197,21 @@ export default async function LandingPage({ params }: { params: Promise<Params> 
               <span className="text-xs text-slate-500">{label}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="border-b border-blue-100 bg-[#f4f7ff] px-4 py-12 sm:px-6">
+        <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-[1fr_380px] lg:items-center">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-600">Atendimento local, trabalho remoto</p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Quer encontrar {cat.label.toLowerCase()} em {cid.name}?</h2>
+            <p className="mt-4 max-w-xl leading-7 text-slate-600">Conte o que você precisa e receba um caminho claro para publicar seu projeto e comparar profissionais que atendem sua região.</p>
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
+              <span className="inline-flex items-center gap-2"><CheckCircle2 className="size-4 text-emerald-600" /> Cadastro gratuito</span>
+              <span className="inline-flex items-center gap-2"><Shield className="size-4 text-emerald-600" /> Sem comissão para contratar</span>
+            </div>
+          </div>
+          <RegionalLeadForm category={cat.label} city={cid.name} />
         </div>
       </section>
 
