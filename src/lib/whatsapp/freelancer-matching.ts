@@ -1,10 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import { ScopeAnalysis } from "./ai-scope-analyzer";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 export interface FreelancerMatch {
   id: string;
@@ -24,6 +26,7 @@ export async function findCompatibleFreelancers(
   scope: ScopeAnalysis
 ): Promise<FreelancerMatch[]> {
   try {
+    const supabase = getSupabaseClient();
     // Buscar por categoria (se encontrar categoria no sistema)
     // Por enquanto, busca generalista e ordena por rating
     // TODO: Implementar busca por habilidades do scope.skills[]
@@ -128,6 +131,7 @@ export async function notifyFreelancerOfMatch(
   scope: ScopeAnalysis
 ): Promise<boolean> {
   try {
+    const supabase = getSupabaseClient();
     // TODO: Enviar notificação pra freelancer via WhatsApp
     // Por enquanto, log apenas
     console.log(
@@ -152,6 +156,7 @@ export async function createProjectFromScope(
   scope: ScopeAnalysis
 ): Promise<string | null> {
   try {
+    const supabase = getSupabaseClient();
     // Primeiro: linkar telefone ao user_id (ou criar novo user se necessário)
     const userId = await getOrCreateUserFromPhone(clientPhoneNumber);
     if (!userId) throw new Error("Could not identify user");
@@ -254,6 +259,7 @@ export async function logWhatsAppInteraction(
   freelancersReturned: FreelancerMatch[]
 ): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
     await supabase.from("whatsapp_interactions").insert({
       phone_number: phoneNumber,
       user_message: messageText,
