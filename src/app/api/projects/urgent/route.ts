@@ -8,13 +8,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+  );
+}
 
 export async function GET(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient();
     const { searchParams } = req.nextUrl;
     const limit = parseInt(searchParams.get("limit") || "20");
     const category = searchParams.get("category");

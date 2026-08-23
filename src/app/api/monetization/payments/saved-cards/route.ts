@@ -3,10 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { getAuthenticatedUser as getUser } from "@/lib/auth/getUser";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 const saveCardSchema = z.object({
   token: z.string().min(1, "Token required"),
@@ -25,6 +27,7 @@ type SaveCardRequest = z.infer<typeof saveCardSchema>;
  */
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient();
     const user = await getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -92,6 +95,7 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient();
     const user = await getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -126,6 +130,7 @@ export async function GET(req: NextRequest) {
  */
 export async function DELETE(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient();
     const user = await getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

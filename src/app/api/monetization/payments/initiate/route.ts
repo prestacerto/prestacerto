@@ -5,10 +5,12 @@ import { getAuthenticatedUser as getUser } from "@/lib/auth/getUser";
 import { checkRateLimit, getClientIP, rateLimitResponse, rateLimiters } from "@/lib/rate-limit";
 import crypto from "crypto";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 // Validation schema
 const initiatePaymentSchema = z.object({
@@ -28,6 +30,8 @@ type InitiatePaymentRequest = z.infer<typeof initiatePaymentSchema>;
  */
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient();
+
     // 1. Rate limiting (clients can't spam payments)
     const ip = getClientIP(req);
     const rateLimitCheck = await checkRateLimit(rateLimiters.proposals, ip);
