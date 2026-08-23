@@ -15,7 +15,7 @@ export async function POST() {
 
     // Faz um test select em cada tabela
     const tables = ['projects', 'proposals', 'transactions'];
-    const results = [];
+    const results: Array<{ table: string; exists: boolean; status?: number; error?: string }> = [];
 
     for (const table of tables) {
       try {
