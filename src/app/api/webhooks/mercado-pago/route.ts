@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
           priority_queue: isPriorityQueue,
           monetization_plans: monetizationPlans,
         },
-      }).catch(err => console.error("[MP WEBHOOK] Error logging:", err));
+      });
 
       console.log(`[MP WEBHOOK] Payment approved for user ${userId} - Amount: ${payment.transaction_amount}`);
       return NextResponse.json({ received: true });

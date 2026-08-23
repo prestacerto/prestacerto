@@ -79,8 +79,9 @@ export async function POST(
       .eq("id", id)
       .single();
 
+    const projectRef = Array.isArray(proposal?.projects) ? proposal?.projects[0] : proposal?.projects;
     const recipientId = proposal?.freelancer_id === user.id
-      ? proposal?.projects?.client_id
+      ? projectRef?.client_id
       : proposal?.freelancer_id;
 
     const { data: message, error } = await supabase
@@ -122,11 +123,12 @@ export async function POST(
       }
     }
 
+    const profileRef = Array.isArray(message.profiles) ? message.profiles[0] : message.profiles;
     const formatted = {
       id: message.id,
       body: message.body,
       created_at: message.created_at,
-      sender_name: message.profiles?.full_name,
+      sender_name: profileRef?.full_name,
     };
 
     return NextResponse.json({ message: formatted }, { status: 201 });

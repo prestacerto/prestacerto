@@ -60,13 +60,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to activate plan" }, { status: 500 });
     }
 
-    // Log monetization event
-    await supabase.from("monetization_events").insert({
+    // Log monetization event (fire and forget)
+    void supabase.from("monetization_events").insert({
       user_id: user.id,
       plan_id: planId,
       type: "plan_activated",
       expires_at: expiresAt.toISOString(),
-    }).catch(err => console.error("[ACTIVATE PLAN] Log error:", err));
+    });
 
     return NextResponse.json({
       success: true,

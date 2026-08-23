@@ -33,7 +33,8 @@ export async function POST(
     }
 
     // Verify user is the client
-    if (proposal.projects?.client_id !== user.id) {
+    const projectRef = Array.isArray(proposal.projects) ? proposal.projects[0] : proposal.projects;
+    if (projectRef?.client_id !== user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 

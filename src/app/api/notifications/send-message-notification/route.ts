@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       body: `${senderName} enviou uma mensagem`,
       sent_count: successCount,
       failed_count: failedCount,
-    }).catch(err => console.error("[MESSAGE NOTIFICATION] Log error:", err));
+    });
 
     return NextResponse.json({
       success: true,

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       body: `${freelancerName} propôs seu projeto`,
       sent_count: successCount,
       failed_count: failedCount,
-    }).catch(err => console.error("[NOTIFICATION] Log error:", err));
+    });
 
     return NextResponse.json({
       success: true,
