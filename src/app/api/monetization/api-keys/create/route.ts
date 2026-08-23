@@ -3,10 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 import { randomBytes } from "crypto";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 const PLAN_PRICING: Record<string, { fee: number; limit: number }> = {
   free: { fee: 0, limit: 1000 },
@@ -16,6 +18,7 @@ const PLAN_PRICING: Record<string, { fee: number; limit: number }> = {
 };
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

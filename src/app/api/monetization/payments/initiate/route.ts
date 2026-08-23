@@ -5,9 +5,13 @@ import { getAuthenticatedUser as getUser } from "@/lib/auth/getUser";
 import { checkRateLimit, getClientIP, rateLimitResponse, rateLimiters } from "@/lib/rate-limit";
 import crypto from "crypto";
 
-const supabase = createClient(
+function getSupabaseClient() {
+  return createClient(
+}
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+}
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+}
 );
 
 // Validation schema

@@ -33,7 +33,7 @@ export async function POST(
     }
 
     // Verify user is the client
-    if (proposal.projects?.client_id !== user.id) {
+    if (proposal.projects?.[0]?.client_id !== user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 

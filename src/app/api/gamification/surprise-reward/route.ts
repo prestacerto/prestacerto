@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 const REWARD_POOL = [30, 50, 75, 100, 150]; // R$ randomicamente
 
@@ -16,6 +18,7 @@ export async function POST(req: NextRequest) {
 
     // Checar se já recebeu hoje
     const today = new Date().toISOString().split("T")[0];
+    const supabase = getSupabaseClient();
     const { data: existing } = await supabase
       .from("surprise_rewards")
       .select("id")
@@ -63,6 +66,7 @@ export async function GET(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const today = new Date().toISOString().split("T")[0];
+    const supabase = getSupabaseClient();
     const { data: claimed } = await supabase
       .from("surprise_rewards")
       .select("amount, created_at")
