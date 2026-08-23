@@ -18,8 +18,9 @@ function getSupabaseClient() {
  * Idempotency key enforcement (no double-processing)
  */
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseClient();
+
   try {
-    const supabase = getSupabaseClient();
     // 1. Get request body and signature
     const body = await req.json();
     const xSignature = req.headers.get("x-signature");

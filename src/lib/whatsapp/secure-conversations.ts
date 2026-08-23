@@ -13,10 +13,12 @@
 import { createClient } from "@supabase/supabase-js";
 import type { ScopeAnalysis } from "./ai-scope-analyzer";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+}
 
 /**
  * Iniciar ou recuperar conversação do WhatsApp
@@ -27,6 +29,7 @@ export async function getOrCreateConversation(
   phoneNumber: string
 ): Promise<{ conversationId: string; userId: string | null }> {
   try {
+    const supabase = getSupabaseClient();
     // Procurar conversa ativa
     const { data: existing } = await supabase
       .from("whatsapp_conversations")
@@ -70,6 +73,7 @@ export async function addMessageToContext(
   content: string
 ): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
     const { data: convo, error: fetchError } = await supabase
       .from("whatsapp_conversations")
       .select("conversation_context")
@@ -109,6 +113,7 @@ export async function storeMatchesInConversation(
   scopeAnalysis: ScopeAnalysis
 ): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
     // Primeiro: ler contexto atual
     const { data: convo, error: fetchError } = await supabase
       .from("whatsapp_conversations")
@@ -154,6 +159,7 @@ export async function validateFreelancerAccess(
   freelancerId: string
 ): Promise<boolean> {
   try {
+    const supabase = getSupabaseClient();
     const { data: convo } = await supabase
       .from("whatsapp_conversations")
       .select("conversation_context")
@@ -183,6 +189,7 @@ export async function completeConversation(
   selectedFreelancerId?: string
 ): Promise<void> {
   try {
+    const supabase = getSupabaseClient();
     const { error } = await supabase
       .from("whatsapp_conversations")
       .update({
