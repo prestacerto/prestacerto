@@ -17,7 +17,10 @@ const featuredVehicles = [
     type: 'SUV',
     image: '/vehicles/jeep-compass.jpg',
     isFavorite: false,
-    status: 'available'
+    status: 'available',
+    isHighlighted: true,
+    sellerBadge: 'top-seller' as const,
+    views: 1234
   },
   {
     id: '2',
@@ -30,7 +33,9 @@ const featuredVehicles = [
     type: 'SUV',
     image: '/vehicles/vw-tcross.jpg',
     isFavorite: false,
-    status: 'sold'
+    status: 'sold',
+    sellerBadge: 'verified' as const,
+    views: 2845
   },
   {
     id: '3',
@@ -43,7 +48,9 @@ const featuredVehicles = [
     type: 'Sedan',
     image: '/vehicles/honda-civic.jpg',
     isFavorite: true,
-    status: 'available'
+    status: 'available',
+    priceDropped: true,
+    views: 892
   }
 ];
 
@@ -73,6 +80,13 @@ const services = [
     title: 'Quero Vender',
     badge: ''
   }
+];
+
+const recentSearches = [
+  'Hyundai HB20',
+  'Volkswagen T-Cross',
+  'Honda Civic',
+  'Jeep Compass'
 ];
 
 export default function Home() {
@@ -140,6 +154,21 @@ export default function Home() {
                 {service.badge && (
                   <div className="text-xs font-bold opacity-90 mt-1">{service.badge}</div>
                 )}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Recent Searches */}
+        <section className="px-4 py-4">
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Últimas buscas</h3>
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {recentSearches.map((search) => (
+              <button
+                key={search}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap transition flex-shrink-0"
+              >
+                {search}
               </button>
             ))}
           </div>

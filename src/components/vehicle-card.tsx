@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Star, Zap } from 'lucide-react';
+import { Heart, Star, Zap, TrendingUp, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 
 interface Vehicle {
@@ -16,6 +16,9 @@ interface Vehicle {
   isFavorite: boolean;
   status: 'available' | 'sold';
   isHighlighted?: boolean;
+  sellerBadge?: 'verified' | 'top-seller' | 'new';
+  views?: number;
+  priceDropped?: boolean;
 }
 
 export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
@@ -30,10 +33,31 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
       {/* Image Container */}
       <div className="relative bg-gray-100 aspect-video">
-        {vehicle.isHighlighted && (
-          <div className="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
-            <Star className="w-3 h-3 fill-current" />
-            Destaque
+        {/* Badges */}
+        <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+          {vehicle.isHighlighted && (
+            <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
+              <Star className="w-3.5 h-3.5 fill-current" />
+              Destaque
+            </div>
+          )}
+          {vehicle.sellerBadge === 'verified' && (
+            <div className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
+              <CheckCircle className="w-3.5 h-3.5" />
+              Verificado
+            </div>
+          )}
+          {vehicle.sellerBadge === 'top-seller' && (
+            <div className="bg-blue-600 text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
+              <TrendingUp className="w-3.5 h-3.5" />
+              Top Seller
+            </div>
+          )}
+        </div>
+
+        {vehicle.priceDropped && (
+          <div className="absolute top-2 left-2 bg-red-500 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-md">
+            ↓ Preço Reduzido
           </div>
         )}
 
@@ -79,7 +103,7 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-3">
           <div className="flex items-center gap-1">
             <span>📍</span>
-            <span>{vehicle.location}</span>
+            <span className="truncate">{vehicle.location}</span>
           </div>
           <div className="flex items-center gap-1">
             <span>🏷️</span>
@@ -87,8 +111,15 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
           </div>
         </div>
 
+        {/* Views Count */}
+        {vehicle.views && (
+          <p className="text-xs text-gray-500 mb-2">
+            👁️ {vehicle.views.toLocaleString()} visualizações
+          </p>
+        )}
+
         {/* CTA Button */}
-        <button className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold text-sm transition">
+        <button className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-lg font-semibold text-sm transition shadow-sm">
           Ver Detalhes
         </button>
       </div>
