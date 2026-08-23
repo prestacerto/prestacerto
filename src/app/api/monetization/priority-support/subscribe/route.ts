@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
-function getSupabaseClient() {
-  return createClient(
-}
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-}
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-}
 );
 
 const PRIORITY_SUPPORT_FEE = 20; // R$ 20/mês

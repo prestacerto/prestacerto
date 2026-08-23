@@ -17,7 +17,7 @@ const featuredVehicles = [
     type: 'SUV',
     image: '/vehicles/jeep-compass.jpg',
     isFavorite: false,
-    status: 'available' as const,
+    status: 'available',
     isHighlighted: true,
     sellerBadge: 'top-seller' as const,
     views: 1234
@@ -33,7 +33,7 @@ const featuredVehicles = [
     type: 'SUV',
     image: '/vehicles/vw-tcross.jpg',
     isFavorite: false,
-    status: 'sold' as const,
+    status: 'sold',
     sellerBadge: 'verified' as const,
     views: 2845
   },
@@ -48,11 +48,11 @@ const featuredVehicles = [
     type: 'Sedan',
     image: '/vehicles/honda-civic.jpg',
     isFavorite: true,
-    status: 'available' as const,
+    status: 'available',
     priceDropped: true,
     views: 892
   }
-] as const;
+];
 
 const services = [
   {

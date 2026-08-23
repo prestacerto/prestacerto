@@ -80,7 +80,7 @@ export async function POST(
       .single();
 
     const recipientId = proposal?.freelancer_id === user.id
-      ? proposal?.projects?.[0]?.client_id
+      ? proposal?.projects?.client_id
       : proposal?.freelancer_id;
 
     const { data: message, error } = await supabase
@@ -126,7 +126,7 @@ export async function POST(
       id: message.id,
       body: message.body,
       created_at: message.created_at,
-      sender_name: message.profiles?.[0]?.full_name,
+      sender_name: message.profiles?.full_name,
     };
 
     return NextResponse.json({ message: formatted }, { status: 201 });

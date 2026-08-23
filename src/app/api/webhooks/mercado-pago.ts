@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-function getSupabaseClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-  );
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+);
 
 /**
  * POST /api/webhooks/mercado-pago
@@ -18,9 +16,7 @@ function getSupabaseClient() {
  * Idempotency key enforcement (no double-processing)
  */
 export async function POST(req: NextRequest) {
-  const supabase = getSupabaseClient();
   try {
-
     // 1. Get request body and signature
     const body = await req.json();
     const xSignature = req.headers.get("x-signature");

@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
-function getSupabaseClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-  );
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+);
 
 const CHALLENGES = [
   { id: "publish_project", name: "Publicar um projeto", xp: 50, reward: 10, action: "project_created" },
@@ -24,7 +22,6 @@ export async function GET(req: NextRequest) {
 
     // Pegar challenges do usuário hoje
     const today = new Date().toISOString().split("T")[0];
-    const supabase = getSupabaseClient();
     const { data: userChallenges } = await supabase
       .from("user_daily_challenges")
       .select("challenge_id, completed_at, progress")
@@ -56,7 +53,6 @@ export async function POST(req: NextRequest) {
     if (!challenge) return NextResponse.json({ error: "Challenge not found" }, { status: 404 });
 
     const today = new Date().toISOString().split("T")[0];
-    const supabase = getSupabaseClient();
 
     // Marcar como completo
     await supabase.from("user_daily_challenges").upsert({

@@ -3,13 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { getAuthenticatedUser as getUser } from "@/lib/auth/getUser";
 
-function getSupabaseClient() {
-  return createClient(
-}
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-}
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-}
 );
 
 const saveCardSchema = z.object({
