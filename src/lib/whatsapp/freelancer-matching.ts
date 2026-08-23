@@ -201,6 +201,7 @@ async function getOrCreateUserFromPhone(
   phoneNumber: string
 ): Promise<string | null> {
   try {
+    const supabase = getSupabaseClient();
     // Ver se já existe mapeamento
     const { data: existing } = await supabase
       .from("whatsapp_users")
