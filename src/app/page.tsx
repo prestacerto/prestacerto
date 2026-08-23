@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Heart, Menu, Home, Filter, Settings, Plus } from 'lucide-react';
+import { Search, Heart, Menu, Home as HomeIcon, Filter, Settings, Plus } from 'lucide-react';
 import { VehicleCard } from '@/components/vehicle-card';
 
 const featuredVehicles = [
@@ -207,7 +207,7 @@ export default function Home() {
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
         <div className="flex justify-around items-center">
           <Link href="/" className="flex-1 py-3 text-center hover:bg-gray-50">
-            <Home className="w-6 h-6 mx-auto mb-1 text-red-500" />
+            <HomeIcon className="w-6 h-6 mx-auto mb-1 text-red-500" />
             <span className="text-xs text-red-500 font-semibold">Início</span>
           </Link>
           <Link href="/search" className="flex-1 py-3 text-center hover:bg-gray-50">
