@@ -22,8 +22,10 @@ export async function GET(
         proposed_price,
         message,
         created_at,
+        freelancer_id,
         projects (
           title,
+          client_id,
           profiles!projects_client_id_fkey (
             full_name
           )
@@ -38,7 +40,7 @@ export async function GET(
 
     // Check if user has access (freelancer or client)
     const isFreelancer = proposal.freelancer_id === user.id;
-    const isClient = proposal.projects?.profiles?.id === user.id;
+    const isClient = proposal.projects?.[0]?.client_id === user.id;
 
     if (!isFreelancer && !isClient) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
@@ -64,15 +66,15 @@ export async function GET(
       proposed_price: proposal.proposed_price,
       message: proposal.message,
       created_at: proposal.created_at,
-      project_title: proposal.projects?.title,
-      client_name: proposal.projects?.profiles?.full_name,
+      project_title: proposal.projects?.[0]?.title,
+      client_name: proposal.projects?.[0]?.profiles?.[0]?.full_name,
     };
 
     const formattedMessages = messages?.map((m: any) => ({
       id: m.id,
       body: m.body,
       created_at: m.created_at,
-      sender_name: m.profiles?.full_name,
+      sender_name: m.profiles?.[0]?.full_name,
     })) || [];
 
     return NextResponse.json({ proposal: formatted, messages: formattedMessages });

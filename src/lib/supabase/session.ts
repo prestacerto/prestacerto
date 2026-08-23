@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import type { User } from "@supabase/supabase-js";
 
 const PROTECTED_PREFIX = "/dashboard";
 
@@ -51,7 +52,7 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  let user = null;
+  let user: User | null = null;
   try {
     const {
       data: { user: authUser },

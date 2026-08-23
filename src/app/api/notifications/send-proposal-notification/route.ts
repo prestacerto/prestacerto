@@ -81,14 +81,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Log notification
-    await supabase.from("notification_logs").insert({
+    const { error: logError } = await supabase.from("notification_logs").insert({
       user_id: clientId,
       type: "proposal",
       title: "Nova Proposta",
       body: `${freelancerName} propôs seu projeto`,
       sent_count: successCount,
       failed_count: failedCount,
-    }).catch(err => console.error("[NOTIFICATION] Log error:", err));
+    });
+    if (logError) {
+      console.error("[NOTIFICATION] Log error:", logError);
+    }
 
     return NextResponse.json({
       success: true,
