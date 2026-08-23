@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { createServiceClient } from "@/lib/supabase/service";
 import { SuccessStoryCard } from "@/components/success-story-card";
 import { LinkButton } from "@/components/link-button";

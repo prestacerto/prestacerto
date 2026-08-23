@@ -4,7 +4,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { LinkButton } from "@/components/link-button";
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Quanto ganha um freelancer no Brasil? | PrestaCerto",

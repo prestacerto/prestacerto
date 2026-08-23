@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { Search, Heart, Menu, Home as HomeIcon, Filter, Settings, Plus } from 'lucide-react';
+import { Search, Heart, Menu, Home as HomeIcon, Filter, Settings, Plus, Share2, Gift, TrendingUp } from 'lucide-react';
 import { VehicleCard } from '@/components/vehicle-card';
+import { ReferralTracker } from '@/components/ReferralTracker';
 
 const featuredVehicles = [
   {
@@ -93,9 +94,60 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'cars' | 'motos'>('cars');
   const [searchQuery, setSearchQuery] = useState('');
   const [favoriteCount, setFavoriteCount] = useState(1);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [showReferralBanner, setShowReferralBanner] = useState(true);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterMessage, setNewsletterMessage] = useState('');
+
+  useEffect(() => {
+    const fetchReferralCode = async () => {
+      try {
+        const response = await fetch('/api/referrals/generate-code');
+        const data = await response.json();
+        if (data.code) {
+          setReferralCode(data.code);
+        }
+      } catch (error) {
+        console.error('Failed to fetch referral code:', error);
+      }
+    };
+
+    fetchReferralCode();
+  }, []);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) {
+      setNewsletterMessage('Por favor, digite seu email');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail, source: 'home_page' }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setNewsletterMessage(data.message);
+        setNewsletterEmail('');
+        setTimeout(() => setNewsletterMessage(''), 4000);
+      } else {
+        setNewsletterMessage(data.error || 'Erro ao inscrever');
+      }
+    } catch (error) {
+      console.error('Newsletter error:', error);
+      setNewsletterMessage('Erro ao processar sua inscrição');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
+      <Suspense fallback={null}>
+        <ReferralTracker />
+      </Suspense>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
@@ -159,6 +211,45 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Referral Banner */}
+        {showReferralBanner && (
+          <section className="px-4 py-4">
+            <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-4 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 opacity-10">
+                <Gift size={80} />
+              </div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp size={20} />
+                  <h3 className="text-lg font-bold">Ganhe R$ Indicando!</h3>
+                </div>
+                <p className="text-sm mb-3 opacity-95">
+                  Indique amigos e ganhe até R$ 50 por cada pessoa que se cadastrar
+                </p>
+                {referralCode ? (
+                  <div className="bg-white bg-opacity-20 rounded p-2 mb-3">
+                    <p className="text-xs opacity-90 mb-1">Seu código de indicação:</p>
+                    <p className="font-bold text-sm">{referralCode}</p>
+                  </div>
+                ) : null}
+                <Link
+                  href={referralCode ? `/referrals?code=${referralCode}` : '/referrals'}
+                  className="inline-block w-full bg-white text-orange-500 font-semibold py-2 rounded text-center hover:bg-gray-100 transition"
+                >
+                  <Share2 className="inline mr-2" size={16} />
+                  Copiar Link e Compartilhar
+                </Link>
+              </div>
+              <button
+                onClick={() => setShowReferralBanner(false)}
+                className="absolute top-2 right-2 text-white opacity-70 hover:opacity-100"
+              >
+                ✕
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* Recent Searches */}
         <section className="px-4 py-4">
           <h3 className="text-sm font-bold text-gray-900 mb-3">Últimas buscas</h3>
@@ -181,6 +272,38 @@ export default function Home() {
             {featuredVehicles.map((vehicle) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} />
             ))}
+          </div>
+        </section>
+
+        {/* Newsletter Section */}
+        <section className="px-4 py-4">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-bold text-gray-900 mb-2">
+              📧 Receba ofertas exclusivas
+            </h3>
+            <p className="text-sm text-gray-600 mb-3">
+              Seja o primeiro a saber sobre os melhores veículos
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+              <input
+                type="email"
+                placeholder="Seu email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                className="w-full px-3 py-2 border border-blue-300 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+              />
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition text-sm"
+              >
+                Se inscrever gratuitamente
+              </button>
+            </form>
+            {newsletterMessage && (
+              <p className={`text-xs mt-2 ${newsletterMessage.includes('✓') ? 'text-green-600' : 'text-red-600'}`}>
+                {newsletterMessage}
+              </p>
+            )}
           </div>
         </section>
 
