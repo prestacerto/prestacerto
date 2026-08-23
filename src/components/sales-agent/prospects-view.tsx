@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Eye, Mail, MessageSquare } from 'lucide-react';
 
 interface ProspectsViewProps {

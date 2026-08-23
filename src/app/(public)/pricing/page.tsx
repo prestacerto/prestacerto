@@ -14,7 +14,7 @@ export default async function PricingPage() {
   const supabase = createServiceClient();
 
   // Fetch pricing plans from database
-  const { data: plans = [] } = await supabase
+  const { data: plans } = await supabase
     .from('stripe_plans')
     .select('*')
     .order('base_price', { ascending: true });
@@ -79,7 +79,7 @@ export default async function PricingPage() {
     },
   ];
 
-  const displayPlans = plans.length > 0 ? plans : defaultPlans;
+  const displayPlans = (plans && plans.length > 0) ? plans : defaultPlans;
 
   return (
     <main className="min-h-screen bg-white py-24 px-4 sm:px-6 lg:px-8">
