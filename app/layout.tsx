@@ -7,6 +7,15 @@ export const metadata: Metadata = {
   title: { default: 'IA para imobiliárias no WhatsApp | Cadu AI', template: '%s | Cadu AI' },
   description: 'O Cadu atende, qualifica e acompanha leads imobiliários pelo WhatsApp para gerar mais visitas com contexto para o corretor.',
   alternates: { canonical: '/' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/apple-touch-icon.png', type: 'image/png', sizes: '180x180' }],
+  },
   keywords: ['IA para imobiliárias', 'atendimento imobiliário no WhatsApp', 'automação de leads imobiliários', 'qualificação de leads imobiliários', 'CRM para imobiliária'],
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
   openGraph: { type: 'website', locale: 'pt_BR', siteName: 'Cadu AI', title: 'IA para imobiliárias no WhatsApp | Cadu AI', description: 'Atenda, qualifique e acompanhe leads para transformar conversas em visitas.', images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Cadu.AI — Mais visitas que acontecem.' }] },

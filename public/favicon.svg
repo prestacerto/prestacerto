@@ -1,6 +1,15 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M22 19.2727C22 20.779 20.779 22 19.2727 22H14.7273C13.221 22 12 20.779 12 19.2727V12H19.2727C20.779 12 22 13.221 22 14.7273V19.2727Z" fill="#68C4FF"/>
-<path d="M20 2C21.1046 2 22 2.89543 22 4V7C22 8.10457 21.1046 9 20 9H17C15.8954 9 15 8.10457 15 7V4C15 2.89543 15.8954 2 17 2H20Z" fill="#0C79D8"/>
-<path d="M7 15C8.10457 15 9 15.8954 9 17V20C9 21.1046 8.10457 22 7 22H4C2.89543 22 2 21.1046 2 20V17C2 15.8954 2.89543 15 4 15H7Z" fill="#0C79D8"/>
-<path d="M12 12H4.72727C3.22104 12 2 10.779 2 9.27273V4.72727C2 3.22104 3.22104 2 4.72727 2H9.27273C10.779 2 12 3.22104 12 4.72727V12Z" fill="#2E9EFF"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="18" fill="#F5F3EE"/>
+  <path d="M10 8L54 17.68V46.32L10 56V8Z" fill="url(#brandGradient)"/>
+  <path d="M43.84 42.55C41.29 45.02 37.76 46.4 33.65 46.4C24.76 46.4 18.1 40 18.1 31.92C18.1 23.84 24.76 17.6 33.65 17.6C37.67 17.6 41.11 18.9 43.66 21.2L39.73 26.13C38.09 24.61 36.12 23.94 33.83 23.94C28.82 23.94 25.38 27.29 25.38 31.96C25.38 36.66 28.82 40.06 33.83 40.06C36.34 40.06 38.35 39.26 39.99 37.61L43.84 42.55Z" fill="white"/>
+  <defs>
+    <linearGradient id="brandGradient" x1="9" y1="8" x2="55" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17134C"/>
+      <stop offset="0.46" stop-color="#1D174F"/>
+      <stop offset="0.47" stop-color="#EF4B31"/>
+      <stop offset="0.72" stop-color="#EF4B31"/>
+      <stop offset="0.73" stop-color="#1F9B62"/>
+      <stop offset="1" stop-color="#1F9B62"/>
+    </linearGradient>
+  </defs>
 </svg>
