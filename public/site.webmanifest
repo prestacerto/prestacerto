@@ -1,0 +1,25 @@
+{
+  "name": "Cadu AI",
+  "short_name": "Cadu",
+  "description": "IA para imobiliárias no WhatsApp: atendimento, qualificação e follow-up de leads para gerar mais visitas.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f3ee",
+  "theme_color": "#ef4b31",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
