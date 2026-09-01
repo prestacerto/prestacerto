@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export type ChatGPTUser = { userId: string; displayName: string; email: string; fullName: string | null };
+export type UserRole = 'Admin' | 'User';
 
 export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
   const requestHeaders = await headers();
@@ -17,6 +18,20 @@ export async function requireChatGPTUser(returnTo: string): Promise<ChatGPTUser>
   const user = await getChatGPTUser();
   if (user) return user;
   redirect('/signin-with-chatgpt?return_to=' + encodeURIComponent(safeReturnTo(returnTo)));
+}
+
+export function getUserRole(user: ChatGPTUser): UserRole {
+  const adminEmails = (process.env.ADMIN_EMAILS ?? '')
+    .split(',')
+    .map(email => email.trim().toLowerCase())
+    .filter(Boolean);
+  return adminEmails.includes(user.email.toLowerCase()) ? 'Admin' : 'User';
+}
+
+export async function requireAdmin(): Promise<ChatGPTUser> {
+  const user = await getChatGPTUser();
+  if (!user || getUserRole(user) !== 'Admin') redirect('/');
+  return user;
 }
 
 function safeReturnTo(value: string) {
