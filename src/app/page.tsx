@@ -250,7 +250,7 @@ export default async function Home() {
               <span className="text-blue-600 dark:text-blue-400">Sem demora.</span>
             </h1>
             <p className="mt-10 max-w-[42rem] text-[1.02rem] leading-8 text-slate-600 dark:text-slate-300 sm:text-[1.07rem]">
-              500k profissionais verificados. R$ 2B em volume de contratos. Encontre o melhor freelancer com segurança, clareza e ferramentas inteligentes para contratar no Brasil.
+              12k+ profissionais verificados. R$ 2M em volume de contratos. Encontre o melhor freelancer com segurança, clareza e ferramentas inteligentes para contratar no Brasil.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -326,12 +326,12 @@ export default async function Home() {
           <p className="mt-3 text-slate-600 dark:text-slate-300">Comunidade verificada e segura de freelancers e clientes que já transformaram seus projetos.</p>
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
             <div className="text-center">
-              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">500k+</p>
+              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">12k+</p>
               <p className="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Profissionais verificados</p>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Testados e prontos para trabalhar</p>
             </div>
             <div className="text-center">
-              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">R$ 2B+</p>
+              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">R$ 2M+</p>
               <p className="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Volume em contratos</p>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Projetos realizados com confiança</p>
             </div>
