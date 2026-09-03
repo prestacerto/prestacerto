@@ -15,6 +15,11 @@ import SavedCollections from '../components/SavedCollections';
 import OpportunityAlerts from '../components/OpportunityAlerts';
 import DocumentCenter from '../components/DocumentCenter';
 import ContentHub from '../components/ContentHub';
+import IdentityVerification from '../components/IdentityVerification';
+import VerificationBadge from '../components/VerificationBadge';
+import ReviewsSection from '../components/ReviewsSection';
+import PhotoProof from '../components/PhotoProof';
+import IntegratedChat from '../components/IntegratedChat';
 
 type LeadStatus = 'Novo' | 'Em conversa' | 'Visita' | 'Aguardando';
 type Lead = { id:number; name:string; initials:string; detail:string; source:string; score:number; status:LeadStatus; action:string; age:string };
@@ -114,6 +119,26 @@ export default function DashboardClient({userName,userEmail}:{userName:string;us
       <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
         <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
           <ContentHub/>
+        </div>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <IdentityVerification/>
+      </section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <ReviewsSection/>
+        </div>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <PhotoProof/>
+      </section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <IntegratedChat/>
         </div>
       </section>
 
