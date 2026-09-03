@@ -1,14 +1,24 @@
 'use client';
+import { useEffect, useState } from 'react';
 import HeroSection from './components/HeroSection';
 import ThreePillars from './components/ThreePillars';
 import CategoriesSection from './components/CategoriesSection';
 import DiscoverSection from './components/DiscoverSection';
+import BriefingAIIntegrated from './components/BriefingAI-Integrated';
 import PricingCalculator from './components/PricingCalculator';
 import StartingPoint from './components/StartingPoint';
 import FAQNarrative from './components/FAQNarrative';
 import FinalCTA from './components/FinalCTA';
 
 export default function Home() {
+  const [user, setUser] = useState<{ email: string; displayName: string } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then(r => r.json())
+      .then(data => setUser(data.user || null))
+      .catch(() => setUser(null));
+  }, []);
   return (
     <>
       <style>{`
@@ -132,6 +142,9 @@ export default function Home() {
         <ThreePillars />
         <CategoriesSection />
         <DiscoverSection />
+        <section style={{ background: '#f9f8f7', padding: '80px 40px' }}>
+          <BriefingAIIntegrated user={user} />
+        </section>
         <PricingCalculator />
         <StartingPoint />
         <FAQNarrative />

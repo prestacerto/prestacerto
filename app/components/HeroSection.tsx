@@ -57,17 +57,17 @@ export default function HeroSection() {
       <section className="hero">
         <div className="hero-content">
           <p className={`hero-label ${isVisible ? 'fade-in fade-in-1' : ''}`}>
-            Marketplace pensado para o Brasil
+            Contrate melhor, sem comissões
           </p>
-          
+
           <h1 className={`hero-headline ${isVisible ? 'fade-in fade-in-2' : ''}`}>
             Contrate<br/>
             melhor.<br/>
-            <span className="hero-headline-accent">Feito para o Brasil.</span>
+            <span className="hero-headline-accent">Sem comissões.</span>
           </h1>
           
           <p className={`hero-description ${isVisible ? 'fade-in fade-in-3' : ''}`}>
-            Encontre <strong>freelancers e prestadores com histórico verificado</strong>. Compare <strong>portfólio, prazo e valor</strong> antes de decidir. Contrate com <strong>segurança e contexto</strong>.
+            Encontre <strong>freelancers e prestadores com histórico verificado</strong>. Compare <strong>portfólio, prazo e valor</strong> antes de decidir. Contrate com <strong>segurança, contexto e sem comissões</strong>.
           </p>
           
           <div className={`hero-ctas ${isVisible ? 'fade-in fade-in-4' : ''}`}>
@@ -77,7 +77,9 @@ export default function HeroSection() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px', fontSize: '12px', color: '#a8a3b5' }}>
             <div>✓ Avaliações reais verificadas</div>
+            <div>✓ Sem comissões ou taxas</div>
             <div>✓ Negociação transparente</div>
+            <div>✓ Pagamento seguro com escrow</div>
           </div>
         </div>
 
