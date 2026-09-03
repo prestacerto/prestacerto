@@ -6,6 +6,15 @@ import AnimatedMetrics from '../components/AnimatedMetrics';
 import ProposalChat from '../components/ProposalChat';
 import InteractiveDashboard from '../components/InteractiveDashboard';
 import NotificationBell from '../components/NotificationBell';
+import BriefingAI from '../components/BriefingAI';
+import ContextualMatch from '../components/ContextualMatch';
+import ProposalComparator from '../components/ProposalComparator';
+import ShareableProfile from '../components/ShareableProfile';
+import ProjectHistory from '../components/ProjectHistory';
+import SavedCollections from '../components/SavedCollections';
+import OpportunityAlerts from '../components/OpportunityAlerts';
+import DocumentCenter from '../components/DocumentCenter';
+import ContentHub from '../components/ContentHub';
 
 type LeadStatus = 'Novo' | 'Em conversa' | 'Visita' | 'Aguardando';
 type Lead = { id:number; name:string; initials:string; detail:string; source:string; score:number; status:LeadStatus; action:string; age:string };
@@ -63,6 +72,51 @@ export default function DashboardClient({userName,userEmail}:{userName:string;us
       <section id="insights" className="insight-banner"><div><p>INSIGHT DA SEMANA</p><h2>Leads com visita no radar avançam <em>2,3× mais</em> quando recebem confirmação no mesmo dia.</h2></div><button onClick={()=>setNotice('Lembrete de confirmação preparado para sua operação.')}>Ativar lembrete ↗</button></section>
       <PortfolioUpload/>
       <section style={{marginTop: '30px'}}><ProposalChat/></section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <BriefingAI/>
+        </div>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <ContextualMatch/>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <ProposalComparator/>
+      </section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <ShareableProfile/>
+        </div>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <ProjectHistory/>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <SavedCollections/>
+      </section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <OpportunityAlerts/>
+        </div>
+      </section>
+
+      <section style={{marginTop: '40px'}}>
+        <DocumentCenter/>
+      </section>
+
+      <section style={{marginTop: '40px', background: '#f5f3f0', padding: '40px 0', marginLeft: '-40px', marginRight: '-40px', paddingLeft: '40px', paddingRight: '40px'}}>
+        <div style={{maxWidth: 'calc(100% + 80px)', marginLeft: '-40px', marginRight: '-40px'}}>
+          <ContentHub/>
+        </div>
+      </section>
+
       <section id="integracoes" className="portal-integrations"><div><p>INTEGRAÇÕES</p><h2>Conecte a operação real.</h2><span>O dashboard já está pronto; basta ligar as fontes para trocar os dados demonstrativos pelos dados da sua imobiliária.</span></div><div><article><span>V</span><strong>Vista CRM</strong><small>Em homologação</small></article><article><span>RD</span><strong>RD Station</strong><small>Em homologação</small></article><article><span>W</span><strong>WhatsApp oficial</strong><small>Próxima etapa</small></article></div></section>
     </section>
   </main>;
