@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 import './globals.css';
+import WhatsAppWidget from './components/WhatsAppWidget';
+import SocialProof from './components/SocialProof';
+import ProgressiveSignup from './components/ProgressiveSignup';
+import ExitIntentPopup from './components/ExitIntentPopup';
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const siteUrl = 'https://caduai.com.br';
 const siteTitle = 'IA para imobiliárias no WhatsApp | Cadu AI';
@@ -114,4 +118,4 @@ const structuredData = {
     },
   ],
 };
-export default function RootLayout({children}: Readonly<{children:React.ReactNode}>) { return <html lang="pt-BR"><body className={geist.variable}>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(structuredData)}}/></body></html>; }
+export default function RootLayout({children}: Readonly<{children:React.ReactNode}>) { return <html lang="pt-BR"><body className={geist.variable}>{children}<WhatsAppWidget/><SocialProof/><ProgressiveSignup/><ExitIntentPopup/><script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(structuredData)}}/></body></html>; }
