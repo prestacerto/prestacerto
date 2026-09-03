@@ -1,69 +1,142 @@
 'use client';
-import { FormEvent, useMemo, useState } from 'react';
-
-const whatsapp = 'https://wa.me/5513988251275?text=Ol%C3%A1%2C%20Cadu!%20Quero%20mapear%20o%20atendimento%20da%20minha%20imobili%C3%A1ria.';
-const faqs = [
-  ['O Cadu substitui o corretor?','Não. O Cadu assume a primeira resposta, a triagem e o acompanhamento. O corretor entra quando existe contexto e uma próxima ação clara.'],
-  ['Com quais CRMs o Cadu pode funcionar?','Vista CRM e RD Station estão entre os primeiros conectores. Também desenhamos integrações para Kenlo, CV CRM, Imoview, HubSpot e outros sistemas.'],
-  ['Como funciona o modelo por resultado?','Antes do piloto, definimos juntos o que conta como visita ou negócio atribuído. A remuneração acompanha o resultado verificado pela operação.'],
-  ['O Cadu inventa imóveis, preços ou disponibilidade?','Não. Ele trabalha apenas com as fontes autorizadas pela sua imobiliária e pede ajuda humana quando a informação não está disponível.'],
-  ['O Cadu é um chatbot ou um CRM?','Nenhum dos dois. É uma camada de inteligência de receita que conversa com o lead e devolve contexto para o CRM que sua equipe já usa.'],
-];
-
-type ChatMessage = { id:number; from:'cadu'|'lead'; text:string };
-const starterChat:ChatMessage[] = [
-  { id:1, from:'cadu', text:'Oi! Eu sou o Cadu da Atlântica. Posso entender o que você procura e já deixar o próximo passo organizado.' },
-  { id:2, from:'cadu', text:'Você busca imóvel para morar, investir ou temporada?' },
-];
-const quickQuestions = ['Quero 2 quartos perto do metrô', 'Até R$ 800 mil', 'Quero agendar uma visita'];
-
-function replyFor(message:string) {
-  const text = message.toLowerCase();
-  if (text.includes('visita') || text.includes('agendar')) return 'Perfeito. Posso organizar uma visita. Qual dia e período funcionam melhor para você?';
-  if (text.includes('2 quarto') || text.includes('dois quarto')) return 'Ótimo recorte. Para eu priorizar as opções certas: em qual região você gostaria de morar?';
-  if (text.includes('800') || text.includes('orçamento') || text.includes('mil')) return 'Anotado. Vou considerar essa faixa no atendimento. Você aceita imóvel pronto ou também avalia lançamento?';
-  if (text.includes('morar')) return 'Perfeito. Me conta a região que faz sentido e o que é indispensável para você no dia a dia.';
-  return 'Entendi. Para eu te ajudar sem te fazer perder tempo: qual região, tipo de imóvel e faixa de investimento fazem sentido?';
-}
+import HeroSection from './components/HeroSection';
+import ThreePillars from './components/ThreePillars';
+import CategoriesSection from './components/CategoriesSection';
+import DiscoverSection from './components/DiscoverSection';
+import PricingCalculator from './components/PricingCalculator';
+import StartingPoint from './components/StartingPoint';
+import FAQNarrative from './components/FAQNarrative';
+import FinalCTA from './components/FinalCTA';
 
 export default function Home() {
-  const [goal,setGoal] = useState(0); const [faq,setFaq] = useState<number|null>(0);
-  const [leads,setLeads] = useState(200); const [hours,setHours] = useState(60); const [cost,setCost] = useState(45); const [automation,setAutomation] = useState(40);
-  const [chatMessages,setChatMessages] = useState<ChatMessage[]>(starterChat); const [chatInput,setChatInput] = useState(''); const [isReplying,setIsReplying] = useState(false); const [leadSent,setLeadSent] = useState(false);
-  const savings = useMemo(()=>Math.round(hours*cost*(automation/100)),[hours,cost,automation]);
-  const submitLead = (event:FormEvent<HTMLFormElement>) => { event.preventDefault(); const form = new FormData(event.currentTarget); const text = `Olá, Cadu! Meu nome é ${form.get('nome')}.\nImobiliária: ${form.get('empresa')}.\nMeu WhatsApp: ${form.get('telefone')}.\nRecebemos ${form.get('volume')} leads/mês.\nQuero mapear o atendimento.`; window.open(`https://wa.me/5513988251275?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer'); setLeadSent(true); };
-  const sendChat = (event?:FormEvent<HTMLFormElement>, value=chatInput) => { event?.preventDefault(); const message=value.trim(); if (!message || isReplying) return; setChatMessages(items=>[...items,{id:Date.now(),from:'lead',text:message}]); setChatInput(''); setIsReplying(true); window.setTimeout(()=>{setChatMessages(items=>[...items,{id:Date.now()+1,from:'cadu',text:replyFor(message)}]);setIsReplying(false);},650); };
-  return <main id="topo">
-    <header className="site-header"><a className="brand" href="#topo" aria-label="Cadu, ir ao início"><span className="brand-mark">C</span><span>Cadu.</span></a><nav aria-label="Navegação principal"><a href="#imobiliarias">Buscar prestadores</a><a href="#como-funciona">Como funciona</a><a href="#integracoes">Certo AI</a><a href="#demo">Comunidade</a><a href="#modelo">Planos</a></nav><div className="header-actions"><a className="portal-link" href="/dashboard">Entrar</a><a className="button button-small" href="#contato">Cadastre-se grátis <span>↗</span></a></div></header>
+  return (
+    <>
+      <style>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1d174f; background: white; }
 
-    <section className="hero shell"><div className="hero-copy"><p className="eyebrow">IA + HUMANOS PARA IMOBILIÁRIAS</p><h1>Inteligência de<br/>receita para<br/>imobiliárias.<br/><em>Mais visitas que<br/>acontecem.</em></h1><p className="hero-lead">O Cadu atende, entende, qualifica e acompanha seus leads — enquanto seus corretores entram no momento certo para fechar negócios. Comece por um piloto com critérios claros e avance quando o resultado aparecer.</p><div className="hero-actions"><a className="button" href="#contato">Quero começar por resultado <span>↗</span></a><a className="text-link" href="#demo">Converse com o Cadu <span>↓</span></a></div><div className="proof-row"><span>✓ Critérios definidos antes de operar</span><span>✓ Sem trocar seu CRM</span><span>✓ Corretor entra com contexto</span></div></div><div className="hero-visual"><img src="/cadu-hero.jpg" alt="Corretor usando o Cadu durante o atendimento"/><div className="flow-pill">lead <i>—</i> Cadu <i>—</i> corretor</div><div className="ready-pill">pronto para avançar</div><article className="message-card"><p>CADU · AGORA</p><strong>Oi, Fernanda. Quer conhecer opções de 2 quartos perto do metrô?</strong></article><article className="action-card"><span className="status-dot"/><div><p>PRÓXIMA AÇÃO</p><strong>Agendar visita</strong><small>Contexto entregue ao corretor</small></div></article></div></section>
-    <section className="steps shell" aria-label="Como o Cadu funciona"><article><span>01</span><p><strong>Atende,</strong><br/>sem deixar o lead no vácuo</p></article><article><span>02</span><p><strong>Entende,</strong><br/>sem transformar conversa em formulário</p></article><article><span>03</span><p><strong>Encaminha,</strong><br/>com contexto para a pessoa certa</p></article></section>
+        header {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 40px;
+          align-items: center;
+          padding: 20px 40px;
+          background: white;
+          border-bottom: 1px solid #e5e0eb;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+        }
 
-    <section className="dark-section" id="como-funciona"><div className="shell"><div className="section-head light"><p className="eyebrow">O RESULTADO COMEÇA PELO QUE MEDIMOS</p><h2>Sem número inventado.<br/>Sem resultado nebuloso.</h2><p>O Cadu estrutura a operação em eventos que podem ser verificados pela imobiliária e pelo corretor.</p></div><div className="metric-grid">{[['01','Primeira resposta','Quando o lead recebeu atenção.'],['02','Visita agendada','Quando existe data e próximo passo.'],['03','Visita comparecida','Quando o resultado pode gerar success fee.'],['04','Handoff com contexto','Quando o corretor recebe a conversa pronta.']].map(m=><article key={m[0]}><span>{m[0]}</span><h3>{m[1]}</h3><p>{m[2]}</p></article>)}</div></div></section>
+        @media (max-width: 768px) {
+          header {
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            padding: 16px 24px;
+          }
+          header nav { display: none; }
+        }
 
-    <section className="problem shell" id="imobiliarias"><div><p className="eyebrow">O PROBLEMA NÃO É SÓ GERAR DEMANDA</p><h2>O lead chega.<br/><em>A oportunidade escapa.</em></h2><p className="body-copy">Entre a primeira mensagem e a próxima ação, muita coisa pode quebrar: demora, falta de continuidade, dados espalhados e uma equipe presa em tarefas repetitivas.</p><blockquote>Toda conversa precisa avançar ou explicar por quê.</blockquote></div><div className="process-panel"><p className="eyebrow">UMA CAMADA INTELIGENTE NO SEU PROCESSO</p><h3>O Cadu faz a conversa andar.</h3><p>Não é mais uma ferramenta para sua equipe aprender. É uma função comercial operando todos os dias.</p>{[['01','Recebe','WhatsApp, site ou outro canal autorizado.'],['02','Entende','Intenção, contexto e momento do lead.'],['03','Encaminha','Agenda, cria tarefa ou transfere com contexto.']].map(x=><article key={x[0]}><span>{x[0]}</span><div><strong>{x[1]}</strong><p>{x[2]}</p></div></article>)}</div></section>
+        .brand {
+          font-size: 18px;
+          font-weight: 900;
+          color: #1d174f;
+          text-decoration: none;
+          display: flex;
+          gap: 6px;
+          align-items: center;
+        }
 
-    <section className="demo-section" id="demo"><div className="shell demo-grid"><div className="section-head"><p className="eyebrow">EXPERIMENTE O CADU</p><h2>Parece gente.<br/><em>Fecha como processo.</em></h2><p>Converse como se fosse um lead real. Esta é uma demonstração segura: ela entende sua intenção e mostra como o Cadu conduz até uma próxima ação, sem prometer imóvel ou disponibilidade.</p><ul className="check-list"><li>Tom da sua imobiliária, não de chatbot genérico</li><li>Perguntas curtas que avançam o contexto</li><li>Próximo passo claro para o corretor</li></ul></div><div className="phone" aria-label="Demonstração de conversa com o Cadu"><div className="phone-head"><span className="avatar">C</span><div><strong>Cadu · Atlântica</strong><small>{isReplying?'digitando…':'online agora'}</small></div><span className="demo-badge">DEMO</span></div><div className="chat" aria-live="polite">{chatMessages.map(message=><p key={message.id} className={message.from==='lead'?'reply':''}>{message.text}</p>)}{isReplying&&<p className="typing"><i/><i/><i/></p>}</div><div className="quick-questions" aria-label="Sugestões de mensagem">{quickQuestions.map(question=><button key={question} type="button" onClick={()=>sendChat(undefined,question)} disabled={isReplying}>{question}</button>)}</div><form className="chat-form" onSubmit={sendChat}><input value={chatInput} onChange={event=>setChatInput(event.target.value)} placeholder="Escreva sua mensagem" aria-label="Mensagem para o Cadu" maxLength={240}/><button type="submit" disabled={!chatInput.trim()||isReplying} aria-label="Enviar mensagem">➤</button></form><a href={whatsapp} target="_blank" rel="noreferrer" className="chat-whatsapp">Continuar no WhatsApp <span>↗</span></a></div></div><div className="property-strip shell">{[['/apto-ana-costa.jpg','Apartamento 1204 · Ana Costa','Gonzaga, Santos · 3 dorms · 92 m²','R$ 790 mil'],['/apto-jardins.jpg','Apartamento 82 · Haddock Lobo','Jardins, São Paulo · 2 dorms · 68 m²','R$ 1,12 mi'],['/casa-enseada.jpg','Casa Enseada','Enseada, Guarujá · 4 dorms · 180 m²','R$ 1,45 mi']].map(p=><article key={p[1]}><img src={p[0]} alt={p[1]}/><div><h3>{p[1]}</h3><p>{p[2]}</p><strong>{p[3]}</strong></div></article>)}</div></section>
+        .brand-mark {
+          width: 28px;
+          height: 28px;
+          background: #0066ff;
+          border-radius: 6px;
+          display: grid;
+          place-items: center;
+          color: white;
+          font-weight: 900;
+          font-size: 14px;
+        }
 
-    <section className="goals shell"><div className="section-head centered"><p className="eyebrow">ESCOLHA O QUE QUER DESTRAVAR</p><h2>Uma conversa diferente<br/>para cada gargalo.</h2><p>O Cadu começa pelo ponto do funil que está custando oportunidade agora.</p></div><div className="goal-layout"><div className="goal-tabs">{[['Quero mais visitas','Qualifique, agende e acompanhe até o comparecimento.'],['Quero recuperar leads','Reabra conversas que pararam antes da próxima ação.'],['Quero conectar meu CRM','Leve contexto para o sistema que sua equipe já usa.']].map((g,i)=><button className={goal===i?'active':''} onClick={()=>setGoal(i)} key={g[0]}><span>0{i+1}</span><div><strong>{g[0]}</strong><p>{g[1]}</p></div></button>)}</div><div className="diagnosis"><p className="eyebrow">DIAGNÓSTICO GUIADO</p><h3>{['Mais visitas, com menos atrito.','Retome o fio sem parecer spam.','Seu CRM continua no centro.'][goal]}</h3><div className="timeline">{[['01','O lead chega','Atenção imediata'],['02','A conversa avança','Contexto organizado'],['03','O corretor assume','Handoff com clareza']].map(t=><article key={t[0]}><span>{t[0]}</span><div><strong>{t[1]}</strong><small>{t[2]}</small></div></article>)}</div></div></div></section>
+        nav {
+          display: flex;
+          gap: 32px;
+        }
 
-    <section className="followup"><div className="shell followup-grid"><div className="section-head light"><p className="eyebrow">AUTOMAÇÃO DE FOLLOW-UP</p><h2>O lead esfria.<br/>O Cadu retoma o fio.</h2><p>Você configura o gatilho. O Cadu obedece: mesmo WhatsApp, mesmo contexto, e para quando a conversa anda.</p><div className="rule-chips"><span>Silêncio sem resposta</span><span>Objeção de preço</span><span>Visita sem confirmação</span></div></div><div className="conversation"><header><div><strong>Fernanda Costa</strong><small>Apt. 1204 · Ana Costa</small></div><span>Toque 0 de 2</span></header><div className="bubble theirs">Vi o 1204 na Ana Costa. Ainda tá disponível?</div><div className="bubble ours">Sim, Fernanda. 3 dorms, 92 m², varanda pro mar. Você busca pra morar?</div><div className="bubble theirs">Morar. Vou pensar no valor e te falo.</div><div className="next-touch">Próximo toque: D+1 · 10h — Retoma com o imóvel certo</div></div></div></section>
+        nav a {
+          font-size: 13px;
+          font-weight: 600;
+          color: #5d5969;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
 
-    <section className="integrations shell" id="integracoes"><div className="section-head"><p className="eyebrow">CONECTORES EM EXPANSÃO</p><h2>Seu CRM continua sendo o centro.<br/><em>O Cadu entra onde a conversa acontece.</em></h2><p>Uma camada multiconector para receber leads, registrar conversas, criar tarefas e devolver contexto ao sistema que sua operação já usa.</p></div><div className="connector-flow"><span>LEAD CHEGA</span><i>→</i><span>CADU INTERPRETA</span><i>→</i><span>CRM RECEBE CONTEXTO</span></div><div className="logo-cloud">{['Vista CRM','RD Station','WhatsApp oficial','CV CRM','Kenlo','Imoview','Imobzi','Jetimob','HubSpot'].map(x=><span key={x}>{x}</span>)}</div></section>
+        nav a:hover { color: #0066ff; }
 
-    <section className="model" id="modelo"><div className="shell"><div className="section-head light centered"><p className="eyebrow">MODELO DE AQUISIÇÃO</p><h2>Contrate o resultado.<br/>Não só a entrega.</h2><p>Comece sem uma mensalidade pesada, com critérios claros para os dois lados.</p></div><div className="price-grid">{[
-      ['01','Por visita','R$ 30–50','/ visita comparecida',['Qualificação do lead','Agendamento confirmado','Lembrete e follow-up','Contexto para o corretor']],
-      ['02','Por resultado','R$ 200–500','/ negócio atribuído',['Diagnóstico do funil','Supervisão humana','Critério de atribuição','Ciclo de melhoria']],
-      ['03','Enterprise','R$ 5–10 mil','/ mês + variável',['Integrações dedicadas','SLA e governança','Rotas por equipe','Painel operacional']]
-    ].map((p,i)=><article className={i===1?'featured':''} key={p[1] as string}>{i===1&&<b>FUNÇÃO RECOMENDADA</b>}<span>{p[0]}</span><h3>{p[1]}</h3><div className="price"><strong>{p[2]}</strong><small>{p[3]}</small></div><ul>{(p[4] as string[]).map(x=><li key={x}>✓ {x}</li>)}</ul><a href="#contato">Conversar sobre este plano ↗</a></article>)}</div></div></section>
+        .header-actions {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
 
-    <section className="calculator shell"><div className="section-head"><p className="eyebrow">SIMULADOR DE OPERAÇÃO</p><h2>Quanto custa deixar<br/>o lead esperando?</h2><p>Ajuste as premissas e veja uma estimativa simples para validar num piloto real.</p></div><div className="calc-card"><div className="calc-inputs"><label>Leads recebidos / mês <strong>{leads}</strong><input type="range" min="50" max="1000" step="50" value={leads} onChange={e=>setLeads(+e.target.value)}/></label><label>Custo por hora interno <strong>R$ {cost}</strong><input type="range" min="20" max="120" step="5" value={cost} onChange={e=>setCost(+e.target.value)}/></label><label>Horas internas / mês <strong>{hours}h</strong><input type="range" min="10" max="200" step="5" value={hours} onChange={e=>setHours(+e.target.value)}/></label><label>Automação estimada <strong>{automation}%</strong><input type="range" min="10" max="80" step="5" value={automation} onChange={e=>setAutomation(+e.target.value)}/></label></div><div className="calc-result"><p>ECONOMIA POTENCIAL / MÊS</p><strong>R$ {savings.toLocaleString('pt-BR')}</strong><span>{Math.round(hours*automation/100)} horas potencialmente poupadas</span><small>Estimativa para orientar o piloto. Resultado real depende da operação.</small></div></div></section>
+        .portal-link {
+          font-size: 13px;
+          font-weight: 700;
+          color: #0066ff;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
 
-    <section className="faq shell"><div className="section-head"><p className="eyebrow">PERGUNTAS FREQUENTES</p><h2>O que precisa estar claro<br/>antes de começar.</h2></div><div className="accordion">{faqs.map((f,i)=><article className={faq===i?'open':''} key={f[0]}><button onClick={()=>setFaq(faq===i?null:i)} aria-expanded={faq===i}><span>{f[0]}</span><b>{faq===i?'−':'+'}</b></button>{faq===i&&<p>{f[1]}</p>}</article>)}</div></section>
+        .portal-link:hover { color: #0052cc; }
 
-    <section className="contact" id="contato"><div className="shell contact-grid"><div className="section-head light"><p className="eyebrow">MAPEAMENTO DO ATENDIMENTO</p><h2>Vamos olhar seu processo —<br/><em>e sua próxima visita.</em></h2><p>Conte como seus leads chegam hoje. O diagnóstico organiza canal, volume, CRM e o principal gargalo antes de qualquer proposta.</p><ul className="check-list"><li>Sem compromisso de plataforma</li><li>Critérios mensuráveis desde o piloto</li><li>Seu CRM continua no centro</li></ul></div><form onSubmit={submitLead}><label>Nome completo<input required name="nome" autoComplete="name" placeholder="Maria Silva"/></label><label>Imobiliária<input required name="empresa" autoComplete="organization" placeholder="Atlântica Imóveis"/></label><label>WhatsApp<input required name="telefone" autoComplete="tel" inputMode="tel" pattern="[0-9 ()+.-]{8,}" placeholder="(13) 99999-0000" title="Informe um WhatsApp válido"/></label><label>Leads por mês<select name="volume" required defaultValue=""><option value="" disabled>Selecione</option><option>Até 50</option><option>51 a 200</option><option>201 a 500</option><option>501 a 1.000</option><option>Mais de 1.000</option></select></label><button className="button" type="submit">Receber diagnóstico no WhatsApp <span>↗</span></button><small>{leadSent?'Seu WhatsApp deve ter aberto com seus dados preenchidos. Se não abriu, toque no botão novamente.':'Ao enviar, você abre uma conversa direta com o Cadu no WhatsApp — com o contexto do seu diagnóstico.'}</small></form></div></section>
+        .btn-header {
+          background: #0066ff;
+          color: white;
+          border: 0;
+          padding: 10px 18px;
+          border-radius: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-decoration: none;
+          display: inline-block;
+        }
 
-    <footer><div className="shell footer-grid"><a className="brand" href="#topo"><span className="brand-mark">C</span><span>Cadu.</span></a><p>Inteligência de receita para imobiliárias.<br/>Mais visitas que acontecem.</p><div><a href="#como-funciona">Como funciona</a><a href="#integracoes">Integrações</a><a href="#modelo">Modelo</a><a href="/privacidade">Privacidade</a><a href="/termos">Termos</a></div><a href="https://instagram.com/caduai.br" target="_blank" rel="noreferrer">@caduai.br ↗</a></div></footer>
-    <a className="floating-wa" href={whatsapp} target="_blank" rel="noreferrer" aria-label="Conversar com o Cadu no WhatsApp"><span>◉</span> Falar com o Cadu</a>
-  </main>;
+        .btn-header:hover { background: #0052cc; }
+
+        main { background: white; }
+      `}</style>
+
+      <header>
+        <a href="/" className="brand">
+          <span className="brand-mark">C</span>
+          <span>Prestacerto</span>
+        </a>
+        <nav>
+          <a href="#buscar">Buscar prestadores</a>
+          <a href="#como">Como funciona</a>
+          <a href="#certo">Certo AI</a>
+          <a href="#comunidade">Comunidade</a>
+          <a href="#planos">Planos</a>
+        </nav>
+        <div className="header-actions">
+          <a href="/dashboard" className="portal-link">Entrar</a>
+          <a href="/signup" className="btn-header">Cadastrar grátis</a>
+        </div>
+      </header>
+
+      <main>
+        <HeroSection />
+        <ThreePillars />
+        <CategoriesSection />
+        <DiscoverSection />
+        <PricingCalculator />
+        <StartingPoint />
+        <FAQNarrative />
+        <FinalCTA />
+      </main>
+    </>
+  );
 }
