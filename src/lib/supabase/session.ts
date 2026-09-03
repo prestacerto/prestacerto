@@ -51,7 +51,7 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  let user = null;
+  let user: any = null;
   try {
     const {
       data: { user: authUser },

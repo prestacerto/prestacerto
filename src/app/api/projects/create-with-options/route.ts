@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     // Registrar transações de monetização — "pending" até o pagamento real
     // ser cobrado no checkout. Nunca marcar "completed" sem cobrança de
     // verdade confirmada (senão vira receita fabricada no relatório).
-    const transactions = [];
+    const transactions: Array<{ project_id: any; transaction_type: string; amount: number; status: string }> = [];
     if (urgent_fee > 0) {
       transactions.push({
         project_id: project.id,

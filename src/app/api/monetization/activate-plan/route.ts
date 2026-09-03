@@ -61,12 +61,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Log monetization event
-    await supabase.from("monetization_events").insert({
-      user_id: user.id,
-      plan_id: planId,
-      type: "plan_activated",
-      expires_at: expiresAt.toISOString(),
-    }).catch(err => console.error("[ACTIVATE PLAN] Log error:", err));
+    try {
+      await supabase.from("monetization_events").insert({
+        user_id: user.id,
+        plan_id: planId,
+        type: "plan_activated",
+        expires_at: expiresAt.toISOString(),
+      });
+    } catch (err) {
+      console.error("[ACTIVATE PLAN] Log error:", err);
+    }
 
     return NextResponse.json({
       success: true,

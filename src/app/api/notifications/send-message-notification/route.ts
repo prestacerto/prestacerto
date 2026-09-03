@@ -81,14 +81,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Log notification
-    await supabase.from("notification_logs").insert({
-      user_id: recipientId,
-      type: "message",
-      title: "Nova Mensagem",
-      body: `${senderName} enviou uma mensagem`,
-      sent_count: successCount,
-      failed_count: failedCount,
-    }).catch(err => console.error("[MESSAGE NOTIFICATION] Log error:", err));
+    try {
+      await supabase.from("notification_logs").insert({
+        user_id: recipientId,
+        type: "message",
+        title: "Nova Mensagem",
+        body: `${senderName} enviou uma mensagem`,
+        sent_count: successCount,
+        failed_count: failedCount,
+      });
+    } catch (err) {
+      console.error("[MESSAGE NOTIFICATION] Log error:", err);
+    }
 
     return NextResponse.json({
       success: true,

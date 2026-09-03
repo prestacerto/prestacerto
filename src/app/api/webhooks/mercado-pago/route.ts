@@ -99,18 +99,22 @@ export async function POST(request: NextRequest) {
       }
 
     // Log transaction
-      await supabase.from("revenue_events").insert({
-        user_id: userId,
-        type: "payment_approved",
-        amount: payment.transaction_amount,
-        mercado_pago_payment_id: payment.id,
-        status: "approved",
-        metadata: {
-          conectares: isConnectares,
-          priority_queue: isPriorityQueue,
-          monetization_plans: monetizationPlans,
-        },
-      }).catch(err => console.error("[MP WEBHOOK] Error logging:", err));
+      try {
+        await supabase.from("revenue_events").insert({
+          user_id: userId,
+          type: "payment_approved",
+          amount: payment.transaction_amount,
+          mercado_pago_payment_id: payment.id,
+          status: "approved",
+          metadata: {
+            conectares: isConnectares,
+            priority_queue: isPriorityQueue,
+            monetization_plans: monetizationPlans,
+          },
+        });
+      } catch (err) {
+        console.error("[MP WEBHOOK] Error logging:", err);
+      }
 
       console.log(`[MP WEBHOOK] Payment approved for user ${userId} - Amount: ${payment.transaction_amount}`);
       return NextResponse.json({ received: true });
