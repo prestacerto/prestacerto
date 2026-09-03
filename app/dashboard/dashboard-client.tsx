@@ -24,6 +24,32 @@ export default function DashboardClient({userName,userEmail}:{userName:string;us
     <aside className="portal-sidebar"><a href="/" className="portal-brand"><span className="brand-mark">C</span><span>Cadu.</span></a><div className="workspace"><span className="workspace-symbol">A</span><div><strong>Atlântica Imóveis</strong><small>Operação ativa</small></div><span>⌄</span></div><nav className="portal-nav" aria-label="Navegação do portal"><a className="active" href="#visao">⌘ <span>Visão geral</span></a><a href="#fila">↗ <span>Fila de leads</span><b>{leads.length}</b></a><a href="#visitas">◷ <span>Visitas</span></a><a href="#insights">✦ <span>Insights</span></a><a href="#integracoes">⟐ <span>Integrações</span></a></nav><div className="portal-help"><strong>Precisa de ajuda?</strong><p>Fale com o time Cadu.</p><a href="https://wa.me/5513988251275" target="_blank" rel="noreferrer">Abrir WhatsApp ↗</a></div><a className="portal-user" href="/signout-with-chatgpt?return_to=/"><span>{userName.slice(0,2).toUpperCase()}</span><div><strong>{userName}</strong><small>{userEmail}</small></div><i>↗</i></a></aside>
     <section className="portal-content"><header className="portal-top"><div><p>OPERAÇÃO CADU</p><h1>Bom dia, {userName.split(' ')[0]}.</h1><span>Tem <strong>{fresh} leads novos</strong> e <strong>{visits} visitas</strong> pedindo atenção hoje.</span></div><div className="top-actions"><button aria-label="Notificações">◉</button><button className="primary-action" onClick={()=>setNotice('Resumo atualizado agora.')}>Atualizar agora ↻</button><a href="/signout-with-chatgpt?return_to=/" className="logout-btn" aria-label="Sair">Sair</a></div></header>
       {notice && <div className="portal-notice" role="status">✓ {notice}<button onClick={()=>setNotice('')} aria-label="Fechar aviso">×</button></div>}
+      <section className="premium-features">
+        <article className="premium-card">
+          <div className="premium-icon">⚡</div>
+          <div>
+            <h3>Certo AI</h3>
+            <p>Gerencie inteligência artificial na sua operação</p>
+          </div>
+          <a href="#" className="premium-cta">Conectar →</a>
+        </article>
+        <article className="premium-card">
+          <div className="premium-icon">📋</div>
+          <div>
+            <h3>Certo Currículo</h3>
+            <p>Crie e gerencie currículos profissionais</p>
+          </div>
+          <a href="#" className="premium-cta">Conectar →</a>
+        </article>
+        <article className="premium-card">
+          <div className="premium-icon">💰</div>
+          <div>
+            <h3>Certo Preço</h3>
+            <p>Precifique seus serviços com inteligência</p>
+          </div>
+          <a href="#" className="premium-cta">Conectar →</a>
+        </article>
+      </section>
       <section id="visao" className="portal-metrics"><Metric icon="↗" tone="coral" label="Leads recebidos" value="38" change="+12%" detail="vs. semana anterior"/><Metric icon="◷" tone="purple" label="Visitas agendadas" value="12" change="+3" detail="nesta semana"/><Metric icon="✓" tone="green" label="Primeira resposta" value="42s" change="−18s" detail="mais rápido"/><Metric icon="✦" tone="yellow" label="Taxa de avanço" value="31%" change="+4.2pp" detail="mês atual"/></section>
       <section className="portal-grid"><article className="funnel-card"><header><div><p>FUNIL DA OPERAÇÃO</p><h2>O que está acontecendo agora.</h2></div><button>Últimos 7 dias⌄</button></header><div className="funnel-bars">{[['Leads recebidos',38,'100%'],['Em conversa',27,'71%'],['Qualificados',18,'47%'],['Visitas agendadas',12,'31%'],['Visitas realizadas',8,'21%']].map((item,i)=><div className="funnel-row" key={item[0]}><div><span>{i+1}</span><strong>{item[0]}</strong></div><div className="bar"><i style={{width:String(Number(item[1])/38*100)+'%'}} /></div><b>{item[1]}</b><small>{item[2]}</small></div>)}</div><footer><span>✓ Dados demonstrativos — conecte seu CRM para ver a operação real.</span><a href="#integracoes">Ver integrações ↗</a></footer></article>
         <article id="visitas" className="agenda-card"><header><div><p>PRÓXIMAS VISITAS</p><h2>O dia em movimento.</h2></div><a href="#fila">Ver agenda ↗</a></header><div className="agenda-list">{[['10:30','Fernanda Costa','Apt. 1204 · Ana Costa','Confirmada'],['14:00','Paulo Mendes','Apartamento 82 · Haddock Lobo','Confirmar'],['16:30','Camila Prado','Casa Enseada','Em preparação']].map((v,i)=><article key={v[0]}><time>{v[0]}</time><div><strong>{v[1]}</strong><small>{v[2]}</small></div><span className={i===0?'confirmed':''}>{v[3]}</span></article>)}</div></article></section>
