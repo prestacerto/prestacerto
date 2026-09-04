@@ -5,12 +5,24 @@ export async function POST(req: Request) {
     const user = await getChatGPTUser();
     if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 
-    const { projectId, proposalId, message } = await req.json();
-    console.log('Chat message:', { from: user.email, projectId, message });
+    const body = await req.json();
+    const projectId = String(body.projectId || '').trim();
+    const proposalId = String(body.proposalId || '').trim();
+    const message = String(body.message || '').trim().slice(0, 5000);
+
+    if (!projectId && !proposalId) {
+      return new Response(JSON.stringify({ error: 'ID do projeto ou proposta obrigatório' }), { status: 400 });
+    }
+    if (!message || message.length < 1) {
+      return new Response(JSON.stringify({ error: 'Mensagem não pode estar vazia' }), { status: 400 });
+    }
+
+    console.log('Chat message:', { userId: user.userId, projectId });
 
     return new Response(JSON.stringify({ success: true, id: `msg_${Date.now()}`, timestamp: new Date().toISOString() }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Erro' }), { status: 500 });
+    console.error('Chat error:', error instanceof Error ? error.message : 'Unknown error');
+    return new Response(JSON.stringify({ error: 'Erro ao processar mensagem' }), { status: 500 });
   }
 }
 

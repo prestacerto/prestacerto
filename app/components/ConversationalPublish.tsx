@@ -1,8 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ConversationalPublish() {
   const [step, setStep] = useState(0);
+  const [profileCompleteness, setProfileCompleteness] = useState(0);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [error, setError] = useState('');
   const [project, setProject] = useState({
     title: '',
     description: '',
@@ -19,6 +22,20 @@ export default function ConversationalPublish() {
     { question: "Quando você precisa?", field: 'deadline', placeholder: 'Ex: Próximas 2 semanas' },
   ];
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        const data = await response.json();
+        setProfileCompleteness(data.profile?.completeness || 0);
+      } catch (err) {
+        console.error('Erro ao buscar perfil:', err);
+        setProfileCompleteness(0);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   const current = steps[step];
   const progress = Math.round(((step + 1) / steps.length) * 100);
 
@@ -28,11 +45,43 @@ export default function ConversationalPublish() {
     }
   };
 
-  const handlePublish = () => {
-    console.log('Projeto publicado:', project);
-    alert('✅ Projeto publicado com sucesso!');
-    setStep(0);
-    setProject({ title: '', description: '', category: '', budget: '', deadline: '' });
+  const handlePublish = async () => {
+    if (profileCompleteness < 100) {
+      setError(`Sua conta precisa estar 100% completa. Completeness atual: ${profileCompleteness}%`);
+      return;
+    }
+
+    setIsPublishing(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...project,
+          profileCompleteness,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Erro ao publicar projeto');
+        setIsPublishing(false);
+        return;
+      }
+
+      alert('✅ Projeto publicado com sucesso!');
+      setStep(0);
+      setProject({ title: '', description: '', category: '', budget: '', deadline: '' });
+      setError('');
+    } catch (err) {
+      setError('Erro ao conectar com o servidor');
+      console.error('Erro:', err);
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   return (
@@ -169,8 +218,19 @@ export default function ConversationalPublish() {
           <div className="publish-step-counter">Passo {step + 1} de {steps.length}</div>
           <h2 className="publish-question">{current.question}</h2>
 
+          {error && (
+            <div style={{background: '#fee', border: '1px solid #f99', borderRadius: 8, padding: 12, marginBottom: 20, color: '#c33', fontSize: 13}}>
+              ⚠️ {error}
+            </div>
+          )}
+
           {step === steps.length - 1 ? (
             <>
+              {profileCompleteness < 100 && (
+                <div style={{background: '#ffe8e8', border: '1px solid #ffcccc', borderRadius: 8, padding: 12, marginBottom: 20, color: '#d32f2f', fontSize: 13}}>
+                  ⚠️ Seu perfil está apenas {profileCompleteness}% completo. Precisa estar 100% para publicar!
+                </div>
+              )}
               <div className="publish-summary">
                 {Object.entries(project).map(([key, value]) => (
                   <div key={key} className="summary-item">
@@ -179,8 +239,11 @@ export default function ConversationalPublish() {
                   </div>
                 ))}
               </div>
-              <p style={{fontSize: 12, color: '#a8a3b5', marginBottom: 20}}>
-                ✓ Tudo certo? Revise e publique seu projeto!
+              <p style={{fontSize: 12, color: profileCompleteness < 100 ? '#f99' : '#a8a3b5', marginBottom: 20}}>
+                {profileCompleteness < 100
+                  ? `⚠️ Complete seu perfil para poder publicar (${profileCompleteness}%)`
+                  : '✓ Tudo certo? Revise e publique seu projeto!'
+                }
               </p>
             </>
           ) : (
@@ -195,19 +258,24 @@ export default function ConversationalPublish() {
           )}
 
           <div className="publish-actions">
-            <button 
+            <button
               className="back"
               onClick={() => step > 0 ? setStep(step - 1) : null}
-              disabled={step === 0}
-              style={{opacity: step === 0 ? 0.5 : 1}}
+              disabled={step === 0 || isPublishing}
+              style={{opacity: step === 0 || isPublishing ? 0.5 : 1}}
             >
               ← Voltar
             </button>
-            <button 
+            <button
               className="next"
               onClick={() => step === steps.length - 1 ? handlePublish() : handleNext()}
+              disabled={step === steps.length - 1 && (profileCompleteness < 100 || isPublishing)}
+              style={{
+                opacity: step === steps.length - 1 && (profileCompleteness < 100 || isPublishing) ? 0.5 : 1,
+                cursor: step === steps.length - 1 && (profileCompleteness < 100 || isPublishing) ? 'not-allowed' : 'pointer'
+              }}
             >
-              {step === steps.length - 1 ? '🚀 Publicar Projeto' : 'Próximo →'}
+              {isPublishing ? '⏳ Publicando...' : step === steps.length - 1 ? '🚀 Publicar Projeto' : 'Próximo →'}
             </button>
           </div>
         </div>
