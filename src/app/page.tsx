@@ -3,7 +3,6 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { StructuredData, getFAQSchema } from "@/components/structured-data";
 import { HomePriceCalculator } from "@/components/home/home-price-calculator";
-import { PLANS } from "@/lib/plans-data";
 import { getProfile } from "@/lib/auth/getUser";
 import {
   ArrowRight,
@@ -11,13 +10,10 @@ import {
   ClipboardPenLine,
   Check,
   Code2,
-  Crown,
   Gauge,
   GraduationCap,
   HeartPulse,
   Handshake,
-  MessagesSquare,
-  LockKeyhole,
   Megaphone,
   Palette,
   Repeat2,
@@ -26,7 +22,6 @@ import {
   Sparkles,
   Target,
   Store,
-  Users2,
   Wrench,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -155,7 +150,7 @@ const homeFaqs = [
   {
     question: "O freelancer paga comissão por projeto?",
     answer:
-      "Não. O freelancer recebe 100% do valor combinado com o cliente. O PrestaCerto monetiza por planos e recursos opcionais, com transparência.",
+      "Não durante o beta gratuito. Pagamentos são combinados diretamente entre cliente e freelancer; a plataforma não processa nem retém valores nesta fase.",
   },
   {
     question: "Posso publicar um projeto gratuitamente?",
@@ -231,7 +226,6 @@ const hiringGuides = [
 export default async function Home() {
   const profile = await getProfile();
   const canPublishProjects = profile?.role === "client" || profile?.role === "both";
-  const canSeeProviderTools = !canPublishProjects;
   return (
     <>
       <StructuredData type="WebPage" data={{ name: "PrestaCerto — marketplace de serviços", url: "https://prestacerto.com.br/", description: "Marketplace brasileiro para contratar freelancers e prestadores de serviços." }} />
@@ -243,14 +237,14 @@ export default async function Home() {
         <div className="relative z-10 mx-auto grid max-w-7xl gap-8 px-4 pb-16 pt-8 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-10 lg:pb-20 lg:pt-10">
           <div className="relative z-10">
             <h1 className="max-w-3xl text-[4rem] font-black leading-[0.88] tracking-[-0.07em] text-[#05092b] sm:text-[5rem] lg:text-[6.5rem] dark:text-white">
-              Contrate em 24h.
+              Encontre profissionais.
               <br />
-              <span className="text-blue-600 dark:text-blue-400">Freelancers testados.</span>
+              <span className="text-blue-600 dark:text-blue-400">Publique seu projeto.</span>
               <br />
-              <span className="text-blue-600 dark:text-blue-400">Sem demora.</span>
+              <span className="text-blue-600 dark:text-blue-400">Beta gratuito.</span>
             </h1>
             <p className="mt-10 max-w-[42rem] text-[1.02rem] leading-8 text-slate-600 dark:text-slate-300 sm:text-[1.07rem]">
-              12k+ profissionais verificados. R$ 2M em volume de contratos. Encontre o melhor freelancer com segurança, clareza e ferramentas inteligentes para contratar no Brasil.
+              Organize sua demanda, compare perfis e propostas e converse com profissionais em um marketplace brasileiro que está em fase beta.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -258,7 +252,7 @@ export default async function Home() {
                 href={canPublishProjects ? "/dashboard/projects/new" : "/register?role=client"}
                 className="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)] transition hover:-translate-y-0.5 hover:bg-blue-700"
               >
-                Começar 14 dias grátis
+                Publicar projeto grátis
                 <ArrowRight className="ml-2 size-4" />
               </Link>
               <Link
@@ -276,7 +270,7 @@ export default async function Home() {
               </span>
               <span className="inline-flex items-center gap-2">
                 <ShieldCheck className="size-4 text-emerald-600" />
-                Avaliações reais e negociação transparente
+                Cadastro e publicação gratuitos no beta
               </span>
             </div>
           </div>
@@ -320,75 +314,12 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-b border-slate-200 bg-blue-50 dark:bg-blue-950/20">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <h2 className="text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">PrestaCerto em números</h2>
-          <p className="mt-3 text-slate-600 dark:text-slate-300">Comunidade verificada e segura de freelancers e clientes que já transformaram seus projetos.</p>
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            <div className="text-center">
-              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">12k+</p>
-              <p className="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Profissionais verificados</p>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Testados e prontos para trabalhar</p>
-            </div>
-            <div className="text-center">
-              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">R$ 2M+</p>
-              <p className="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Volume em contratos</p>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Projetos realizados com confiança</p>
-            </div>
-            <div className="text-center">
-              <p className="text-5xl font-black text-blue-600 dark:text-blue-400">24h</p>
-              <p className="mt-2 text-lg font-semibold text-slate-700 dark:text-slate-200">Tempo médio de resposta</p>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Suas propostas recebem retorno rápido</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-slate-200 bg-white dark:bg-slate-950">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <div className="text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400">Histórias reais</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">Quem já confía no PrestaCerto</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-300">Veja como empresas e profissionais estão transformando seus projetos.</p>
-          </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Startup Tech",
-                role: "Desenvolveu MVP em 2 semanas",
-                quote: "Encontramos developers sênior no PrestaCerto e saímos do zero pro ar em 14 dias. Exatamente o que precisávamos.",
-                avatar: "🚀"
-              },
-              {
-                name: "E-commerce Brasil",
-                role: "Crescimento de 300% em vendas",
-                quote: "A qualidade dos designers no marketplace nos ajudou a aumentar conversão. Resultado: 3x de crescimento em 6 meses.",
-                avatar: "📈"
-              },
-              {
-                name: "Consultoria",
-                role: "Equipe remota em 1 mês",
-                quote: "Contratamos consultores com expertise específica. Transparência de preço e qualidade é incomparável.",
-                avatar: "💼"
-              }
-            ].map((story, idx) => (
-              <div key={idx} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-                <p className="text-2xl">{story.avatar}</p>
-                <p className="mt-4 text-sm font-semibold text-slate-950 dark:text-white">{story.name}</p>
-                <p className="text-xs text-blue-600 dark:text-blue-400">{story.role}</p>
-                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300 italic">"{story.quote}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="border-b border-slate-200 bg-[#fcfbf8] dark:bg-slate-900/50">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Por que testar essa tese</p>
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Sem comissões</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Uma experiência global, adaptada para contratar no Brasil.</h2>
-            <p className="mt-3 text-slate-600">Em vez de competir só por preço, o PrestaCerto pode ganhar em contexto, clareza e ferramentas práticas para o mercado brasileiro.</p>
+            <p className="mt-3 text-slate-600">Contexto, clareza e ferramentas práticas ajudam clientes e profissionais a organizar melhor cada contratação.</p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {positioningPillars.map((pillar) => {
@@ -553,22 +484,22 @@ export default async function Home() {
       <section className="border-y border-slate-200 bg-[#f8fafc]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:py-20">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700"><LockKeyhole className="size-3.5" /> Mais clareza do aceite à entrega</div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700"><ShieldCheck className="size-3.5" /> Mais clareza do aceite à entrega</div>
             <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Acordos bem definidos protegem os dois lados.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-slate-600">Projetos maiores pedem escopo, etapas e confirmação de entrega claros. O PrestaCerto está estruturado para apoiar esse fluxo, com pagamento processado por parceiros habilitados.</p>
+            <p className="mt-4 max-w-xl leading-7 text-slate-600">Projetos pedem escopo, prazo, valor e entregas claros. No beta, cliente e profissional registram a negociação na plataforma e combinam o pagamento diretamente entre si.</p>
             <Link href="/como-funciona" className="mt-6 inline-flex items-center font-bold text-slate-950 hover:text-blue-600">Entender como a contratação funciona <ArrowRight className="ml-2 size-4" /></Link>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Fluxo de contratação</p>
             <div className="mt-5 space-y-3">
-              {["Escopo e valor alinhados", "Etapas registradas para acompanhar a entrega", "Confirmação antes da liberação, quando o pagamento protegido estiver disponível"].map((item, index) => (
+              {["Escopo e valor alinhados", "Proposta registrada para consulta", "Mensagens para combinar os próximos passos"].map((item, index) => (
                 <div key={item} className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-950 text-xs font-black text-white">0{index + 1}</span>
                   <p className="text-sm font-semibold leading-6 text-slate-700">{item}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-5 text-xs leading-5 text-slate-500">A disponibilidade de pagamento protegido depende da integração de pagamento e das condições aplicáveis ao projeto.</p>
+            <p className="mt-5 text-xs leading-5 text-slate-500">Pagamentos, retenção e liberação automática não estão ativos no beta.</p>
           </div>
         </div>
       </section>
@@ -609,72 +540,18 @@ export default async function Home() {
         </div>
       </section>
 
-      {!canSeeProviderTools && <section className="border-t border-slate-200 bg-gradient-to-b from-slate-50 to-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <div className="text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Transparência de Preço</p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Sem surpresas. Sem taxas escondidas.</h2>
-            <p className="mt-3 max-w-2xl mx-auto text-slate-600">Publique seus projetos e receba propostas. Você só paga quando ativa um freelancer — sem taxa de publicação, sem taxa de visualização.</p>
-          </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Taxa de Plataforma</p>
-              <p className="mt-4 text-4xl font-black text-slate-950">8%</p>
-              <p className="mt-2 text-sm text-slate-600">Cobrado apenas quando você ativa um contrato com freelancer</p>
-              <p className="mt-6 text-sm font-semibold text-slate-950">O que está incluído:</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 shrink-0 text-emerald-600" />Proteção de pagamento em escrow</li>
-                <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 shrink-0 text-emerald-600" />Mediação de conflitos</li>
-                <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 shrink-0 text-emerald-600" />Histórico de transações</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">Exemplo de Custo</p>
-              <div className="mt-6 space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Valor do contrato:</span>
-                  <span className="font-semibold text-slate-950">R$ 1.000</span>
-                </div>
-                <div className="border-t border-slate-200 pt-3 flex justify-between">
-                  <span className="text-slate-600">Taxa PrestaCerto (8%):</span>
-                  <span className="font-semibold text-red-600">-R$ 80</span>
-                </div>
-                <div className="border-t border-slate-200 pt-3 flex justify-between">
-                  <span className="font-bold text-slate-950">Você paga ao freelancer:</span>
-                  <span className="font-black text-emerald-600">R$ 920</span>
-                </div>
-              </div>
-              <p className="mt-6 text-xs text-slate-500">* A protecão de pagamento é feita em escrow. Você libera o valor conforme o trabalho avança.</p>
-            </div>
-          </div>
-        </div>
-      </section>}
-
-      {canSeeProviderTools && <section className="border-t border-blue-100 bg-[#f4f8ff]">
+      <section className="border-t border-blue-100 bg-[#f4f8ff]">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div><p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">Planos para prestadores</p><h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950">Preço claro, sem comissão por projeto.</h2></div>
-            <Link href="/plans" className="inline-flex items-center text-sm font-bold text-blue-700 hover:text-blue-800">Comparar planos <ArrowRight className="ml-2 size-4" /></Link>
+          <div className="grid gap-6 rounded-3xl border border-blue-100 bg-white p-7 shadow-sm sm:grid-cols-[1fr_auto] sm:items-center sm:p-9">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">Beta gratuito</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-950">Teste os fluxos disponíveis sem cobrança.</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-slate-600">Cadastro, publicação de projetos e envio de propostas estão abertos no beta. Não há assinatura paga, cobrança automática nem taxa de plataforma ativa.</p>
+            </div>
+            <Link href="/register" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700">Criar conta gratuita <ArrowRight className="ml-2 size-4" /></Link>
           </div>
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
-            {PLANS.map((plan) => (
-              <article key={plan.id} className={`relative flex min-h-[390px] flex-col rounded-2xl border p-5 ${plan.popular ? "border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-600/25" : "border-blue-100 bg-white text-slate-950"}`}>
-                {plan.popular && <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-amber-300 px-3 py-1 text-xs font-extrabold text-slate-950 shadow-sm"><Crown className="size-3.5" /> Mais escolhido</span>}
-                <p className={`text-sm font-bold ${plan.popular ? "text-blue-100" : "text-slate-500"}`}>{plan.name}</p>
-                <p className="mt-2 text-3xl font-black">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 }).format(plan.priceMonthly)}<span className={`ml-1 text-sm font-semibold ${plan.popular ? "text-blue-100" : "text-slate-500"}`}>/mês</span></p>
-                <p className={`mt-3 text-sm leading-6 ${plan.popular ? "text-blue-100" : "text-slate-600"}`}>{plan.id === "free" ? "Inclui até 3 propostas por mês." : plan.description}</p>
-                <ul className={`mt-4 space-y-2 text-sm ${plan.popular ? "text-white" : "text-slate-700"}`}>
-                  {plan.features.map((feature) => <li key={feature} className="flex items-start gap-2"><Check className={`mt-0.5 size-4 shrink-0 ${plan.popular ? "text-blue-100" : "text-emerald-600"}`} />{feature}</li>)}
-                </ul>
-                <Link href={`/register?plan=${plan.id}`} className={`mt-auto inline-flex items-center justify-center rounded-xl px-4 py-3 text-sm font-bold transition ${plan.popular ? "bg-white text-blue-700 hover:bg-blue-50" : "bg-slate-950 text-white hover:bg-slate-800"}`}>
-                  {plan.id === "pro" ? "Quero o Pro" : plan.id === "free" ? "Começar grátis" : "Quero o Business"}<ArrowRight className="ml-2 size-4" />
-                </Link>
-              </article>
-            ))}
-          </div>
-          <p className="mt-5 text-sm text-slate-500">As assinaturas estão em configuração. Enquanto isso, você pode comparar os planos e registrar interesse sem nenhuma cobrança.</p>
         </div>
-      </section>}
+      </section>
 
       <section className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-[#0b1428]">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
@@ -693,65 +570,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-t border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:px-6 lg:py-20">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-700">Programa de Indicação</p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Ganhe até 30% de comissão indicando clientes</h2>
-            <p className="mt-4 max-w-2xl leading-7 text-slate-600">Cada cliente que você indica e ativa gera créditos recorrentes na sua conta. Transparência total: veja quanto ganha em tempo real, receba mensalmente e sem limites de ganho.</p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-3">
-            <div className="rounded-2xl border border-blue-200 bg-white p-6 shadow-sm">
-              <p className="text-3xl font-black text-blue-600">30%</p>
-              <p className="mt-2 font-semibold text-slate-950">Comissão por indicação</p>
-              <p className="mt-1 text-sm text-slate-500">Do plano mensais que seus clientes ativam</p>
-            </div>
-            <div className="rounded-2xl border border-blue-200 bg-white p-6 shadow-sm">
-              <p className="text-3xl font-black text-blue-600">12 meses</p>
-              <p className="mt-2 font-semibold text-slate-950">Recorrência garantida</p>
-              <p className="mt-1 text-sm text-slate-500">Ganhe enquanto seus clientes usam</p>
-            </div>
-            <div className="rounded-2xl border border-blue-200 bg-white p-6 shadow-sm">
-              <p className="text-3xl font-black text-blue-600">Ilimitado</p>
-              <p className="mt-2 font-semibold text-slate-950">Sem teto de ganhos</p>
-              <p className="mt-1 text-sm text-slate-500">Indique quantos quiser, ganhe quantos conseguir</p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link href="/login?next=/dashboard/referral" className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-700">Ativar Programa de Indicação <ArrowRight className="ml-2 size-4" /></Link>
-            <Link href="/register" className="inline-flex items-center justify-center rounded-xl border border-blue-300 bg-white px-6 py-3 text-sm font-bold text-blue-700 transition hover:bg-blue-50">Criar conta para indicar</Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-20">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">
-              <Users2 className="size-3.5" /> Comunidade em preparação
-            </div>
-            <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Mercado bom também se constrói fora da transação.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-slate-600">A comunidade pode virar um diferencial de volta diária: troca de casos, dicas práticas, networking e acesso antecipado a oportunidades. Já dá para captar interesse sem prometer um Discord pronto hoje.</p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              ["Cases reais", "Espaço para compartilhar aprendizados, preço, proposta e bastidores."],
-              ["Projetos premium", "Sinalizar oportunidades mais maduras e recorrentes."],
-              ["Mentoria entre pares", "Top freelancers ajudam quem ainda está ganhando tração."],
-              ["Networking útil", "Menos ruído, mais conexão entre quem contrata e quem executa."],
-            ].map(([title, copy]) => (
-              <div key={title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-sm font-bold text-slate-950">{title}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{copy}</p>
-              </div>
-            ))}
-            <Link href="/community" className="sm:col-span-2 inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800">
-              Entrar na lista da comunidade <MessagesSquare className="ml-2 size-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <section className="bg-blue-600 text-white">
         <div className="mx-auto max-w-6xl px-4 py-14 text-center sm:px-6 lg:py-16">
           <h2 className="text-3xl font-black tracking-tight sm:text-4xl">O próximo projeto começa aqui.</h2>
@@ -766,4 +584,3 @@ export default async function Home() {
     </>
   );
 }
-
