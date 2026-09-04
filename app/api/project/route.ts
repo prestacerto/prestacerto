@@ -5,9 +5,24 @@ export async function POST(req: Request) {
     const user = await getChatGPTUser();
     if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 
-    const { title, budget, deadline, skills, description, profileCompleteness } = await req.json();
+    const body = await req.json();
+    const title = String(body.title || '').trim().slice(0, 200);
+    const budget = String(body.budget || '').trim().slice(0, 100);
+    const deadline = String(body.deadline || '').trim().slice(0, 100);
+    const description = String(body.description || '').trim().slice(0, 5000);
+    const skills = Array.isArray(body.skills) ? body.skills.slice(0, 10) : [];
+    const profileCompleteness = Number(body.profileCompleteness || 0);
 
-    // Verify profile is 100% complete before allowing publication
+    if (!title || title.length < 5) {
+      return new Response(JSON.stringify({ error: 'Título deve ter no mínimo 5 caracteres' }), { status: 400 });
+    }
+    if (!description || description.length < 10) {
+      return new Response(JSON.stringify({ error: 'Descrição deve ter no mínimo 10 caracteres' }), { status: 400 });
+    }
+    if (skills.some(s => typeof s !== 'string' || s.length > 50)) {
+      return new Response(JSON.stringify({ error: 'Habilidades com formato inválido' }), { status: 400 });
+    }
+
     if (!profileCompleteness || profileCompleteness < 100) {
       return new Response(JSON.stringify({
         error: 'Sua conta precisa ser finalizada antes de publicar',
@@ -17,7 +32,7 @@ export async function POST(req: Request) {
       }), { status: 403, headers: { 'Content-Type': 'application/json' } });
     }
 
-    console.log('Project published:', { user: user.email, title, budget, deadline, skills, timestamp: new Date().toISOString() });
+    console.log('Project published:', { userId: user.userId, timestamp: new Date().toISOString() });
 
     return new Response(JSON.stringify({
       success: true,
@@ -26,7 +41,7 @@ export async function POST(req: Request) {
       project: { title, budget, deadline, skills }
     }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
-    console.error('Erro ao publicar projeto:', error);
+    console.error('Project publish error:', error instanceof Error ? error.message : 'Unknown error');
     return new Response(JSON.stringify({ error: 'Erro ao processar' }), { status: 500 });
   }
 }
