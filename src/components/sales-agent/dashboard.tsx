@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Settings, BarChart3, Users, Zap, CreditCard } from 'lucide-react';
+import { Settings, BarChart3, Users, Zap, CreditCard, Clock } from 'lucide-react';
 import { AgentConfig } from './agent-config';
 import { ProspectsView } from './prospects-view';
 import { AnalyticsView } from './analytics-view';
 import { BillingView } from './billing-view';
+import { ScheduleView } from './schedule-view';
 
 interface SalesAgentDashboardProps {
   userId: string;
@@ -46,8 +47,9 @@ export function SalesAgentDashboard({ userId }: SalesAgentDashboardProps) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="config">Configuração</TabsTrigger>
+          <TabsTrigger value="schedule">Agendamento</TabsTrigger>
           <TabsTrigger value="prospects">Prospects</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="billing">Cobrança</TabsTrigger>
@@ -55,6 +57,10 @@ export function SalesAgentDashboard({ userId }: SalesAgentDashboardProps) {
 
         <TabsContent value="config" className="space-y-4">
           <AgentConfig userId={userId} />
+        </TabsContent>
+
+        <TabsContent value="schedule" className="space-y-4">
+          <ScheduleView userId={userId} />
         </TabsContent>
 
         <TabsContent value="prospects" className="space-y-4">
