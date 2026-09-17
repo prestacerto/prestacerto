@@ -105,12 +105,12 @@ test('Client Products - Produtos por tier', () => {
 test('Client Products - Cálculo de MRR', () => {
   const mrr = calculateClientProductsMRR();
 
-  assert.equal(mrr.monthlyProducts, 4, 'Deve ter 4 produtos mensais (premium excluído)');
+  assert.equal(mrr.monthlyProducts, 5, 'Deve ter 5 produtos com model monthly (inclui VIP Network premium)');
   assert.equal(mrr.commissionProducts, 2, 'Deve ter 2 produtos com comissão');
 
-  // MRR = 49.90 + 24.90 + 34.90 + 39.90 = 149.60
-  // VIP Network (999.90) não é contado pois tem tier 'premium'
-  const expectedMRR = 49.90 + 24.90 + 34.90 + 39.90;
+  // MRR = 49.90 + 24.90 + 34.90 + 999.90 + 39.90 = 1.248.70
+  // Todos os produtos com model: 'monthly' são contados, incluindo premium tier
+  const expectedMRR = 49.90 + 24.90 + 34.90 + 999.90 + 39.90;
   assert.equal(
     Math.abs(mrr.totalMonthlyMRR - expectedMRR) < 0.01,
     true,
