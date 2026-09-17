@@ -1,433 +1,207 @@
-# ✅ DEPLOYMENT CHECKLIST - PrestaCerto 2.0
+# 🚀 CERTO ECOSYSTEM - DEPLOYMENT CHECKLIST
 
-**Status**: 🚀 PRONTO PARA DEPLOY  
-**Data**: 2026-08-12  
-**Features**: 20+  
-**Esforço**: ~2-3 horas de setup
+## PRÉ-DEPLOYMENT (HOJE — Cadu)
+
+### PASSO 1: Criar 27 Produtos no Assinify (60 min)
+- [ ] Acessar https://admin.assiny.com.br/login
+- [ ] Criar produto "Certo Match" (R$ 2,90 - por proposta)
+- [ ] Criar produto "Certo Preço" (R$ 14,90 - mensal)
+- [ ] Criar produto "Certo Timing" (R$ 9,90 - mensal)
+- [ ] Continuar com Fase 2 (8 produtos)
+- [ ] Continuar com Fase 3 (8 produtos)
+- [ ] Continuar com Fase 4 (8 produtos)
+
+**Template de Descrição:** Ver `CERTO_ECOSYSTEM_MASTER_2026-09-17.md`
+
+### PASSO 2: Copiar Links de Checkout (15 min)
+Para cada produto, copiar o link de checkout que Assinify fornece.
+
+Exemplo:
+```
+Certo Match: https://assinify.com.br/checkout/certo-match?session=abc123
+Certo Preço: https://assinify.com.br/checkout/certo-preco?session=xyz789
+... (total 27)
+```
+
+### PASSO 3: Criar .env.local com Links (15 min)
+```bash
+# .env.local
+
+# Assinify Webhook
+ASSINIFY_WEBHOOK_SECRET=seu_token_super_secreto
+
+# FASE 1
+NEXT_PUBLIC_ASSINIFY_MATCH=https://assinify.com.br/checkout/certo-match?session=...
+NEXT_PUBLIC_ASSINIFY_PRECO=https://assinify.com.br/checkout/certo-preco?session=...
+NEXT_PUBLIC_ASSINIFY_TIMING=https://assinify.com.br/checkout/certo-timing?session=...
+
+# FASE 2 (8 produtos)
+NEXT_PUBLIC_ASSINIFY_DASHBOARD_IA=...
+NEXT_PUBLIC_ASSINIFY_INSIGHTS=...
+... (etc)
+
+# FASE 3 (8 produtos)
+NEXT_PUBLIC_ASSINIFY_ANALYTICS_CLIENTE=...
+... (etc)
+
+# FASE 4 (8 produtos)
+NEXT_PUBLIC_ASSINIFY_ACADEMY=...
+NEXT_PUBLIC_ASSINIFY_TEMPLATES=...
+... (etc)
+```
+
+### PASSO 4: Configurar Webhook no Assinify (10 min)
+1. Ir para Settings → Webhooks
+2. Adicionar webhook URL: `https://prestacerto.com.br/api/webhooks/assinify`
+3. Selecionar eventos:
+   - `subscription.created`
+   - `subscription.updated`
+   - `subscription.cancelled`
+   - `payment.completed`
+   - `payment.failed`
+4. Copiar webhook secret e adicionar a `.env.local` (ASSINIFY_WEBHOOK_SECRET)
 
 ---
 
-## 📋 PRÉ-DEPLOYMENT (Local)
+## DEPLOYMENT (DEPOIS)
 
-### 1️⃣ Verificar Build Local
-
+### PASSO 5: Validar Localmente (30 min)
 ```bash
-cd /Users/cadusima/prestacerto
+# Terminal 1: Rodando servidor de desenvolvimento
+npm run dev
 
-# Instalar dependências
-npm install
+# Terminal 2: Testar webhook
+curl -X POST http://localhost:3000/api/webhooks/assinify \
+  -H "Content-Type: application/json" \
+  -H "x-assinify-signature: seu_webhook_secret" \
+  -d '{
+    "id": "test-123",
+    "event": "subscription.created",
+    "timestamp": 1234567890,
+    "data": {
+      "product_id": "match",
+      "customer_id": "user-123",
+      "customer_email": "test@example.com",
+      "amount": 2900,
+      "status": "active"
+    }
+  }'
+```
 
-# Build
+### PASSO 6: Testar Links Assinify
+- [ ] Ir para http://localhost:3000/dashboard/products
+- [ ] Clicar em cada produto → deve redirecionar para Assinify
+- [ ] Verificar que links estão corretos
+
+### PASSO 7: Rodar Testes
+```bash
+npm test
+# Esperado: 13+ testes PASS
+```
+
+### PASSO 8: Build para Produção
+```bash
 npm run build
-
-# Testar
-npm start
+# Verificar que build completa sem erros
 ```
 
-Esperado: ✅ Build sem erros
-
----
-
-### 2️⃣ Migrations SQL (Supabase)
-
-Copiar e executar no **Supabase Dashboard → SQL Editor**:
-
-```sql
--- 1. Profile Views (já feito?)
-src/lib/supabase/profile-views.sql
-
--- 2. Business Tracking (já feito?)
-src/lib/supabase/business-tracking.sql
-
--- 3. Streaks (NOVO - executar agora)
-src/lib/supabase/streaks.sql
-
--- 4. Project Interests (NOVO - criar tabela)
-CREATE TABLE IF NOT EXISTS project_interests (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL REFERENCES auth.users(id),
-  project_id uuid NOT NULL REFERENCES projects(id),
-  interaction_type TEXT DEFAULT 'swipe_like',
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE UNIQUE INDEX idx_project_interests_unique 
-ON project_interests(user_id, project_id);
-```
-
-Esperado: ✅ Sem erros
-
----
-
-### 3️⃣ Variáveis .env Local
-
-Criar arquivo `.env.local`:
-
+### PASSO 9: Deploy
 ```bash
-# Next.js
-NODE_ENV=production
-NEXT_PUBLIC_SITE_URL=https://seu-app.onrender.com
+# Opção 1: Vercel
+vercel deploy --prod
 
-# Supabase (já tem?)
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxxxx
-SUPABASE_SERVICE_ROLE_KEY=xxxxxxx
+# Opção 2: Heroku
+git push heroku main
 
-# Email
-EMAIL_HOST=smtp.seuservidor.com
-EMAIL_PORT=587
-EMAIL_USER=seu-email@empresa.com
-EMAIL_PASSWORD=sua-senha
-EMAIL_FROM=noreply@prestacerto.com.br
-EMAIL_SECURE=false
-
-# Stripe (deixar vazio por enquanto)
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
+# Opção 3: Self-hosted
+git push
+# (configure CI/CD conforme seu setup)
 ```
+
+### PASSO 10: Validar em Produção
+- [ ] Acessar https://prestacerto.com.br/dashboard/products
+- [ ] Clicar em cada produto → Assinify checkout
+- [ ] Testar pagamento com cartão de teste Assinify
+- [ ] Verificar webhook foi chamado (check logs)
+- [ ] Verificar subscription foi criada no banco
+
+### PASSO 11: Monitorar
+- [ ] Dashboard admin: https://prestacerto.com.br/admin/analytics
+- [ ] Logs de webhook em tempo real
+- [ ] Erros de pagamento
+- [ ] Taxa de conversão por produto
 
 ---
 
-### 4️⃣ Testar URLs Locais
+## ROLLOUT STRATEGY
 
-```bash
-# Em outro terminal, enquanto npm start está rodando
+### SEMANA 1-2: Fase 1 (3 produtos)
+- Lançar Match, Preço, Timing
+- Monitorar conversão
+- Feedback de usuários
+- Alvo: R$ 69k/mês
 
-# Homepage
-curl -s http://localhost:3000 | grep -q "PrestaCerto" && echo "✅ Homepage OK"
+### SEMANA 3-6: Fase 2 (8 produtos)
+- Lançar inteligência (Dashboard, Insights, Badge, etc)
+- Cross-sell para usuários Fase 1
+- Alvo: +R$ 309k/mês
 
-# Checkout
-curl -s http://localhost:3000/checkout | grep -q "Checkout" && echo "✅ Checkout OK"
+### SEMANA 7-10: Fase 3 (8 produtos)
+- Lançar client tools (Analytics, Contrato, QA, VIP)
+- Bundle de 3+ produtos = desconto
+- Alvo: +R$ 1.828k/mês
 
-# Swipe
-curl -s http://localhost:3000/explore/swipe | grep -q "Swipe" && echo "✅ Swipe OK"
+### SEMANA 11-14: Fase 4 (8 produtos)
+- Lançar comunidade (Academy, Templates, Cold Email, Premium)
+- Tier premium com benefícios
+- Alvo: +R$ 1.164k/mês
 
-# API
-curl -s http://localhost:3000/api/user/streak -H "Authorization: Bearer TOKEN" | jq . && echo "✅ API OK"
-```
-
----
-
-## 🚀 DEPLOYMENT (Render)
-
-### 5️⃣ Criar Web Service no Render
-
-```
-1. Acesse https://dashboard.render.com
-2. "New +" → "Web Service"
-3. Conecte GitHub (seu repo)
-4. Selecione branch: main
-5. Nome: prestacerto
-6. Runtime: Node
-7. Build: npm run build
-8. Start: npm start
-9. Plan: Standard ($12/mês)
-```
-
-### 6️⃣ Adicionar Variáveis (Render Settings)
-
-```
-Settings → Environment Variables
-
-Adicione TODAS de .env.local acima
-```
-
-### 7️⃣ Deploy Inicial
-
-```
-Clique "Create Web Service"
-Aguarde ~5-10 minutos
-```
-
-Você verá no Logs:
-```
-Building...
-Running npm install
-Running npm run build
-Starting application on port 10000
-Application is running
-```
+**TOTAL:** R$ 3.371k/mês (conservador)
 
 ---
 
-## ✅ PÓS-DEPLOYMENT (Validação)
+## TROUBLESHOOTING
 
-### 8️⃣ Testar URLs em Produção
+### Webhook não está sendo chamado
+1. Verificar webhook URL em Assinify settings
+2. Verificar ASSINIFY_WEBHOOK_SECRET está correto
+3. Verificar logs: `npm run dev` e fazer POST test
 
-Substitua `https://seu-app.onrender.com` e teste:
+### Link Assinify retorna 404
+1. Verificar link em `.env.local`
+2. Verificar produto foi criado em Assinify
+3. Verificar sessão não expirou
 
-```bash
-# Homepage
-curl -s https://seu-app.onrender.com | grep -q "PrestaCerto" && echo "✅ OK"
-
-# Checkout
-curl -s https://seu-app.onrender.com/checkout | grep -q "Checkout" && echo "✅ OK"
-
-# Landing Page
-curl -s https://seu-app.onrender.com/landing/designer/sao-paulo | \
-  grep -q "designer" && echo "✅ OK"
-
-# API
-curl -s https://seu-app.onrender.com/api/user/streak \
-  -H "Authorization: Bearer YOUR_TOKEN" | jq . && echo "✅ OK"
-```
-
-### 9️⃣ Testar no Browser
-
-Abra em uma janela anônima (sem cache):
-
-```
-✅ https://seu-app.onrender.com/checkout
-  → Deve carregar em < 2s
-  → Clique em um plano
-  → Clique em um add-on
-  → Veja o totalizador atualizar
-
-✅ https://seu-app.onrender.com/explore/swipe
-  → Deve mostrar card de projeto
-  → Tente swipes left/right
-  → Veja stats atualizar
-
-✅ https://seu-app.onrender.com/dashboard
-  → Deve ver StreakWidget
-  → Deve ver BusinessDashboard
-  → Deve ver DailyMatchWidget
-```
+### Testes falhando
+1. Verificar banco de dados está rodando
+2. Verificar Supabase variables em `.env.local`
+3. Rodar: `npm test -- --passWithNoTests`
 
 ---
 
-## 📊 FEATURES CHECKLIST
+## OBSERVAÇÕES IMPORTANTES
 
-### Monetização
-- [ ] `/checkout` — Funciona?
-- [ ] `/billing` — Mostra dados?
-- [ ] Email automation — Emails enviando?
+⚠️ **NÃO FAZER:**
+- Não delete produtos do Assinify depois de lançados (quebra links)
+- Não mude webhooks sem avisar developers
+- Não exporte links para repositório público
 
-### Tração
-- [ ] `/landing/designer/sao-paulo` — SEO tags corretas?
-- [ ] Perfil visto X vezes — Widget aparece?
-- [ ] Feed personalizado — Mostra projetos?
-
-### Retenção
-- [ ] Dashboard negócios — Stats corretos?
-- [ ] Projeto do dia — Mostra alert?
-- [ ] Taxa de resposta — Badge no perfil?
-- [ ] Alertas de oportunidade — Notificações funcionam?
-- [ ] Índice demanda — Dados aparecem?
-
-### Engagement
-- [ ] Calculadora — Calcula preço?
-- [ ] Dashboard mercado — Mostra preços?
-- [ ] Leaderboard — Rankings corretos?
-- [ ] Histórico visitas — Gráfico aparece?
-- [ ] Comparação preços — Recomendações mostram?
-- [ ] **Swipe Cards** — Gestures funcionam? ✅ NOVO
-- [ ] **Streak System** — Bônus acumulam? ✅ NOVO
+✅ **FAZER:**
+- Teste tudo localmente antes de produção
+- Monitore erros de pagamento em tempo real
+- Mantenha backups de links Assinify
 
 ---
 
-## 🎯 FLUXO COMPLETO (End-to-End Test)
+## SUPORTE
 
-### Scenario: Novo Usuário
-
-```
-1. Acessa https://seu-app.onrender.com
-2. Clica em "Signup"
-3. Cria conta (email + password)
-4. Vê dashboard com widgets:
-   - ProfileViewsWidget (0 views)
-   - StreakWidget (0 days)
-   - DailyMatchWidget (hoje: projeto perfeito)
-   - BusinessDashboard (R$ 0)
-   - OpportunityAlertsWidget (3 skills)
-
-5. Acessa /explore/swipe
-6. Swipa direita em projeto interessante
-   - Vê "❤️ Salvo!"
-   - Streak aumenta para 1 dia
-   - Stats: Curtidas +1
-
-7. Acessa /calculator/pricing
-8. Seleciona skill + experiência
-9. Vê preço sugerido
-10. Entra email e clica "Enviar"
-11. Recebe email com resultado
-
-12. Acessa /leaderboard/weekly
-13. Vê ranking semanal
-14. Vê seus 0 pontos
-
-15. Acessa /checkout
-16. Seleciona plano "Pro"
-17. Seleciona add-on "Suporte"
-18. Vê totalizador atualizar
-19. Clica "Continuar para Revisão"
-20. Clica "Continuar para Pagamento"
-21. Vê tela de sucesso
-
-Esperado: ✅ Tudo funciona sem erros
-```
+**Docs:** `CERTO_ECOSYSTEM_MASTER_2026-09-17.md`  
+**Webhook:** `/api/webhooks/assinify` (POST)  
+**Analytics:** `/admin/analytics`  
+**Config:** `src/lib/certo-ecosystem/products-config.ts`  
 
 ---
 
-## 📈 MONITORAMENTO PÓS-DEPLOY
-
-### Health Checks
-
-```bash
-# Verificar a cada hora no primeiro dia
-watch -n 3600 'curl -s https://seu-app.onrender.com/api/health | jq .'
-```
-
-### Logs (Render Dashboard)
-
-```
-Settings → Logs
-Procure por:
-- ✅ "Application is running"
-- ❌ "Error" — investigar
-- ❌ "Connection refused" — Database issue
-```
-
-### Sentry (opcional)
-
-```bash
-# Se implementou:
-npm install @sentry/nextjs
-# Configurar SENTRY_AUTH_TOKEN em .env
-```
-
----
-
-## 🚨 TROUBLESHOOTING
-
-### Build falha
-
-```bash
-# Limpar cache
-rm -rf .next node_modules package-lock.json
-npm install
-npm run build
-
-# Se persistir: verificar Node version
-node --version  # Deve ser 18+
-```
-
-### Database connection timeout
-
-```
-1. Supabase Dashboard → Settings → Database
-2. Ativar "Allow all IP addresses" (temporário)
-3. Ou adicionar IP do Render na whitelist
-```
-
-### Email não envia
-
-```
-1. Verificar EMAIL_* em .env
-2. PORT 587 (TLS) ou 465 (SSL)?
-3. Host permite SMTP desde Render?
-4. Testar: telnet EMAIL_HOST EMAIL_PORT
-```
-
-### App lento
-
-```
-1. Render → Settings → Resources
-2. Scale up para Standard ($12)
-3. Ou Premium ($29) se muita traffic
-```
-
----
-
-## 🎁 BONUS: Automações Render
-
-### Redeploy automático
-
-```
-Settings → Auto-Deploy
-Ativar: "Yes"
-Sempre que push para main, redeploy automático
-```
-
-### Backup automático (Supabase)
-
-```
-Supabase Dashboard → Settings → Backups
-Ativar diário + semanal
-```
-
----
-
-## ✅ ANTES DE CONSIDERAR "PRONTO"
-
-- [ ] Todas migrations SQL executadas
-- [ ] Variáveis .env configuradas
-- [ ] Build local funciona sem erros
-- [ ] URLs em produção testadas
-- [ ] Email funcionando
-- [ ] Database queries respondendo < 100ms
-- [ ] UI responsiva (mobile + desktop testado)
-- [ ] Não há erros no Render logs
-- [ ] Streak system acumulando dias
-- [ ] Swipe cards salvando interesses
-- [ ] Dashboard mostrando dados
-
----
-
-## 📞 SUPORTE
-
-### Se algo quebrar:
-
-1. **Checar Render Logs**
-   - Dashboard → Logs (procure por "Error")
-
-2. **Checar Supabase**
-   - Realtime On?
-   - RLS policies corretas?
-   - Database accessible?
-
-3. **Checar .env**
-   - Todas variáveis setadas?
-   - Valores corretos?
-
-4. **Reinstalar**
-   ```bash
-   rm -rf .next node_modules
-   npm install
-   npm run build
-   ```
-
-5. **Render Restart**
-   - Dashboard → Settings → Restart
-
----
-
-## 🎉 FINAL SUMMARY
-
-**Você tem:**
-- ✅ 20+ features implementadas
-- ✅ Database com RLS seguro
-- ✅ APIs prontas
-- ✅ Email automático
-- ✅ UI responsiva
-- ✅ Gamification (Streaks + Swipes)
-- ✅ Analytics pronto
-
-**Próximos passos:**
-1. Deploy em Render (hoje)
-2. Validar em produção (hoje)
-3. Monitorar logs (primeira semana)
-4. Configurar Stripe (quando pronto)
-5. A/B test features (segunda semana)
-
-**Expected Growth:**
-- DAU: 340 → 650 (+91%)
-- Retention: 35% → 75% (+114%)
-- Revenue/user: R$ 580 → R$ 1.850 (+220%)
-
----
-
-**Criado**: 2026-08-12  
-**Status**: 🚀 READY TO SHIP
+**Status:** ✅ Pronto para deployment  
+**Data:** 17 de Setembro de 2026  
+**Next:** Aguardando links Assinify (seu turno!)
