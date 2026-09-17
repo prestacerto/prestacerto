@@ -1,0 +1,24 @@
+// Adicionar ao seu arquivo de registro existente:
+// Depois que o usuário é criado com sucesso:
+
+import { createEmailQueue } from "@/lib/email/queue";
+
+// No seu handler POST de registro:
+export async function POST(request: NextRequest) {
+  // ... seu código de registro existente ...
+
+  // Depois que createUser() ou similar funciona:
+  const userId = user.id; // ou o que você usar
+  const email = user.email;
+  const sequence = userType === "client" ? "CLIENTE" : "PRESTADOR";
+
+  // Criar fila de e-mails
+  try {
+    await createEmailQueue(userId, email, sequence);
+  } catch (error) {
+    console.error("Failed to create email queue:", error);
+    // Não bloqueia o registro, mas loga o erro
+  }
+
+  // ... continua com o resto do registro ...
+}

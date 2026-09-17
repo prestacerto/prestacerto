@@ -1,0 +1,41 @@
+{
+  "at": "2026-09-11T19:29:26.213Z",
+  "origin": "https://prestacerto.com.br",
+  "deployment": "dpl_448xJ5wUQzC1VeBKN5T7kddqxe4r",
+  "realCharge": false,
+  "results": [
+    {
+      "name": "admin_login",
+      "ok": true
+    },
+    {
+      "name": "admin_page",
+      "ok": true
+    },
+    {
+      "name": "admin_overview",
+      "ok": true,
+      "state": "ready"
+    },
+    {
+      "name": "anonymous_admin_denied",
+      "ok": true
+    },
+    {
+      "name": "checkout_authentication",
+      "ok": true
+    },
+    {
+      "name": "unverified_checkout_closed",
+      "ok": true
+    },
+    {
+      "name": "business_price_matches_provider",
+      "ok": true
+    },
+    {
+      "name": "logout",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,1154 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "SimaAI Central Engine API",
+    "version": "1.0.1",
+    "description": "Contrato v1 revisado para o armazenamento PostgreSQL com unicidade atômica. Status operacional: implantação corrigida e validação concorrente pendentes. O primeiro deploy foi reprovado no teste de 100 retries simultâneos: a criação de claims por Storage permitiu múltiplos request_id. Os testes sequenciais anteriores não comprovam idempotência sob carga. Os tenants PrestaCerto, SinalMeet e Sima Creators possuem autorização, sessões, histórico, ações e métricas separados logicamente. Teste e produção são separados logicamente na tabela PostgreSQL public.sima_engine_state_v1 por environment; path inclui o tenant. Chave primária (environment, path) impõe unicidade atômica no banco. A tabela tem RLS forçada e acesso anon/authenticated revogado; acesso exclusivamente servidor através do broker Edge autenticado sima-engine-store. Infraestrutura Vercel, banco Supabase existente do SinalMeet e conta de modelo são compartilhados. Este arquivo descreve o contrato, não constitui sozinho prova de implantação ou SLA.\n\nIdempotência corrigida: INSERT exclusivo protegido pela chave primária PostgreSQL (environment, path), com path por tenant/message_id; o hash usa o payload validado e normalizado. Mesma chave e conteúdo retorna resultado persistido; conteúdo diferente retorna 409. Resultado pendente retorna 202. Resultados e chaves não têm expiração/limpeza automática implementada. Sessões expiram em 24h; isso não elimina automaticamente seus registros nem impede replay de resultado já persistido. Crash ou persistência incerta mantém claim/trava: revisão operacional, sem reinferência automática.\n\nLimites: corpo até 32.000 bytes; message até 8.000 unidades UTF-16; 50 ciclos de mensagem por sessão; histórico contextual limitado às últimas oito entradas (user/assistant), removendo as mais antigas para manter o JSON do histórico em até 50.000 bytes UTF-8 antes da inferência e da persistência. Quotas por tenant/ambiente: no máximo 120 slots/minuto UTC e 1.000/dia UTC. Somente o detentor exclusivo do claim reserva quota; retries concorrentes da mesma mensagem não reservam slots adicionais. Até oito tentativas de reserva aleatória por quota; o sorteio permanece conservador e colisões podem rejeitar antes desses tetos; não é capacidade garantida de mensagens aceitas. Rejeição por quota fica persistida como erro terminal 429, retryable=false: a mesma chave conserva esse resultado; depois do intervalo, uma nova tentativa de mensagem pode usar novo UUID. Throttling do armazenamento pode retornar 429 retryable=true; nesse caso preservar UUID e payload originais. Consumidor precisa impor limites próprios por IP/visitante e consentimento de handoff.\n\nTimeout do modelo: 10 segundos; rota Vercel maxDuration 30 segundos. Cliente deve permitir a duração da rota e, em timeout, repetir a mesma chave/payload. Respeitar Retry-After; aplicar backoff exponencial limitado com jitter para erros retryable e número máximo de tentativas. Não repetir automaticamente erros terminais nem trocar UUID para contornar resultado incerto. Sessão processa uma mensagem por vez.\n\nMétricas de backend incluem request_id, tenant, ambiente, latência, tokens e custo estimado do modelo. Não são retornadas no corpo público. Conta de consumo inclui chamadas de teste; estimativa não é fatura nem inclui infraestrutura."
+  },
+  "servers": [
+    {
+      "url": "https://prestacerto.com.br",
+      "description": "Host do motor central; ambientes diferenciados por rota e credencial."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Engine",
+      "description": "Conversas comerciais isoladas por tenant e ambiente."
+    }
+  ],
+  "paths": {
+    "/api/v1/engine/chat": {
+      "post": {
+        "operationId": "chatProduction",
+        "summary": "Enviar mensagem ao motor SimaAI (produção)",
+        "description": "Exige credencial do ambiente production. Endpoint servidor a servidor: rejeita qualquer header Origin. O ambiente é definido pela rota, nunca pelo payload. Teste usa dados e credenciais isolados logicamente pelo ambiente na tabela PostgreSQL e por tenant no path, com unicidade atômica (environment, path), mas compartilha infraestrutura Vercel, banco Supabase e conta de modelo com produção; chamadas de teste também consomem modelo real. Nenhum dado ou secret é publicado no OpenAPI.",
+        "tags": [
+          "Engine"
+        ],
+        "security": [
+          {
+            "TenantBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID igual a message_id. Escopo: ambiente + tenant + message_id. Reutilizar chave e payload originais nos retries.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+              "description": "UUID v1–v5 aceito; UUID v4 recomendado. Deve ser exatamente igual ao header Idempotency-Key."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Corpo JSON estrito com até 32.000 bytes. audience opcional tem default por tenant; demais campos exigidos.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              },
+              "example": {
+                "message_id": "49df0b63-b7d3-4eb4-8800-a92ed70faf82",
+                "session_id": null,
+                "tenant": "prestacerto",
+                "message": "Qual plano pode ajudar quando envio mais de três propostas por mês?",
+                "page_context": {
+                  "path": "/plans",
+                  "audience": "provider"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resposta persistida. Retry de mensagem concluída retorna o mesmo corpo e request_id, com Idempotency-Replayed:true; não chama novamente o modelo.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Idempotency-Replayed": {
+                "schema": {
+                  "type": "string",
+                  "const": "true"
+                },
+                "description": "Presente somente ao retornar resultado já persistido; também pode acompanhar erro terminal repetido."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "A mensagem já foi reivindicada; resultado ainda não persistido. Não confirma conclusão nem nova inferência.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "const": "3"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Processing"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_BODY: JSON inválido/ausente; INVALID_REQUEST: campo, contexto, UUID ou igualdade da chave inválidos.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED: credencial ausente, inválida ou configuração de credenciais indisponível.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ENVIRONMENT_FORBIDDEN: credencial de outro ambiente. TENANT_FORBIDDEN: tenant diferente do autorizado. SERVER_ONLY: qualquer header Origin está presente; chamar apenas pelo backend.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "SESSION_NOT_FOUND: sessão inexistente, expirada ou inacessível nesse tenant/ambiente. Não revela sua existência em outro tenant.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "IDEMPOTENCY_CONFLICT: mesma chave com payload normalizado diferente. SESSION_CONTEXT_CONFLICT: público da sessão mudou. SESSION_BUSY: outra mensagem detém a trava da sessão; esse erro é terminal e fica associado ao message_id. Depois que a sessão estiver livre, uma nova mensagem usa novo UUID.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "INVALID_BODY: corpo excede 32.000 bytes, inclusive quando enviado em streaming.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "INVALID_BODY: Content-Type não indica application/json.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED: quota distribuída (resultado persistido e retryable=false; mesma chave conserva 429) ou limitação do armazenamento (retryable=true; repetir a mesma chave). SESSION_LIMIT: conversa já concluiu 50 ciclos; erro terminal, iniciar nova conversa se necessário. Retry-After:60 acompanha todos os 429, inclusive replay e SESSION_LIMIT; não torna erro terminal retryable. Quota diária só muda no dia UTC seguinte.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "const": "60"
+                },
+                "description": "Espera recomendada de 60 segundos; presente em 429 inicial e repetido. Não altera retryable nem expira resultado idempotente terminal."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE, RETRY_PENDING ou ENGINE_UNAVAILABLE. Retry com a mesma chave/payload e backoff; uma interrupção após inferência pode manter 202 pendente para revisão manual.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "INFERENCE_FAILED: resposta não concluída, inclusive timeout/erro/recusa de modelo. Persistido como resultado terminal retryable=false; repetir a chave retorna o erro sem nova inferência. Oferecer atendimento humano.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/engine/test/chat": {
+      "post": {
+        "operationId": "chatTest",
+        "summary": "Enviar mensagem ao motor SimaAI (teste)",
+        "description": "Exige credencial do ambiente test. Endpoint servidor a servidor: rejeita qualquer header Origin. O ambiente é definido pela rota, nunca pelo payload. Teste usa dados e credenciais isolados logicamente pelo ambiente na tabela PostgreSQL e por tenant no path, com unicidade atômica (environment, path), mas compartilha infraestrutura Vercel, banco Supabase e conta de modelo com produção; chamadas de teste também consomem modelo real. Nenhum dado ou secret é publicado no OpenAPI.",
+        "tags": [
+          "Engine"
+        ],
+        "security": [
+          {
+            "TenantBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "description": "UUID igual a message_id. Escopo: ambiente + tenant + message_id. Reutilizar chave e payload originais nos retries.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+              "description": "UUID v1–v5 aceito; UUID v4 recomendado. Deve ser exatamente igual ao header Idempotency-Key."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Corpo JSON estrito com até 32.000 bytes. audience opcional tem default por tenant; demais campos exigidos.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              },
+              "example": {
+                "message_id": "49df0b63-b7d3-4eb4-8800-a92ed70faf82",
+                "session_id": null,
+                "tenant": "prestacerto",
+                "message": "Qual plano pode ajudar quando envio mais de três propostas por mês?",
+                "page_context": {
+                  "path": "/plans",
+                  "audience": "provider"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resposta persistida. Retry de mensagem concluída retorna o mesmo corpo e request_id, com Idempotency-Replayed:true; não chama novamente o modelo.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Idempotency-Replayed": {
+                "schema": {
+                  "type": "string",
+                  "const": "true"
+                },
+                "description": "Presente somente ao retornar resultado já persistido; também pode acompanhar erro terminal repetido."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "A mensagem já foi reivindicada; resultado ainda não persistido. Não confirma conclusão nem nova inferência.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "const": "3"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Processing"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_BODY: JSON inválido/ausente; INVALID_REQUEST: campo, contexto, UUID ou igualdade da chave inválidos.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED: credencial ausente, inválida ou configuração de credenciais indisponível.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ENVIRONMENT_FORBIDDEN: credencial de outro ambiente. TENANT_FORBIDDEN: tenant diferente do autorizado. SERVER_ONLY: qualquer header Origin está presente; chamar apenas pelo backend.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "SESSION_NOT_FOUND: sessão inexistente, expirada ou inacessível nesse tenant/ambiente. Não revela sua existência em outro tenant.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "IDEMPOTENCY_CONFLICT: mesma chave com payload normalizado diferente. SESSION_CONTEXT_CONFLICT: público da sessão mudou. SESSION_BUSY: outra mensagem detém a trava da sessão; esse erro é terminal e fica associado ao message_id. Depois que a sessão estiver livre, uma nova mensagem usa novo UUID.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "INVALID_BODY: corpo excede 32.000 bytes, inclusive quando enviado em streaming.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "INVALID_BODY: Content-Type não indica application/json.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED: quota distribuída (resultado persistido e retryable=false; mesma chave conserva 429) ou limitação do armazenamento (retryable=true; repetir a mesma chave). SESSION_LIMIT: conversa já concluiu 50 ciclos; erro terminal, iniciar nova conversa se necessário. Retry-After:60 acompanha todos os 429, inclusive replay e SESSION_LIMIT; não torna erro terminal retryable. Quota diária só muda no dia UTC seguinte.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "const": "60"
+                },
+                "description": "Espera recomendada de 60 segundos; presente em 429 inicial e repetido. Não altera retryable nem expira resultado idempotente terminal."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE, RETRY_PENDING ou ENGINE_UNAVAILABLE. Retry com a mesma chave/payload e backoff; uma interrupção após inferência pode manter 202 pendente para revisão manual.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "INFERENCE_FAILED: resposta não concluída, inclusive timeout/erro/recusa de modelo. Persistido como resultado terminal retryable=false; repetir a chave retorna o erro sem nova inferência. Oferecer atendimento humano.",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Não armazenar resposta em cache HTTP."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "TenantBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "opaque token",
+        "description": "Token opaco de 32 a 160 caracteres [A-Za-z0-9_-], provisionado por canal seguro e vinculado a um único tenant/ambiente. Cabeçalho exatamente Bearer <token>; não é JWT. Credenciais nunca no navegador, URL, logs ou exemplos."
+      }
+    },
+    "schemas": {
+      "ChatRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message_id",
+          "session_id",
+          "tenant",
+          "message",
+          "page_context"
+        ],
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+            "description": "UUID v1–v5 aceito; UUID v4 recomendado. Deve ser exatamente igual ao header Idempotency-Key."
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^ses_[A-Za-z0-9_-]{32}$",
+                "description": "Identificador opaco criado pelo motor, exclusivo do tenant e ambiente. Expira 24 horas após criação, sem renovação deslizante."
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Obrigatório. Use null somente para a primeira mensagem; reutilize o valor retornado em mensagens novas seguintes. Um retry deve manter o payload original, inclusive session_id:null quando esse foi o envio original."
+          },
+          "tenant": {
+            "type": "string",
+            "enum": [
+              "prestacerto",
+              "sinalmeet",
+              "simacreators"
+            ],
+            "description": "Precisa corresponder ao tenant autorizado pela credencial."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000,
+            "pattern": "\\S",
+            "description": "Texto não vazio; limite implementado de 8.000 unidades UTF-16 (String.length), além do limite total de 32.000 bytes do corpo UTF-8."
+          },
+          "page_context": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "audience": {
+                "type": "string"
+              }
+            },
+            "description": "Somente path e audience. Não aceita query string, UTM ou URL arbitrária. Valores de audiência são contexto de conversa, não autenticação nem concessão de acesso."
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "tenant": {
+                "const": "prestacerto"
+              },
+              "page_context": {
+                "properties": {
+                  "path": {
+                    "enum": [
+                      "/",
+                      "/para-clientes",
+                      "/para-prestadores",
+                      "/plans",
+                      "/planos",
+                      "/ajuda",
+                      "/publicar-projeto",
+                      "/register",
+                      "/contato"
+                    ]
+                  },
+                  "audience": {
+                    "enum": [
+                      "client",
+                      "provider",
+                      "customer"
+                    ],
+                    "default": "client"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "tenant": {
+                "const": "sinalmeet"
+              },
+              "page_context": {
+                "properties": {
+                  "path": {
+                    "enum": [
+                      "/",
+                      "/para-empresas",
+                      "/parceiros",
+                      "/checkout",
+                      "/ajuda",
+                      "/entrar"
+                    ]
+                  },
+                  "audience": {
+                    "enum": [
+                      "company",
+                      "partner",
+                      "customer",
+                      "agency"
+                    ],
+                    "default": "company"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "examples": [
+          {
+            "message_id": "49df0b63-b7d3-4eb4-8800-a92ed70faf82",
+            "session_id": null,
+            "tenant": "prestacerto",
+            "message": "Qual plano pode ajudar quando envio mais de três propostas por mês?",
+            "page_context": {
+              "path": "/plans",
+              "audience": "provider"
+            }
+          }
+        ]
+      },
+      "Action": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "publish_project"
+              },
+              "label": {
+                "const": "Publicar meu projeto"
+              },
+              "url": {
+                "const": "/publicar-projeto"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "create_profile"
+              },
+              "label": {
+                "const": "Criar meu perfil"
+              },
+              "url": {
+                "const": "/register?role=freelancer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "view_plans"
+              },
+              "label": {
+                "const": "Ver planos"
+              },
+              "url": {
+                "const": "/plans"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "contact_team"
+              },
+              "label": {
+                "const": "Falar com a equipe"
+              },
+              "url": {
+                "const": "/contato"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "request_demo"
+              },
+              "label": {
+                "const": "Solicitar demonstração"
+              },
+              "url": {
+                "const": "/#contato"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "view_plans"
+              },
+              "label": {
+                "const": "Ver planos"
+              },
+              "url": {
+                "const": "/checkout"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "become_partner"
+              },
+              "label": {
+                "const": "Conhecer a parceria"
+              },
+              "url": {
+                "const": "/parceiros"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "type": {
+                "const": "contact_team"
+              },
+              "label": {
+                "const": "Falar com a equipe"
+              },
+              "url": {
+                "const": "/#contato"
+              }
+            }
+          }
+        ],
+        "description": "Ações selecionadas exclusivamente da allowlist do tenant autorizado. Renderize texto de rótulo e URL local de forma segura. Uma ação sugerida não executa compra, cadastro ou handoff."
+      },
+      "Handoff": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "required",
+          "reason",
+          "summary"
+        ],
+        "properties": {
+          "required": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 299
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1999
+          }
+        },
+        "description": "Sinal para o site oferecer transferência humana; não confirma envio, recebimento ou início de atendimento. reason e summary são null se required=false. Se true, podem ser null quando o modelo não informou. Consumidor deve obter consentimento e confirmar entrega por seu fluxo autorizado.",
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "required": {
+                  "const": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "reason": {
+                  "type": "null"
+                },
+                "summary": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ChatResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "message_id",
+          "session_id",
+          "text",
+          "actions",
+          "handoff"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "v1"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+            "description": "UUID v1–v5 aceito; UUID v4 recomendado. Deve ser exatamente igual ao header Idempotency-Key."
+          },
+          "session_id": {
+            "type": "string",
+            "pattern": "^ses_[A-Za-z0-9_-]{32}$",
+            "description": "Identificador opaco criado pelo motor, exclusivo do tenant e ambiente. Expira 24 horas após criação, sem renovação deslizante."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 6000,
+            "description": "Texto simples. Prompt solicita até 180 palavras; limite rígido é de 6.000 unidades UTF-16, não contagem de palavras."
+          },
+          "actions": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            }
+          },
+          "handoff": {
+            "$ref": "#/components/schemas/Handoff"
+          }
+        },
+        "examples": [
+          {
+            "api_version": "v1",
+            "request_id": "8e5e9442-8be5-438e-847e-5301095a1676",
+            "message_id": "49df0b63-b7d3-4eb4-8800-a92ed70faf82",
+            "session_id": "ses_AbCdEfGhIjKlMnOpQrStUvWxYz012345",
+            "text": "Exemplo ilustrativo: o Pro permite propostas ilimitadas. Compare os recursos e escolha conforme a sua necessidade.",
+            "actions": [
+              {
+                "type": "view_plans",
+                "label": "Ver planos",
+                "url": "/plans"
+              }
+            ],
+            "handoff": {
+              "required": false,
+              "reason": null,
+              "summary": null
+            }
+          }
+        ]
+      },
+      "Processing": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "message_id",
+          "session_id",
+          "status",
+          "retry_after_seconds"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "v1"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+            "description": "UUID v1–v5 aceito; UUID v4 recomendado. Deve ser exatamente igual ao header Idempotency-Key."
+          },
+          "session_id": {
+            "type": "string",
+            "pattern": "^ses_[A-Za-z0-9_-]{32}$",
+            "description": "Identificador opaco criado pelo motor, exclusivo do tenant e ambiente. Expira 24 horas após criação, sem renovação deslizante."
+          },
+          "status": {
+            "const": "processing"
+          },
+          "retry_after_seconds": {
+            "const": 3
+          }
+        },
+        "description": "Claim da mensagem já existe e não há resultado persistido. Repita POST com chave e payload originais, respeitando Retry-After. Não há endpoint GET de polling. Pode representar processamento ativo OU interrupção que exige revisão operacional; não há reinferência nem recuperação automática."
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request_id",
+          "error"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message",
+              "retryable"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "UNAUTHORIZED",
+                  "ENVIRONMENT_FORBIDDEN",
+                  "SERVER_ONLY",
+                  "INVALID_BODY",
+                  "TENANT_FORBIDDEN",
+                  "INVALID_REQUEST",
+                  "STORAGE_UNAVAILABLE",
+                  "IDEMPOTENCY_CONFLICT",
+                  "SESSION_NOT_FOUND",
+                  "SESSION_CONTEXT_CONFLICT",
+                  "RATE_LIMITED",
+                  "RETRY_PENDING",
+                  "SESSION_BUSY",
+                  "SESSION_LIMIT",
+                  "INFERENCE_FAILED",
+                  "ENGINE_UNAVAILABLE"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "description": "Não depende de texto traduzido: use code e retryable. retryable=true significa repetir com a mesma chave/payload, não criar nova mensagem para contornar resultado incerto."
+      }
+    }
+  },
+  "x-curl-example": "curl --request POST 'https://prestacerto.com.br/api/v1/engine/test/chat' --header \"Authorization: Bearer ${SIMA_AI_TEST_API_KEY}\" --header 'Content-Type: application/json' --header 'Idempotency-Key: 49df0b63-b7d3-4eb4-8800-a92ed70faf82' --data '{\"message_id\":\"49df0b63-b7d3-4eb4-8800-a92ed70faf82\",\"session_id\":null,\"tenant\":\"prestacerto\",\"message\":\"Qual plano atende meu negócio?\",\"page_context\":{\"path\":\"/plans\",\"audience\":\"provider\"}}'",
+  "x-curl-example-status": "Modelo de chamada sem segredo embutido; evidências de execução real devem ser fornecidas separadamente. Usar novo UUID para mensagem nova, mesmo UUID e corpo nos retries."
+}

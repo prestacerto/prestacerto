@@ -1,0 +1,49 @@
+{
+  "at": "2026-09-11T19:23:43.370Z",
+  "deployment": "https://prestacerto-1p8alfzac-prestacerto1.vercel.app",
+  "realCharge": false,
+  "testTransactionId": "65a9b40d-1279-42d1-a775-aa407d62d2e3",
+  "results": [
+    {
+      "name": "native_approval_test",
+      "ok": true,
+      "response": {
+        "received": true,
+        "mode": "test",
+        "outcome": "test"
+      }
+    },
+    {
+      "name": "native_duplicate",
+      "ok": true,
+      "response": {
+        "received": true,
+        "mode": "test",
+        "outcome": "duplicate"
+      }
+    },
+    {
+      "name": "refund_exact_transaction",
+      "ok": true,
+      "response": {
+        "received": true,
+        "mode": "test",
+        "outcome": "test"
+      }
+    },
+    {
+      "name": "unknown_product",
+      "ok": true,
+      "response": {
+        "error": "unknown_assiny_offer"
+      }
+    },
+    {
+      "name": "forged_token",
+      "ok": true,
+      "response": {
+        "error": "unauthorized"
+      }
+    }
+  ]
+}

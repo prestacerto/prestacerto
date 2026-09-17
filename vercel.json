@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": ".",
+      "framework": "nextjs"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "web"
+      }
+    }
+  ]
+}
+{
+  "crons": [{
+    "path": "/api/cron/email",
+    "schedule": "0 * * * *"
+  }]
+}

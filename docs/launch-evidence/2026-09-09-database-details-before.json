@@ -1,0 +1,412 @@
+[
+  {
+    "command": "BEGIN",
+    "rows": []
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "table_name": "messages",
+        "column_name": "body",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "created_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "proposal_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "read_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "sender_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "avatar_url",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "bio",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "city",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "contact_email",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "contact_phone",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "created_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "email",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "full_name",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "is_active",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "plan",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "role",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "state",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "budget_max",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "budget_min",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "category_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "client_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "created_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "deadline_days",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "description",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "skills",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "status",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "title",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "created_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "freelancer_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "message",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "project_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "proposed_price",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "status",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "category_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "created_at",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "delivery_days",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "description",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "freelancer_id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "id",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "is_active",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "price_hour",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "rating",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "rating_count",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "skills",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "table_name": "services",
+        "column_name": "title",
+        "privilege_type": "REFERENCES"
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "relname": "profiles",
+        "conname": "profiles_id_fkey",
+        "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "relname": "profiles",
+        "conname": "profiles_pkey",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "relname": "profiles",
+        "conname": "profiles_plan_check",
+        "definition": "CHECK ((plan = ANY (ARRAY['free'::text, 'pro'::text, 'business'::text])))"
+      },
+      {
+        "relname": "profiles",
+        "conname": "profiles_role_check",
+        "definition": "CHECK ((role = ANY (ARRAY['freelancer'::text, 'client'::text, 'both'::text])))"
+      },
+      {
+        "relname": "projects",
+        "conname": "projects_category_id_fkey",
+        "definition": "FOREIGN KEY (category_id) REFERENCES categories(id)"
+      },
+      {
+        "relname": "projects",
+        "conname": "projects_client_id_fkey",
+        "definition": "FOREIGN KEY (client_id) REFERENCES profiles(id) ON DELETE CASCADE"
+      },
+      {
+        "relname": "projects",
+        "conname": "projects_pkey",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "relname": "projects",
+        "conname": "projects_status_check",
+        "definition": "CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'closed'::text, 'cancelled'::text])))"
+      },
+      {
+        "relname": "proposals",
+        "conname": "proposals_freelancer_id_fkey",
+        "definition": "FOREIGN KEY (freelancer_id) REFERENCES profiles(id) ON DELETE CASCADE"
+      },
+      {
+        "relname": "proposals",
+        "conname": "proposals_pkey",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "relname": "proposals",
+        "conname": "proposals_project_id_fkey",
+        "definition": "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE"
+      },
+      {
+        "relname": "proposals",
+        "conname": "proposals_project_id_freelancer_id_key",
+        "definition": "UNIQUE (project_id, freelancer_id)"
+      },
+      {
+        "relname": "proposals",
+        "conname": "proposals_status_check",
+        "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'rejected'::text, 'withdrawn'::text])))"
+      },
+      {
+        "relname": "services",
+        "conname": "services_category_id_fkey",
+        "definition": "FOREIGN KEY (category_id) REFERENCES categories(id)"
+      },
+      {
+        "relname": "services",
+        "conname": "services_freelancer_id_fkey",
+        "definition": "FOREIGN KEY (freelancer_id) REFERENCES profiles(id) ON DELETE CASCADE"
+      },
+      {
+        "relname": "services",
+        "conname": "services_pkey",
+        "definition": "PRIMARY KEY (id)"
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "proname": "apply_pending_subscription",
+        "definition": "CREATE OR REPLACE FUNCTION public.apply_pending_subscription()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$ declare pending public.pending_subscriptions%rowtype; begin if new.email is null then return new; end if; select * into pending from public.pending_subscriptions where email = lower(new.email) and status = 'active'; if found then new.plan := pending.plan; delete from public.pending_subscriptions where email = pending.email; end if; return new; end; $function$\n"
+      },
+      {
+        "proname": "handle_new_user",
+        "definition": "CREATE OR REPLACE FUNCTION public.handle_new_user()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$\ndeclare\n  profile_role text;\n  profile_name text;\nbegin\n  profile_role := case\n    when new.raw_user_meta_data ->> 'role' in ('freelancer', 'client', 'both')\n      then new.raw_user_meta_data ->> 'role'\n    else 'freelancer'\n  end;\n\n  profile_name := coalesce(\n    nullif(trim(new.raw_user_meta_data ->> 'full_name'), ''),\n    nullif(trim(split_part(coalesce(new.email, ''), '@', 1)), ''),\n    'Novo usuário'\n  );\n\n  insert into public.profiles (id, email, role, full_name, plan)\n  values (\n    new.id,\n    lower(nullif(trim(new.email), '')),\n    profile_role,\n    profile_name,\n    'free'\n  )\n  on conflict (id) do nothing;\n\n  return new;\nend;\n$function$\n"
+      },
+      {
+        "proname": "handle_new_user_connects",
+        "definition": "CREATE OR REPLACE FUNCTION public.handle_new_user_connects()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\nBEGIN\n  INSERT INTO public.user_connects (user_id, plan, monthly_limit)\n  VALUES (new.id, 'free', 5)\n  ON CONFLICT DO NOTHING;\n  RETURN new;\nEND;\n$function$\n"
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "proname": "handle_new_user_connects",
+        "prosecdef": true,
+        "anon_execute": true,
+        "user_execute": true
+      },
+      {
+        "proname": "handle_new_user",
+        "prosecdef": true,
+        "anon_execute": true,
+        "user_execute": true
+      },
+      {
+        "proname": "reset_monthly_connects",
+        "prosecdef": true,
+        "anon_execute": true,
+        "user_execute": true
+      },
+      {
+        "proname": "apply_pending_subscription",
+        "prosecdef": true,
+        "anon_execute": true,
+        "user_execute": true
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "table_name": "profiles",
+        "count": "46"
+      },
+      {
+        "table_name": "projects",
+        "count": "0"
+      },
+      {
+        "table_name": "proposals",
+        "count": "0"
+      },
+      {
+        "table_name": "messages",
+        "count": "0"
+      }
+    ]
+  },
+  {
+    "command": "COMMIT",
+    "rows": []
+  }
+]

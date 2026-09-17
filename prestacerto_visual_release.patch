@@ -1,0 +1,54 @@
+[1mdiff --git a/public/manifest.json b/public/manifest.json[m
+[1mindex 18cf798..1695caa 100644[m
+[1m--- a/public/manifest.json[m
+[1m+++ b/public/manifest.json[m
+[36m@@ -10,28 +10,10 @@[m
+   "theme_color": "#1e293b",[m
+   "icons": [[m
+     {[m
+[31m-      "src": "/icon-192.png",[m
+[31m-      "sizes": "192x192",[m
+[31m-      "type": "image/png",[m
+[31m-      "purpose": "any"[m
+[31m-    },[m
+[31m-    {[m
+[31m-      "src": "/icon-512.png",[m
+[31m-      "sizes": "512x512",[m
+[31m-      "type": "image/png",[m
+[31m-      "purpose": "any"[m
+[31m-    },[m
+[31m-    {[m
+[31m-      "src": "/icon-192-maskable.png",[m
+[31m-      "sizes": "192x192",[m
+[31m-      "type": "image/png",[m
+[31m-      "purpose": "maskable"[m
+[31m-    },[m
+[31m-    {[m
+[31m-      "src": "/icon-512-maskable.png",[m
+[31m-      "sizes": "512x512",[m
+[31m-      "type": "image/png",[m
+[31m-      "purpose": "maskable"[m
+[32m+[m[32m      "src": "/prestacerto-logo-icon.svg?v=20260825",[m
+[32m+[m[32m      "sizes": "any",[m
+[32m+[m[32m      "type": "image/svg+xml",[m
+[32m+[m[32m      "purpose": "any maskable"[m
+     }[m
+   ],[m
+   "screenshots": [[m
+[1mdiff --git a/src/app/layout.tsx b/src/app/layout.tsx[m
+[1mindex a585c95..729f038 100644[m
+[1m--- a/src/app/layout.tsx[m
+[1m+++ b/src/app/layout.tsx[m
+[36m@@ -25,9 +25,9 @@[m [mexport const metadata: Metadata = {[m
+   ...defaultMetadata,[m
+   manifest: "/manifest.json",[m
+   icons: {[m
+[31m-    icon: [{ url: "/prestacerto-logo-icon.svg", type: "image/svg+xml" }],[m
+[31m-    shortcut: ["/prestacerto-logo-icon.svg"],[m
+[31m-    apple: [{ url: "/prestacerto-logo-icon.svg" }],[m
+[32m+[m[32m    icon: [{ url: "/prestacerto-logo-icon.svg?v=20260825", type: "image/svg+xml" }],[m
+[32m+[m[32m    shortcut: ["/prestacerto-logo-icon.svg?v=20260825"],[m
+[32m+[m[32m    apple: [{ url: "/prestacerto-logo-icon.svg?v=20260825" }],[m
+   },[m
+   appleWebApp: {[m
+     capable: true,[m

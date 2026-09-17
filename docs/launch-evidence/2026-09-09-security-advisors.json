@@ -1,0 +1,84 @@
+[
+  {
+    "name": "rls_policy_always_true",
+    "title": "RLS Policy Always True",
+    "level": "WARN",
+    "facing": "EXTERNAL",
+    "categories": [
+      "SECURITY"
+    ],
+    "description": "Detects RLS policies that use overly permissive expressions like `USING (true)` or `WITH CHECK (true)` for UPDATE, DELETE, or INSERT operations. SELECT policies with `USING (true)` are intentionally excluded as this pattern is often used deliberately for public read access.",
+    "detail": "Table `public.contact_messages` has an RLS policy `qualquer um pode enviar mensagem de contato` for `INSERT` that allows unrestricted access (WITH CHECK clause is always true). This effectively bypasses row-level security for -.",
+    "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0024_permissive_rls_policy",
+    "metadata": {
+      "name": "contact_messages",
+      "qual": null,
+      "type": "table",
+      "roles": [
+        "-"
+      ],
+      "schema": "public",
+      "command": "INSERT",
+      "with_check": "true",
+      "policy_name": "qualquer um pode enviar mensagem de contato",
+      "permissive_using": false,
+      "permissive_with_check": true
+    },
+    "cache_key": "rls_policy_always_true_public_contact_messages_qualquer um pode enviar mensagem de contato"
+  },
+  {
+    "name": "rls_policy_always_true",
+    "title": "RLS Policy Always True",
+    "level": "WARN",
+    "facing": "EXTERNAL",
+    "categories": [
+      "SECURITY"
+    ],
+    "description": "Detects RLS policies that use overly permissive expressions like `USING (true)` or `WITH CHECK (true)` for UPDATE, DELETE, or INSERT operations. SELECT policies with `USING (true)` are intentionally excluded as this pattern is often used deliberately for public read access.",
+    "detail": "Table `public.plan_interest_leads` has an RLS policy `qualquer um pode se cadastrar na lista de espera` for `INSERT` that allows unrestricted access (WITH CHECK clause is always true). This effectively bypasses row-level security for -.",
+    "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0024_permissive_rls_policy",
+    "metadata": {
+      "name": "plan_interest_leads",
+      "qual": null,
+      "type": "table",
+      "roles": [
+        "-"
+      ],
+      "schema": "public",
+      "command": "INSERT",
+      "with_check": "true",
+      "policy_name": "qualquer um pode se cadastrar na lista de espera",
+      "permissive_using": false,
+      "permissive_with_check": true
+    },
+    "cache_key": "rls_policy_always_true_public_plan_interest_leads_qualquer um pode se cadastrar na lista de espera"
+  },
+  {
+    "name": "rls_policy_always_true",
+    "title": "RLS Policy Always True",
+    "level": "WARN",
+    "facing": "EXTERNAL",
+    "categories": [
+      "SECURITY"
+    ],
+    "description": "Detects RLS policies that use overly permissive expressions like `USING (true)` or `WITH CHECK (true)` for UPDATE, DELETE, or INSERT operations. SELECT policies with `USING (true)` are intentionally excluded as this pattern is often used deliberately for public read access.",
+    "detail": "Table `public.profile_views` has an RLS policy `profile_views_public_insert` for `INSERT` that allows unrestricted access (WITH CHECK clause is always true). This effectively bypasses row-level security for anon, authenticated.",
+    "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0024_permissive_rls_policy",
+    "metadata": {
+      "name": "profile_views",
+      "qual": null,
+      "type": "table",
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "schema": "public",
+      "command": "INSERT",
+      "with_check": "true",
+      "policy_name": "profile_views_public_insert",
+      "permissive_using": false,
+      "permissive_with_check": true
+    },
+    "cache_key": "rls_policy_always_true_public_profile_views_profile_views_public_insert"
+  }
+]

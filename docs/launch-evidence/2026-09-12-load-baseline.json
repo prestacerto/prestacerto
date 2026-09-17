@@ -1,0 +1,254 @@
+{
+  "runId": "prestacerto-load-2026-09-12T07:28:13.278Z",
+  "base": "https://prestacerto.com.br",
+  "completedAt": "2026-09-12T07:30:04.094Z",
+  "methodology": "Single-origin HTTP HTML reads, paced open arrival model. No browser JavaScript/assets, authenticated writes, email, payment or AI traffic. Cache and DB result correctness require separate verification.",
+  "guardrails": {
+    "maxInflight": 40,
+    "timeoutMs": 10000,
+    "rollingSample": 30,
+    "abortAtFailures": 2,
+    "abortP95Ms": 5000
+  },
+  "elapsedSeconds": 110.815090083,
+  "maximumConcurrency": 16,
+  "scheduled": 1090,
+  "dropped": 0,
+  "abortReason": null,
+  "overall": {
+    "requests": 1090,
+    "failures": 0,
+    "p50Ms": 383,
+    "p95Ms": 655,
+    "p99Ms": 897,
+    "ttfbP95Ms": 417,
+    "bytes": 90599872,
+    "statuses": {
+      "200": 1090
+    },
+    "cache": {
+      "MISS": 1090
+    }
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "rps": 2,
+      "seconds": 20,
+      "elapsedSeconds": 19.8940755,
+      "dropped": 0,
+      "requests": 40,
+      "failures": 0,
+      "p50Ms": 551,
+      "p95Ms": 1090,
+      "p99Ms": 1483,
+      "ttfbP95Ms": 872,
+      "bytes": 3322080,
+      "statuses": {
+        "200": 40
+      },
+      "cache": {
+        "MISS": 40
+      }
+    },
+    {
+      "stage": 2,
+      "rps": 5,
+      "seconds": 30,
+      "elapsedSeconds": 30.185970416,
+      "dropped": 0,
+      "requests": 150,
+      "failures": 0,
+      "p50Ms": 379,
+      "p95Ms": 631,
+      "p99Ms": 897,
+      "ttfbP95Ms": 373,
+      "bytes": 12514576,
+      "statuses": {
+        "200": 150
+      },
+      "cache": {
+        "MISS": 150
+      }
+    },
+    {
+      "stage": 3,
+      "rps": 10,
+      "seconds": 30,
+      "elapsedSeconds": 30.311733124999993,
+      "dropped": 0,
+      "requests": 300,
+      "failures": 0,
+      "p50Ms": 380,
+      "p95Ms": 583,
+      "p99Ms": 755,
+      "ttfbP95Ms": 316,
+      "bytes": 24932016,
+      "statuses": {
+        "200": 300
+      },
+      "cache": {
+        "MISS": 300
+      }
+    },
+    {
+      "stage": 4,
+      "rps": 20,
+      "seconds": 30,
+      "elapsedSeconds": 30.416977583,
+      "dropped": 0,
+      "requests": 600,
+      "failures": 0,
+      "p50Ms": 383,
+      "p95Ms": 634,
+      "p99Ms": 865,
+      "ttfbP95Ms": 417,
+      "bytes": 49831200,
+      "statuses": {
+        "200": 600
+      },
+      "cache": {
+        "MISS": 600
+      }
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "kind": "landing",
+      "requests": 137,
+      "failures": 0,
+      "p50Ms": 276,
+      "p95Ms": 334,
+      "p99Ms": 759,
+      "ttfbP95Ms": 300,
+      "bytes": 17861238,
+      "statuses": {
+        "200": 137
+      },
+      "cache": {
+        "MISS": 137
+      }
+    },
+    {
+      "path": "/para-clientes",
+      "kind": "landing",
+      "requests": 137,
+      "failures": 0,
+      "p50Ms": 383,
+      "p95Ms": 643,
+      "p99Ms": 827,
+      "ttfbP95Ms": 500,
+      "bytes": 14922314,
+      "statuses": {
+        "200": 137
+      },
+      "cache": {
+        "MISS": 137
+      }
+    },
+    {
+      "path": "/para-prestadores",
+      "kind": "landing",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 389,
+      "p95Ms": 604,
+      "p99Ms": 733,
+      "ttfbP95Ms": 513,
+      "bytes": 16387728,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    },
+    {
+      "path": "/plans",
+      "kind": "landing",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 203,
+      "p95Ms": 457,
+      "p99Ms": 948,
+      "ttfbP95Ms": 316,
+      "bytes": 11159752,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    },
+    {
+      "path": "/services",
+      "kind": "catalogue",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 398,
+      "p95Ms": 635,
+      "p99Ms": 780,
+      "ttfbP95Ms": 290,
+      "bytes": 7370248,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    },
+    {
+      "path": "/projects",
+      "kind": "catalogue",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 393,
+      "p95Ms": 732,
+      "p99Ms": 809,
+      "ttfbP95Ms": 282,
+      "bytes": 8029984,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    },
+    {
+      "path": "/services?q=design",
+      "kind": "search",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 401,
+      "p95Ms": 776,
+      "p99Ms": 1147,
+      "ttfbP95Ms": 280,
+      "bytes": 7361952,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    },
+    {
+      "path": "/projects?q=marketing",
+      "kind": "search",
+      "requests": 136,
+      "failures": 0,
+      "p50Ms": 392,
+      "p95Ms": 800,
+      "p99Ms": 1319,
+      "ttfbP95Ms": 292,
+      "bytes": 7506656,
+      "statuses": {
+        "200": 136
+      },
+      "cache": {
+        "MISS": 136
+      }
+    }
+  ],
+  "failures": []
+}

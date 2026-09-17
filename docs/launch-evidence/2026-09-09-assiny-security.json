@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-09-09T15:22:34.247Z",
+  "errors": 0,
+  "warnings": 3,
+  "findings": [
+    {
+      "name": "rls_policy_always_true",
+      "level": "WARN",
+      "table": "contact_messages"
+    },
+    {
+      "name": "rls_policy_always_true",
+      "level": "WARN",
+      "table": "plan_interest_leads"
+    },
+    {
+      "name": "rls_policy_always_true",
+      "level": "WARN",
+      "table": "profile_views"
+    }
+  ]
+}

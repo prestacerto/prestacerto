@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-09-09T15:14:45.410Z",
+  "origin": "https://prestacerto.com.br",
+  "checks": [
+    {
+      "path": "/api/ai/improve-proposal",
+      "expected": 503,
+      "actual": 503,
+      "error": "O Certo AI está em preparação. Você pode continuar escrevendo normalmente.",
+      "pass": true
+    },
+    {
+      "path": "/api/certo-ai/rewrite-proposal",
+      "expected": 503,
+      "actual": 503,
+      "error": "O Certo AI está em preparação. Você pode continuar escrevendo normalmente.",
+      "pass": true
+    },
+    {
+      "path": "/api/ai/optimize-proposal",
+      "expected": 503,
+      "actual": 503,
+      "error": "O Certo AI está em preparação. Você pode continuar escrevendo normalmente.",
+      "pass": true
+    },
+    {
+      "path": "/api/ai/scope-project",
+      "expected": 503,
+      "actual": 503,
+      "error": "O Certo AI está em preparação. Você pode continuar escrevendo normalmente.",
+      "pass": true
+    },
+    {
+      "path": "/api/ai/optimize-proposal",
+      "expected": 503,
+      "actual": 503,
+      "error": "Este recurso está em preparação. A reescrita de propostas é o recurso disponível nesta versão.",
+      "pass": true
+    },
+    {
+      "path": "/api/ai/optimize-proposal-demo",
+      "expected": 410,
+      "actual": 410,
+      "error": "A demonstração foi encerrada. Use a reescrita de propostas com sua conta.",
+      "pass": true
+    },
+    {
+      "path": "/certo-ai",
+      "pass": true
+    },
+    {
+      "check": "missing configuration does not reserve usage",
+      "pass": true
+    },
+    {
+      "check": "temporary user removed",
+      "pass": true
+    }
+  ],
+  "providerCalls": 0,
+  "scope": "HTTP authenticated and rendered HTML. Actual provider generation and payments remain unconfigured."
+}

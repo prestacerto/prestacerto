@@ -1,0 +1,29 @@
+{
+  "verifiedAt": "2026-09-11T22:42:00Z",
+  "origin": "https://prestacerto.com.br",
+  "deploymentId": "dpl_6t9MsZhebWj2fjQYbHHV27Jpound",
+  "commit": "dc4b0ba",
+  "testsPassed": 121,
+  "productionChecks": {
+    "partnerLogin": 200,
+    "partnerAdminOverview": 200,
+    "proCheckout": 200,
+    "businessCheckout": 200,
+    "anonymousCheckoutRequiresLogin": 401,
+    "webhookConfiguredLiveMode": true,
+    "plansNoPreparationMessage": true,
+    "logoutWithOrigin": 200,
+    "homeCanonicalAndFAQ": true,
+    "plansCanonicalAndFAQ": true,
+    "filteredServicesNoindexFollow": true,
+    "filteredProjectsNoindexFollow": true,
+    "mobilePlanSelectionPreservedThroughLoginAndRegisterLink": true,
+    "mobileLoginHorizontalOverflow": false
+  },
+  "limitations": [
+    "No real customer purchase or charge was performed.",
+    "The live flag is configuration, not proof of complete provider financial lifecycle validation.",
+    "Native lifecycle events beyond supported approval, refund and chargeback remain to be confirmed with Assiny.",
+    "No guarantee of ranking, conversion improvement or unlimited traffic capacity is implied by these checks."
+  ]
+}

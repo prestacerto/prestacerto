@@ -1,0 +1,210 @@
+{
+  "checkedAt": "2026-09-09T14:37:56.351Z",
+  "origin": "http://localhost:3217",
+  "results": [
+    {
+      "name": "cadastro client",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "sessão client",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "cadastro worker",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "sessão worker",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "cadastro outsider",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "sessão outsider",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "publicação",
+      "actual": 201,
+      "expected": 201,
+      "pass": true
+    },
+    {
+      "name": "proposta sem preço",
+      "actual": 201,
+      "expected": 201,
+      "pass": true
+    },
+    {
+      "name": "listar propostas",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "proposta na lista",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "cliente lê proposta",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "mensagem profissional",
+      "actual": 201,
+      "expected": 201,
+      "pass": true
+    },
+    {
+      "name": "cliente lê conversa",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "mensagem recebida",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "terceiro bloqueado",
+      "actual": 404,
+      "expected": 404,
+      "pass": true
+    },
+    {
+      "name": "autoaceite bloqueado",
+      "actual": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "name": "aceite pelo cliente",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "projeto em andamento",
+      "actual": "in_progress",
+      "expected": "in_progress",
+      "pass": true
+    },
+    {
+      "name": "tela de propostas recebidas",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "botão de conclusão",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "tela de propostas enviadas",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "proposta renderizada",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "lista de conversas do cliente",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "conversa do cliente renderizada",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "tela da conversa",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "mensagem renderizada",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "conclusão por terceiro bloqueada",
+      "actual": 403,
+      "expected": 403,
+      "pass": true
+    },
+    {
+      "name": "conclusão pelo cliente",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "projeto concluído",
+      "actual": "closed",
+      "expected": "closed",
+      "pass": true
+    },
+    {
+      "name": "IA sem credencial informa indisponibilidade",
+      "actual": 503,
+      "expected": 503,
+      "pass": true
+    },
+    {
+      "name": "painel cliente",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "painel profissional",
+      "actual": 200,
+      "expected": 200,
+      "pass": true
+    },
+    {
+      "name": "limpeza de fixtures",
+      "before": {
+        "profiles": "46",
+        "projects": "0"
+      },
+      "after": {
+        "profiles": "46",
+        "projects": "0"
+      },
+      "pass": true
+    }
+  ]
+}

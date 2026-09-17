@@ -1,0 +1,139 @@
+{
+  "checkedAt": "2026-09-10T20:22:13.209Z",
+  "transactionalSuite": "passed",
+  "rolledBack": true,
+  "tables": [
+    {
+      "table": "ad_campaigns",
+      "rls": true
+    },
+    {
+      "table": "ai_insights",
+      "rls": true
+    },
+    {
+      "table": "ai_model_prices",
+      "rls": true
+    },
+    {
+      "table": "ai_optimizations",
+      "rls": true
+    },
+    {
+      "table": "ai_usage",
+      "rls": true
+    },
+    {
+      "table": "ai_usage_events",
+      "rls": true
+    },
+    {
+      "table": "assiny_events",
+      "rls": true
+    },
+    {
+      "table": "assiny_subscriptions",
+      "rls": true
+    },
+    {
+      "table": "business_subscriptions",
+      "rls": true
+    },
+    {
+      "table": "categories",
+      "rls": true
+    },
+    {
+      "table": "certo_ai_requests",
+      "rls": true
+    },
+    {
+      "table": "client_analytics",
+      "rls": true
+    },
+    {
+      "table": "connect_transactions",
+      "rls": true
+    },
+    {
+      "table": "contact_messages",
+      "rls": true
+    },
+    {
+      "table": "contests",
+      "rls": true
+    },
+    {
+      "table": "hiring_verification",
+      "rls": true
+    },
+    {
+      "table": "messages",
+      "rls": true
+    },
+    {
+      "table": "payment_transactions",
+      "rls": true
+    },
+    {
+      "table": "pending_subscriptions",
+      "rls": true
+    },
+    {
+      "table": "plan_interest_leads",
+      "rls": true
+    },
+    {
+      "table": "priority_queue",
+      "rls": true
+    },
+    {
+      "table": "profile_views",
+      "rls": true
+    },
+    {
+      "table": "profiles",
+      "rls": true
+    },
+    {
+      "table": "project_contacts",
+      "rls": true
+    },
+    {
+      "table": "projects",
+      "rls": true
+    },
+    {
+      "table": "proposals",
+      "rls": true
+    },
+    {
+      "table": "push_subscriptions",
+      "rls": true
+    },
+    {
+      "table": "referral_codes",
+      "rls": true
+    },
+    {
+      "table": "screening_results",
+      "rls": true
+    },
+    {
+      "table": "services",
+      "rls": true
+    },
+    {
+      "table": "trending_data",
+      "rls": true
+    },
+    {
+      "table": "user_connects",
+      "rls": true
+    },
+    {
+      "table": "verified_ratings",
+      "rls": true
+    }
+  ]
+}

@@ -1,0 +1,1005 @@
+[
+  {
+    "command": "BEGIN",
+    "rows": []
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "relname": "ad_campaigns",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "ai_insights",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "ai_optimizations",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "ai_usage",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "business_subscriptions",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "categories",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "client_analytics",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "connect_transactions",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "contact_messages",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "contests",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "hiring_verification",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "messages",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "payment_transactions",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "pending_subscriptions",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "plan_interest_leads",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "priority_queue",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "profiles",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "project_contacts",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "projects",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "proposals",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "push_subscriptions",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "referral_codes",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "screening_results",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "services",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "trending_data",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "user_connects",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      },
+      {
+        "relname": "verified_ratings",
+        "relrowsecurity": true,
+        "relforcerowsecurity": false
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "table_name": "messages",
+        "column_name": "id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "proposal_id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "messages",
+        "column_name": "sender_id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "messages",
+        "column_name": "body",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "messages",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "messages",
+        "column_name": "read_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "email",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "plan",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": "'pro'::text"
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "subscription_id",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "status",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": "'active'::text"
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "pending_subscriptions",
+        "column_name": "updated_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "role",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "full_name",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "city",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "state",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "bio",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "avatar_url",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "contact_email",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "contact_phone",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "plan",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": "'free'::text"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "is_active",
+        "data_type": "boolean",
+        "is_nullable": "YES",
+        "column_default": "true"
+      },
+      {
+        "table_name": "profiles",
+        "column_name": "email",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "client_id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "category_id",
+        "data_type": "integer",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "title",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "description",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "skills",
+        "data_type": "ARRAY",
+        "is_nullable": "NO",
+        "column_default": "'{}'::text[]"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "budget_min",
+        "data_type": "numeric",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "budget_max",
+        "data_type": "numeric",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "deadline_days",
+        "data_type": "integer",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "projects",
+        "column_name": "status",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": "'open'::text"
+      },
+      {
+        "table_name": "projects",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "project_id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "freelancer_id",
+        "data_type": "uuid",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "message",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "proposed_price",
+        "data_type": "numeric",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "status",
+        "data_type": "text",
+        "is_nullable": "NO",
+        "column_default": "'pending'::text"
+      },
+      {
+        "table_name": "proposals",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "schemaname": "public",
+        "tablename": "messages",
+        "policyname": "messages_insert_own",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(auth.uid() = sender_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "messages",
+        "policyname": "messages_select_own",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "((auth.uid() = sender_id) OR (auth.uid() = ( SELECT proposals.freelancer_id\n   FROM proposals\n  WHERE (proposals.id = messages.proposal_id))))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "messages",
+        "policyname": "participantes da proposta enviam mensagem",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "((sender_id = auth.uid()) AND (EXISTS ( SELECT 1\n   FROM proposals\n  WHERE ((proposals.id = messages.proposal_id) AND ((proposals.freelancer_id = auth.uid()) OR (EXISTS ( SELECT 1\n           FROM projects\n          WHERE ((projects.id = proposals.project_id) AND (projects.client_id = auth.uid())))))))))"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "messages",
+        "policyname": "participantes da proposta veem as mensagens",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(EXISTS ( SELECT 1\n   FROM proposals\n  WHERE ((proposals.id = messages.proposal_id) AND ((proposals.freelancer_id = auth.uid()) OR (EXISTS ( SELECT 1\n           FROM projects\n          WHERE ((projects.id = proposals.project_id) AND (projects.client_id = auth.uid()))))))))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "Users can update own profile",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "Users can view own profile",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "authenticated_insert_own_profile",
+        "roles": "{authenticated}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(auth.uid() = id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "authenticated_read_own_profile",
+        "roles": "{authenticated}",
+        "cmd": "SELECT",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "authenticated_update_own_profile",
+        "roles": "{authenticated}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "own_update",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "own_write",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "perfis são publicamente visíveis",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "profiles_select_own",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "profiles_update_own",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "public_read",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "public_read_active_profiles",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(is_active = true)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "usuário cria seu próprio perfil",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "profiles",
+        "policyname": "usuário edita seu próprio perfil",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "cliente cria seus próprios projetos",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(client_id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "cliente edita seus próprios projetos",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(client_id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "projects_insert_own",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(auth.uid() = client_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "projects_select_own",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(auth.uid() = client_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "projects_update_own",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = client_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "projects",
+        "policyname": "projetos são publicamente visíveis",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "true",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "cliente vê propostas dos seus projetos",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(EXISTS ( SELECT 1\n   FROM projects\n  WHERE ((projects.id = proposals.project_id) AND (projects.client_id = auth.uid()))))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "freelancer cria proposta em seu nome",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(freelancer_id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "freelancer retira sua própria proposta",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(freelancer_id = auth.uid())",
+        "with_check": "(freelancer_id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "freelancer vê e cria suas próprias propostas",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(freelancer_id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "proposals_insert_own",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(auth.uid() = freelancer_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "proposals_select_own",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "((auth.uid() = freelancer_id) OR (auth.uid() = ( SELECT projects.client_id\n   FROM projects\n  WHERE (projects.id = proposals.project_id))))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "proposals_update_own",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = freelancer_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "proposals",
+        "policyname": "só o dono do projeto aceita/rejeita proposta",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(EXISTS ( SELECT 1\n   FROM projects\n  WHERE ((projects.id = proposals.project_id) AND (projects.client_id = auth.uid()))))",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "freelancer apaga seus próprios serviços",
+        "roles": "{public}",
+        "cmd": "DELETE",
+        "qual": "(freelancer_id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "freelancer cria seus próprios serviços",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(freelancer_id = auth.uid())"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "freelancer edita seus próprios serviços",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(freelancer_id = auth.uid())",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "services_insert_own",
+        "roles": "{public}",
+        "cmd": "INSERT",
+        "qual": null,
+        "with_check": "(auth.uid() = freelancer_id)"
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "services_select_own",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "(auth.uid() = freelancer_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "services_update_own",
+        "roles": "{public}",
+        "cmd": "UPDATE",
+        "qual": "(auth.uid() = freelancer_id)",
+        "with_check": null
+      },
+      {
+        "schemaname": "public",
+        "tablename": "services",
+        "policyname": "serviços ativos são publicamente visíveis",
+        "roles": "{public}",
+        "cmd": "SELECT",
+        "qual": "((is_active = true) OR (freelancer_id = auth.uid()))",
+        "with_check": null
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "grantee": "anon",
+        "table_name": "messages",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "messages",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "messages",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "messages",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "messages",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "messages",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "profiles",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "profiles",
+        "privilege_type": "SELECT"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "profiles",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "profiles",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "profiles",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "profiles",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "profiles",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "projects",
+        "privilege_type": "SELECT"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "projects",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "projects",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "projects",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "projects",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "projects",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "projects",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "proposals",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "proposals",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "proposals",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "proposals",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "proposals",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "proposals",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "services",
+        "privilege_type": "SELECT"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "services",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "services",
+        "privilege_type": "TRUNCATE"
+      },
+      {
+        "grantee": "anon",
+        "table_name": "services",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "services",
+        "privilege_type": "TRIGGER"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "services",
+        "privilege_type": "REFERENCES"
+      },
+      {
+        "grantee": "authenticated",
+        "table_name": "services",
+        "privilege_type": "TRUNCATE"
+      }
+    ]
+  },
+  {
+    "command": "SELECT",
+    "rows": [
+      {
+        "event_object_schema": "auth",
+        "event_object_table": "users",
+        "trigger_name": "on_auth_user_connects",
+        "action_statement": "EXECUTE FUNCTION handle_new_user_connects()"
+      },
+      {
+        "event_object_schema": "auth",
+        "event_object_table": "users",
+        "trigger_name": "on_auth_user_created",
+        "action_statement": "EXECUTE FUNCTION handle_new_user()"
+      },
+      {
+        "event_object_schema": "public",
+        "event_object_table": "profiles",
+        "trigger_name": "apply_pending_subscription_on_profile",
+        "action_statement": "EXECUTE FUNCTION apply_pending_subscription()"
+      }
+    ]
+  },
+  {
+    "command": "COMMIT",
+    "rows": []
+  }
+]

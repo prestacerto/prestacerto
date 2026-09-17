@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-09-09T15:28:06.365Z",
+  "origin": "https://prestacerto.com.br",
+  "checks": [
+    {
+      "path": "/api/webhooks/assiny",
+      "method": "GET",
+      "status": 200,
+      "configured": false,
+      "liveValidated": false,
+      "pass": true
+    },
+    {
+      "path": "/api/webhooks/assiny",
+      "method": "POST",
+      "status": 503,
+      "pass": true
+    },
+    {
+      "path": "/api/webhooks/assinify",
+      "method": "GET",
+      "status": 200,
+      "configured": false,
+      "liveValidated": false,
+      "pass": true
+    },
+    {
+      "path": "/api/webhooks/assinify",
+      "method": "POST",
+      "status": 503,
+      "pass": true
+    },
+    {
+      "path": "/plans",
+      "status": 200,
+      "pass": true
+    }
+  ],
+  "scope": "Read-only diagnostics and rejected requests. Does not validate real Assiny delivery or paid activation."
+}

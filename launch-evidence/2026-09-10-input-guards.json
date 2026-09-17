@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-09-10T20:25:44.416Z",
+  "checks": [
+    {
+      "path": "/api/auth/forgot-password",
+      "expected": 400,
+      "status": 400,
+      "pass": true
+    },
+    {
+      "path": "/api/auth/login",
+      "expected": 400,
+      "status": 400,
+      "pass": true
+    },
+    {
+      "path": "/api/auth/register",
+      "expected": 400,
+      "status": 400,
+      "pass": true
+    },
+    {
+      "path": "/api/contact",
+      "expected": 400,
+      "status": 400,
+      "pass": true
+    },
+    {
+      "path": "/api/plan-interest",
+      "expected": 400,
+      "status": 400,
+      "pass": true
+    },
+    {
+      "path": "/api/notifications/send-message-notification",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    },
+    {
+      "path": "/api/notifications/send-proposal-notification",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    },
+    {
+      "path": "/api/business/subscribe",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    },
+    {
+      "path": "/api/connects/buy",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    },
+    {
+      "path": "/api/priority-queue/activate",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    },
+    {
+      "path": "/api/monetization/featured-projects/activate",
+      "expected": 401,
+      "status": 401,
+      "pass": true
+    }
+  ]
+}

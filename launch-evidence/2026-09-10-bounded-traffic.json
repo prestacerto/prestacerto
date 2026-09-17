@@ -1,0 +1,947 @@
+{
+  "base": "https://prestacerto.com.br",
+  "startedAt": "2026-09-10T20:25:41.330Z",
+  "kind": "bounded read-only smoke",
+  "maxConcurrency": 5,
+  "maxRequests": 180,
+  "stages": [
+    {
+      "concurrency": 1,
+      "count": 20,
+      "durationMs": 21350,
+      "p50Ms": 414,
+      "p95Ms": 1644,
+      "statuses": {
+        "200": 20
+      },
+      "samples": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 1644
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 1195
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 739
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 198
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 384
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 335
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 564
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 721
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 1503
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 414
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 363
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 933
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 608
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 193
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 305
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 305
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 408
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 578
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 284
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 295
+        }
+      ]
+    },
+    {
+      "concurrency": 3,
+      "count": 60,
+      "durationMs": 21620,
+      "p50Ms": 328,
+      "p95Ms": 844,
+      "statuses": {
+        "200": 60
+      },
+      "samples": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 305
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 2614
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 449
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 211
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 211
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 429
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 438
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 588
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 247
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 196
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 291
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 669
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 431
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 255
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 302
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 374
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 627
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 761
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 230
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 349
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 230
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 679
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 679
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 216
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 210
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 328
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 426
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 610
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 178
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 294
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 204
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 844
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 558
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 183
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 177
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 321
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 851
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 407
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 322
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 291
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 364
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 584
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 382
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 296
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 184
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 245
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 400
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 629
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 279
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 262
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 331
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 579
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 563
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 183
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 185
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 301
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 759
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 790
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 176
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 298
+        }
+      ]
+    },
+    {
+      "concurrency": 5,
+      "count": 100,
+      "durationMs": 20088,
+      "p50Ms": 325,
+      "p95Ms": 842,
+      "statuses": {
+        "200": 100
+      },
+      "samples": [
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 209
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 603
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 421
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 608
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 304
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 304
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 401
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 822
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 194
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 203
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 297
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 486
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 414
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 195
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 442
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 381
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 388
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 421
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 319
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 294
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 300
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 961
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 688
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 289
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 238
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 238
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 976
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 840
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 291
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 291
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 313
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 525
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 634
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 180
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 302
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 216
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 636
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 536
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 238
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 215
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 330
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 396
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 762
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 193
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 386
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 360
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 433
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 394
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 180
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 325
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 308
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 443
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 469
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 322
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 289
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 325
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 423
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 638
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 325
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 325
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 232
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 411
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 639
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 336
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 335
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 313
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 664
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 457
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 303
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 215
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 321
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 421
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 418
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 311
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 185
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 202
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 871
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 811
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 293
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 189
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 293
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 821
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 842
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 290
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 177
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 327
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 575
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 473
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 196
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 195
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 207
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 649
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 709
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 304
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 300
+        },
+        {
+          "path": "/",
+          "status": 200,
+          "ms": 303
+        },
+        {
+          "path": "/projects",
+          "status": 200,
+          "ms": 444
+        },
+        {
+          "path": "/services",
+          "status": 200,
+          "ms": 1084
+        },
+        {
+          "path": "/publicar-projeto",
+          "status": 200,
+          "ms": 204
+        },
+        {
+          "path": "/plans",
+          "status": 200,
+          "ms": 293
+        }
+      ]
+    }
+  ],
+  "aborted": false,
+  "finishedAt": "2026-09-10T20:26:44.391Z"
+}

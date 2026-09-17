@@ -1,0 +1,22 @@
+{
+  "event": "approved_purchase",
+  "data": {
+    "offer": {
+      "id": "ea5a3151-adc5-403f-adec-85c2ca6c801d",
+      "name": "Pro",
+      "amount": 5990,
+      "recurrence": "MONTHLY",
+      "product": { "id": "490249da-426e-4ab5-9d48-6b0db8f02db5", "name": "PrestaCerto" },
+      "subscription": { "id": "ee065201-44d4-4f0a-b76b-1da39fc83175", "recurrence": "MONTHLY", "cycle": 1 }
+    },
+    "transaction": {
+      "id": "b1d08a51-3aa0-454b-95a8-5c4b8d00ed25",
+      "project": { "id": "bbfcef58-addc-46de-a50d-44c8b45ee2de", "organization": { "id": "0b3d8901-87a5-46cb-ae8c-59e6e2f332e2" } },
+      "amount": 5990,
+      "currency": "BRL",
+      "status": "paid",
+      "updated_at": "2026-09-01T12:00:00.296151Z"
+    },
+    "client": { "email": "TEST@example.invalid" }
+  }
+}

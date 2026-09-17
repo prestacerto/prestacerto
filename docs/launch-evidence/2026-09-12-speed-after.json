@@ -1,0 +1,150 @@
+{
+  "at": "2026-09-12T08:22:55.405Z",
+  "base": "https://prestacerto.com.br",
+  "deployment": "dpl_FYEuF7VXxsuedsVgd5xzETeHwKcd",
+  "commit": "6c5127f",
+  "method": "5 sequential anonymous GETs per route; single machine; no browser assets or CWV",
+  "routes": {
+    "/": [
+      {
+        "status": 200,
+        "ttfbMs": 372,
+        "totalMs": 381,
+        "htmlBytes": 119492,
+        "cache": "PRERENDER",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 39,
+        "totalMs": 42,
+        "htmlBytes": 119492,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 74,
+        "totalMs": 80,
+        "htmlBytes": 119492,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 45,
+        "totalMs": 59,
+        "htmlBytes": 119492,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 136,
+        "totalMs": 144,
+        "htmlBytes": 119492,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      }
+    ],
+    "/para-clientes": [
+      {
+        "status": 200,
+        "ttfbMs": 201,
+        "totalMs": 210,
+        "htmlBytes": 98776,
+        "cache": "PRERENDER",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 53,
+        "totalMs": 84,
+        "htmlBytes": 98776,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 60,
+        "totalMs": 76,
+        "htmlBytes": 98776,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 56,
+        "totalMs": 68,
+        "htmlBytes": 98776,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 75,
+        "totalMs": 94,
+        "htmlBytes": 98776,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      }
+    ],
+    "/para-prestadores": [
+      {
+        "status": 200,
+        "ttfbMs": 179,
+        "totalMs": 182,
+        "htmlBytes": 110360,
+        "cache": "PRERENDER",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 46,
+        "totalMs": 55,
+        "htmlBytes": 110360,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 43,
+        "totalMs": 90,
+        "htmlBytes": 110360,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 56,
+        "totalMs": 61,
+        "htmlBytes": 110360,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      },
+      {
+        "status": 200,
+        "ttfbMs": 62,
+        "totalMs": 65,
+        "htmlBytes": 110360,
+        "cache": "HIT",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "versionedImages": true
+      }
+    ]
+  }
+}

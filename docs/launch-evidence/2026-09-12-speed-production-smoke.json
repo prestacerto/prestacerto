@@ -1,0 +1,80 @@
+[
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "robots": [],
+    "sitemapEntries": 45
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "public, max-age=0, must-revalidate",
+    "robots": []
+  },
+  {
+    "path": "/api/auth/navigation",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "private, no-store",
+    "robots": [],
+    "body": "{\"signedIn\":false,\"role\":null}"
+  },
+  {
+    "path": "/services?page=10000",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+    "title": "Página de serviços não encontrada | PrestaCerto",
+    "robots": [
+      "noindex",
+      "noindex, nofollow",
+      "noindex, nofollow, max-image-preview:none, max-snippet:0"
+    ]
+  },
+  {
+    "path": "/projects?page=10000",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+    "title": "Página de projetos não encontrada | PrestaCerto",
+    "robots": [
+      "noindex",
+      "noindex, nofollow",
+      "noindex, nofollow, max-image-preview:none, max-snippet:0"
+    ]
+  },
+  {
+    "path": "/projects/00000000-0000-4000-8000-000000000000",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+    "title": "Projeto não encontrado | PrestaCerto",
+    "robots": [
+      "noindex",
+      "noindex, nofollow",
+      "noindex, nofollow, max-image-preview:none, max-snippet:0"
+    ]
+  },
+  {
+    "path": "/plans",
+    "status": 200,
+    "cache": "MISS",
+    "cacheControl": "private, no-cache, no-store, max-age=0, must-revalidate",
+    "title": "Planos: Grátis, Pro e Business | PrestaCerto",
+    "robots": [
+      "index, follow",
+      "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+    ],
+    "canonical": "https://prestacerto.com.br/plans"
+  },
+  {
+    "path": "/images/marketing/v1/prestacerto-principal-960.avif",
+    "status": 200,
+    "cache": "HIT",
+    "cacheControl": "public, max-age=31536000, immutable",
+    "robots": []
+  }
+]

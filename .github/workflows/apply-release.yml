@@ -1,0 +1,54 @@
+name: Aplicar release oficial
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-release:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, 'aplicar release bundle') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validar bundle SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE="prestacerto-release-20260818T101243Z.tar.gz"
+          EXPECTED="8485bfc5c2aacd1ba337cd2d5a347d3dc8afd15d8b648c7de5babde159f55e92"
+          test -f "$BUNDLE"
+          ACTUAL="$(sha256sum "$BUNDLE" | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Aplicar release na raiz do repositório
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/prestacerto-release
+          mkdir -p /tmp/prestacerto-release
+          tar -xzf prestacerto-release-20260818T101243Z.tar.gz -C /tmp/prestacerto-release
+          rsync -a --delete --exclude='.git/' --exclude='.github/' /tmp/prestacerto-release/ ./
+          rm -f prestacerto-release-*.tar.gz prestacerto-release-*.sha256
+          rm -f prestacerto-source-*.tar.gz prestacerto-source-*.sha256
+
+      - name: Commitar aplicação da release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "PrestaCerto Release Bot"
+          git config user.email "release@prestacerto.com.br"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração para aplicar."
+            exit 0
+          fi
+          git commit -m "chore: aplicar release bundle oficial [skip ci]"
+          git push origin main

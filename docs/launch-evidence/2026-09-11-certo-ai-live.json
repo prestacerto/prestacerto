@@ -1,0 +1,20 @@
+{
+  "date": "2026-09-11",
+  "origin": "https://prestacerto.com.br",
+  "deploymentId": "dpl_6cP81Prj7UGCySY4e1wwK2ZVcCJ6",
+  "commit": "440ec23",
+  "provider": "OpenAI",
+  "model": "gpt-4o-mini",
+  "keyName": "PrestaCerto - Certo AI producao",
+  "keyPermissions": "Chat completions request only",
+  "secretStorage": "Vercel Production, Secret OPENAI_API_KEY",
+  "loginStatus": 200,
+  "tests": [
+    {"route":"/api/certo-ai/rewrite-proposal","status":200,"success":true,"realProviderCall":true,"input":"Designer oferece três peças para redes sociais, orçamento e prazo a combinar.","outputSummary":"Proposta reescrita com abertura, discussão de referências e próximo passo."},
+    {"route":"/api/ai/scope-project","status":200,"realProviderCall":true,"title":"Criação de peças para redes sociais de loja de roupas","budget_min":null,"budget_max":null,"deadline_days":null,"skills":["Design Gráfico","Criação de Conteúdo para Redes Sociais"]}
+  ],
+  "projectPublishedByTest": false,
+  "proposalSentToThirdPartyByTest": false,
+  "otherProjectsChanged": false,
+  "notes": ["Os testes usaram texto fictício e autenticado no PrestaCerto.","As duas chamadas foram reais; os testes unitários complementares usam mocks.","Não foi feita compra real de assinatura."]
+}

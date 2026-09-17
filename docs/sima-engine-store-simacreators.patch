@@ -1,0 +1,10 @@
+Apply these exact replacements in the deployed Supabase function `sima-engine-store`:
+
+```ts
+// before
+/(prestacerto|sinalmeet)\/
+// after
+/(prestacerto|sinalmeet|simacreators)\/
+```
+
+There are three allowlists in `store-broker/index.ts`: `safePath`, the lock removal guard, and the `latest` turns guard. Update all three. Keep the method, JWT setting, broker secret, table, and RLS unchanged.
