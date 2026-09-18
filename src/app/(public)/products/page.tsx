@@ -43,13 +43,11 @@ export default function ProductsPage() {
           <h2 className="text-2xl font-bold text-slate-900">Certo Premium</h2>
         </div>
         <p className="text-slate-700 mb-4">
-          Suite completa por R$ 199,90/mês: Tax + Invoice + Templates + Cold Email + Destaque + suporte prioritário.
+          O plano Business por R$ 99,90/mês: propostas ilimitadas, Certo AI com limite ampliado, Job Matching com IA, destaque de serviços e projetos elegíveis e suporte prioritário.
         </p>
         <div className="flex gap-3">
           <a
-            href={process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_CERTO_PREMIUM}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/plans?plan=business"
             className="inline-flex items-center gap-2 rounded-lg bg-pink-600 px-6 py-3 text-sm font-bold text-white hover:bg-pink-700 transition-colors"
           >
             Assinar Certo Premium
