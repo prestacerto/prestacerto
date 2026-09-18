@@ -5,11 +5,18 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+<<<<<<< HEAD
     "noImplicitAny": false,
+=======
+>>>>>>> a8ed36014a7494559268129c32c01bca01578764
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+<<<<<<< HEAD
+=======
+    "types": ["node", "@cloudflare/workers-types"],
+>>>>>>> a8ed36014a7494559268129c32c01bca01578764
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
@@ -20,7 +27,11 @@
       }
     ],
     "paths": {
+<<<<<<< HEAD
       "@/*": ["./src/*"]
+=======
+      "@/*": ["./*"]
+>>>>>>> a8ed36014a7494559268129c32c01bca01578764
     }
   },
   "include": [
@@ -31,5 +42,9 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
+<<<<<<< HEAD
   "exclude": ["node_modules", "__tests__", "supabase/functions"]
+=======
+  "exclude": ["node_modules"]
+>>>>>>> a8ed36014a7494559268129c32c01bca01578764
 }
