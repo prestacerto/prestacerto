@@ -7,10 +7,10 @@ export interface ProductConfig {
   name: string;
   icon: string;
   description: string;
-  category: "matching" | "pricing" | "timing" | "intelligence" | "tools" | "payments" | "education" | "visibility" | "tier";
+  category: "matching" | "pricing" | "timing" | "intelligence" | "tools" | "payments" | "education" | "visibility" | "tier" | "application-enhancement";
   phase: 1 | 2 | 3 | 4;
   status: "live" | "building" | "planned";
-  pricingType: "monthly" | "one-time" | "per-proposal" | "commission" | "free";
+  pricingType: "monthly" | "one-time" | "per-proposal" | "per-application" | "commission" | "free";
   price: number;
   currency: "BRL";
   mrr: number; // Projeção de MRR em R$
@@ -30,7 +30,7 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     phase: 1,
     status: "live",
     pricingType: "per-proposal",
-    price: 2.9,
+    price: 5.0,
     currency: "BRL",
     mrr: 2900,
     assinifyUrl: "https://assinify.com.br/certo-match",
@@ -229,7 +229,7 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     phase: 3,
     status: "planned",
     pricingType: "commission",
-    price: 2,
+    price: 5.9,
     currency: "BRL",
     mrr: 29800,
     assinifyUrl: null,
@@ -366,7 +366,7 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     phase: 4,
     status: "planned",
     pricingType: "monthly",
-    price: 79.9,
+    price: 59.9,
     currency: "BRL",
     mrr: 119850,
     assinifyUrl: "https://assinify.com.br/certo-cold-email",
@@ -396,28 +396,43 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     phase: 4,
     status: "planned",
     pricingType: "monthly",
-    price: 99.9,
+    price: 79.9,
     currency: "BRL",
     mrr: 149850,
     assinifyUrl: "https://assinify.com.br/certo-destaque",
   },
   {
     id: 26,
-    slug: "candidato",
-    name: "CANDIDATO",
+    slug: "candidato-cliente",
+    name: "CANDIDATO CLIENTE",
     icon: "🎯",
-    description: "Ser candidato recomendado para clientes",
+    description: "IA filtra e apresenta os 10 melhores candidatos para cada proposta",
     category: "visibility",
     phase: 4,
     status: "planned",
-    pricingType: "free",
-    price: 0,
+    pricingType: "per-proposal",
+    price: 19.9,
     currency: "BRL",
-    mrr: 0,
-    assinifyUrl: null,
+    mrr: 29850,
+    assinifyUrl: "https://assinify.com.br/certo-candidato-cliente",
   },
   {
     id: 27,
+    slug: "candidato-freelancer",
+    name: "CANDIDATO FREELANCER",
+    icon: "🎯",
+    description: "Apareça entre os 10 melhores candidatos para seus skills",
+    category: "visibility",
+    phase: 4,
+    status: "planned",
+    pricingType: "monthly",
+    price: 9.9,
+    currency: "BRL",
+    mrr: 14850,
+    assinifyUrl: "https://assinify.com.br/certo-candidato-freelancer",
+  },
+  {
+    id: 28,
     slug: "certo-premium",
     name: "CERTO PREMIUM",
     icon: "🌟",
@@ -426,10 +441,25 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     phase: 4,
     status: "planned",
     pricingType: "monthly",
-    price: 199.9,
+    price: 99.9,
     currency: "BRL",
-    mrr: 299700,
+    mrr: 149850,
     assinifyUrl: "https://assinify.com.br/certo-premium",
+  },
+  {
+    id: 29,
+    slug: "curriculum",
+    name: "CERTO CURRICULUM",
+    icon: "📄",
+    description: "IA otimiza seu currículo customizado para cada vaga",
+    category: "application-enhancement",
+    phase: 3,
+    status: "planned",
+    pricingType: "per-application",
+    price: 29.9,
+    currency: "BRL",
+    mrr: 44850,
+    assinifyUrl: null,
   },
 ];
 
