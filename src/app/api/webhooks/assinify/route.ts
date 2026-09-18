@@ -11,6 +11,7 @@ const json = (body: Record<string, unknown>, status = 200) =>
 
 function providedToken(request: NextRequest) {
   return (
+    request.headers.get("x-assiny-token") ??
     request.headers.get("x-assinify-token") ??
     request.headers.get("x-assiny-signature") ??
     request.headers.get("x-assinify-signature") ??
