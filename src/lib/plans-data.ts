@@ -71,7 +71,7 @@ export const PLANS: PlanDefinition[] = [
       "PDF de propostas com sua marca e cores",
       "Filtros e projetos salvos no Certo Oportunidades",
     ],
-    checkoutUrl: "https://pay.assiny.com.br/e7ab2f/node/nS2aYi",
+    checkoutUrl: "https://pay.assiny.com.br/f1a3cd/node/sVBwWt",
   },
 ];
 
