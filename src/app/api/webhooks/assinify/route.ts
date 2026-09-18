@@ -86,6 +86,16 @@ export async function POST(request: NextRequest) {
   }
   const outcome = (ingest as { outcome?: string } | null)?.outcome ?? "unknown";
 
+  // Relatório financeiro (valor e método). Tabela pode ainda não existir: não bloqueia a ativação.
+  const { error: paymentError } = await db.from("assiny_payments").insert({
+    mode: "live", event_id: event.eventId, subscription_id: event.subscriptionId, event_type: event.event,
+    plan: event.plan, offer_id: event.offerId, amount_cents: event.amountCents, payment_method: event.paymentMethod,
+    customer_email: event.email, occurred_at: event.occurredAt,
+  });
+  if (paymentError && !/duplicate|23505/.test(paymentError.message + (paymentError.code ?? ""))) {
+    console.warn("[ASSINY] assiny_payments indisponível:", paymentError.message);
+  }
+
   let binding: string = "not_attempted";
   if (event.checkoutReference && ["applied", "pending_binding", "duplicate"].includes(outcome)) {
     const userId = verifyCheckoutReference(event.checkoutReference, event.plan, secret, event.occurredAt);

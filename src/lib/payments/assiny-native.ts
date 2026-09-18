@@ -33,10 +33,12 @@ const schema = z.object({
     transaction: z.object({
       id, amount: z.number().int().positive(), currency: z.literal('BRL'),
       status: z.string(), updated_at: timestamp,
+      payment_method: z.string().max(40).nullish(),
       project: z.object({ id, organization: z.object({ id }) }),
     }),
     client: z.object({ email: z.string().trim().email().max(320) }),
     metadata: z.object({ utm_content: z.string().max(600).nullish() }).optional(),
+    payment: z.object({ method: z.string().max(40).nullish() }).nullish(),
   }),
 });
 
@@ -44,6 +46,7 @@ export type NativeAssinyEvent = {
   kind: 'subscription'; event: string; email: string; plan: PaidPlan;
   active: boolean; subscriptionId: string; eventId: string; occurredAt: string;
   checkoutReference?: string;
+  offerId: string; amountCents: number; paymentMethod: string | null;
 };
 export type NativeAssinyResult = NativeAssinyEvent
   | { kind: 'invalid'; reason: string }
@@ -87,6 +90,8 @@ export function parseNativeAssinyEvent(payload: unknown): NativeAssinyResult {
     kind: 'subscription' as const, event, email: client.email.toLowerCase(),
     plan: expected.plan, active: transition.active,
     eventId: nativeAssinyEventId(event, transaction.id), occurredAt,
+    offerId: offer.id, amountCents: transaction.amount,
+    paymentMethod: transaction.payment_method ?? parsed.data.data.payment?.method ?? null,
     ...(parsed.data.data.metadata?.utm_content?.startsWith('pc1.')
       ? { checkoutReference: parsed.data.data.metadata.utm_content } : {}),
   };

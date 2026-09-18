@@ -1,72 +1,52 @@
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import { CreditCard, Smartphone } from 'lucide-react';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { CreditCard, Smartphone, Wallet } from 'lucide-react';
 
-const paymentData = [
-  { name: 'Cartão', value: 62.2, amount: 28140 },
-  { name: 'PIX', value: 37.8, amount: 17090 },
-];
+type Method = { method: string; amount: number; count: number };
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#a855f7'];
+const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-const COLORS = ['#3b82f6', '#10b981'];
-
-export function PaymentBreakdown() {
+export function PaymentBreakdown({ methods }: { methods: Method[] | null }) {
+  const total = (methods ?? []).reduce((s, m) => s + m.amount, 0);
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="mb-6 text-xl font-bold text-white">Métodos de Pagamento</h2>
-
-      <ResponsiveContainer width="100%" height={250}>
-        <PieChart>
-          <Pie
-            data={paymentData}
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
-            dataKey="value"
-            label={({ name, value }) => `${name} ${value}%`}
-            labelLine={false}
-          >
-            {COLORS.map((color, index) => (
-              <Cell key={`cell-${index}`} fill={color} />
-            ))}
-          </Pie>
-          <Tooltip formatter={(value) => `${value}%`} />
-        </PieChart>
-      </ResponsiveContainer>
-
-      <div className="mt-6 space-y-3">
-        <div className="flex items-center justify-between rounded-lg border border-blue-800 bg-blue-900/20 p-3">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-blue-600 p-2">
-              <CreditCard size={20} className="text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-300">Cartão de Crédito</p>
-              <p className="font-bold text-white">R$ 28.140</p>
-            </div>
+      <h2 className="mb-2 text-xl font-bold text-white">Formas de pagamento</h2>
+      {methods === null && (
+        <p className="rounded-lg border border-amber-800/60 bg-amber-900/20 p-3 text-xs text-amber-100">
+          Aguardando a tabela <code>assiny_payments</code> no banco (migration <code>20260918230000</code>). O webhook já está pronto para gravar valor e método.
+        </p>
+      )}
+      {methods !== null && methods.length === 0 && <p className="text-sm text-slate-500">Nenhum pagamento registrado ainda.</p>}
+      {methods && methods.length > 0 && (
+        <>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={methods} dataKey="amount" nameKey="method" cx="50%" cy="50%" innerRadius={55} outerRadius={85}>
+                {methods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+              </Pie>
+              <Tooltip formatter={(value) => brl(Number(value))} contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: '0.5rem' }} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="mt-4 space-y-2">
+            {methods.map((m, i) => {
+              const Icon = m.method === 'PIX' ? Smartphone : m.method === 'Cartão' ? CreditCard : Wallet;
+              return (
+                <div key={m.method} className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-800/50 p-3">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-lg p-2" style={{ backgroundColor: COLORS[i % COLORS.length] }}><Icon size={18} className="text-white" /></div>
+                    <div>
+                      <p className="text-sm text-slate-300">{m.method}</p>
+                      <p className="font-bold text-white">{brl(m.amount)}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-300">{total ? Math.round((m.amount / total) * 100) : 0}% · {m.count}</p>
+                </div>
+              );
+            })}
           </div>
-          <p className="text-sm font-semibold text-blue-400">62.2%</p>
-        </div>
-
-        <div className="flex items-center justify-between rounded-lg border border-green-800 bg-green-900/20 p-3">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-green-600 p-2">
-              <Smartphone size={20} className="text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-300">PIX</p>
-              <p className="font-bold text-white">R$ 17.090</p>
-            </div>
-          </div>
-          <p className="text-sm font-semibold text-green-400">37.8%</p>
-        </div>
-      </div>
-
-      <div className="mt-6 border-t border-slate-800 pt-4">
-        <p className="text-xs text-slate-400">Insight: PIX cresce 18.2% vs semana passada</p>
-        <p className="text-xs text-slate-400">Cartão cresce 8.3% vs semana passada</p>
-      </div>
+        </>
+      )}
     </div>
   );
 }
