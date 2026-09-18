@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import Link from "next/link";
+import type { ReactNode } from "react";
 import type { LucideIcon } from 'lucide-react';
 import { AlertTriangle, ArrowLeft, CreditCard, Package, Smartphone, Target, TrendingUp, Users } from 'lucide-react';
 import { RevenueChart } from '@/components/admin/revenue-chart';
@@ -37,7 +38,7 @@ const dailyRows = [
 
 const brl = (value: number) => value.toLocaleString('pt-BR');
 
-export function RevenueDashboard({ viewer }: { viewer: string }) {
+export function RevenueDashboard({ viewer, briefing, live }: { viewer: string; briefing?: ReactNode; live?: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-8 text-white lg:px-10">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -49,8 +50,13 @@ export function RevenueDashboard({ viewer }: { viewer: string }) {
             <h1 className="mt-2 text-4xl font-black">Receita e produtos</h1>
             <p className="mt-1 text-slate-400">Diário, semanal e mensal · cartão vs PIX · por produto · por plano</p>
           </div>
-          <p className="text-sm text-slate-500">{viewer}</p>
+          <div className="text-right">
+            <p className="text-sm text-slate-500">{viewer}</p>
+            {live}
+          </div>
         </div>
+
+        {briefing}
 
         <div className="flex items-start gap-3 rounded-xl border border-amber-700/60 bg-amber-900/20 p-4 text-sm text-amber-100">
           <AlertTriangle size={18} className="mt-0.5 shrink-0" />

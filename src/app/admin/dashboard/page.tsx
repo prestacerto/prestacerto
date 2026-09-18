@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { RevenueDashboard } from "@/components/admin/revenue-dashboard";
+import { TodayBriefing } from "@/components/admin/today-briefing";
+import { AutoRefresh } from "@/components/admin/auto-refresh";
 import { getAdminContext } from "@/lib/auth/admin";
 
 export const dynamic = "force-dynamic";
@@ -19,5 +21,12 @@ export default async function AdminRevenuePage() {
 
   if (admin.role !== "super_admin") notFound();
 
-  return <RevenueDashboard viewer={admin.user.email ?? "Administrador"} />;
+  const viewer = admin.user.email ?? "Administrador";
+  return (
+    <RevenueDashboard
+      viewer={viewer}
+      live={<AutoRefresh seconds={60} />}
+      briefing={<TodayBriefing viewerName={viewer} />}
+    />
+  );
 }
