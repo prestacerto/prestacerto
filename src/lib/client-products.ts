@@ -53,22 +53,22 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
   // PRODUTO 2: Escrow (5% comissão)
   {
     id: 'escrow',
-    name: 'Escrow Seguro',
+    name: 'Acordo Certo',
     slug: 'escrow',
-    emoji: '🔒',
-    description: 'Sistema de escrow para transações seguras',
+    emoji: '🤝',
+    description: 'Contrato do projeto com aceite registrado de cliente e profissional',
     pricing: {
       model: 'commission',
       commissionRate: 0.05, // 5%
       currency: 'BRL',
     },
     features: [
-      'Transações seguras entre partes',
-      'Proteção de ambos os lados',
-      'Liberação condicional',
-      'Suporte 24/7',
-      'Taxa de 5% por transação',
-      'Sem taxa mínima',
+      'Contrato gerado a partir da proposta aceita',
+      'Escopo, valor, prazo e forma de pagamento por escrito',
+      'Aceite dos dois lados com data e hora registradas',
+      'Documento disponível para ambos a qualquer momento',
+      'O pagamento continua direto entre as partes',
+      'Taxa fixa por projeto (valor no checkout)',
     ],
     apiEndpoint: '/api/client-products/escrow',
     dashboardRoute: '/client-dashboard/escrow',
@@ -79,22 +79,22 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
   // PRODUTO 3: Milestones (2% comissão)
   {
     id: 'milestones',
-    name: 'Milestones',
+    name: 'Marcos de Entrega',
     slug: 'milestones',
     emoji: '🎯',
-    description: 'Gerenciador de milestones de projeto',
+    description: 'Etapas do projeto com valor e prazo aceitos por ambos',
     pricing: {
       model: 'commission',
       commissionRate: 0.02, // 2%
       currency: 'BRL',
     },
     features: [
-      'Criação de milestones automático',
-      'Rastreamento de progresso',
-      'Alertas inteligentes',
-      'Relatórios detalhados',
-      'Taxa de 2% por milestone',
-      'Integração com escrow',
+      'Divida o projeto em etapas com valor e prazo',
+      'Cada etapa aceita por cliente e profissional',
+      'Registro de entrega e de aceite por etapa',
+      'Lembretes de prazo para os dois lados',
+      'O pagamento de cada etapa é feito diretamente',
+      'Complementa o Acordo Certo',
     ],
     apiEndpoint: '/api/client-products/milestones',
     dashboardRoute: '/client-dashboard/milestones',
