@@ -26,7 +26,16 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const secret = process.env.ASSINY_WEBHOOK_SECRET?.trim() ?? "";
   if (!secret) return json({ error: "webhook_secret_not_configured" }, 500);
-  if (!validWebhookToken(secret, providedToken(request))) return json({ error: "unauthorized" }, 401);
+  const provided = providedToken(request)?.trim() ?? null;
+  if (!validWebhookToken(secret, provided)) {
+    // Diagnóstico sem vazar segredo: só nomes de headers, tamanho e prefixo curto.
+    console.warn("[ASSINY] auth falhou", {
+      headers: [...request.headers.keys()].filter((h) => /assin|token|secret|signature/i.test(h)),
+      tokenLen: provided?.length ?? 0, tokenPrefix: provided?.slice(0, 4) ?? null,
+      expectedLen: secret.length, expectedPrefix: secret.slice(0, 4),
+    });
+    return json({ error: "unauthorized" }, 401);
+  }
   if (!hasServiceCredentials()) return json({ error: "service_credentials_missing" }, 500);
 
   let payload: unknown;
