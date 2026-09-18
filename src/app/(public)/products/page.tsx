@@ -53,7 +53,7 @@ export default function ProductsPage() {
             Assinar Certo Premium
           </a>
           <Link
-            href="/products/certo-premium"
+            href="/plans"
             className="inline-flex items-center gap-2 rounded-lg border-2 border-slate-900 px-6 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50 transition-colors"
           >
             Saiba mais
