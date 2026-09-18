@@ -72,7 +72,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/escrow',
     dashboardRoute: '/client-dashboard/escrow',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_ESCROW,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_ESCROW,
     tier: 'commission',
   },
 
@@ -98,7 +98,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/milestones',
     dashboardRoute: '/client-dashboard/milestones',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_MILESTONES,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_MILESTONES,
     tier: 'commission',
   },
 
@@ -125,7 +125,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/analytics-cliente',
     dashboardRoute: '/client-dashboard/analytics-cliente',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_ANALYTICS_CLIENTE,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_ANALYTICS_CLIENTE,
     tier: 'monthly',
   },
 
@@ -152,7 +152,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/contrato-ia',
     dashboardRoute: '/client-dashboard/contrato-ia',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_CONTRATO_IA,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_CONTRATO_IA,
     tier: 'monthly',
   },
 
@@ -179,7 +179,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/qa-automatico',
     dashboardRoute: '/client-dashboard/qa-automatico',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_QA_AUTOMATICO,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_QA_AUTOMATICO,
     tier: 'monthly',
   },
 
@@ -207,7 +207,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/vip-network',
     dashboardRoute: '/client-dashboard/vip-network',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_VIP_NETWORK,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_VIP_NETWORK,
     tier: 'premium',
   },
 
@@ -235,7 +235,7 @@ export const CLIENT_PRODUCTS: ClientProduct[] = [
     ],
     apiEndpoint: '/api/client-products/community',
     dashboardRoute: '/client-dashboard/community',
-    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_COMMUNITY,
+    assinifyCheckoutUrl: process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_COMMUNITY,
     tier: 'monthly',
   },
 ];

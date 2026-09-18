@@ -267,7 +267,7 @@ export function getProductById(id: CommunityProductId): CommunityProduct | undef
  * Usando env var com fallback para checkoutUrl hardcoded
  */
 export function getCheckoutUrl(product: CommunityProduct): string | null {
-  const envKey = `NEXT_PUBLIC_ASSINIFY_CHECKOUT_${product.id.toUpperCase().replace(/-/g, '_')}`;
+  const envKey = `NEXT_PUBLIC_ASSINY_CHECKOUT_${product.id.toUpperCase().replace(/-/g, '_')}`;
   const envUrl = process.env[envKey]?.trim();
 
   return envUrl || product.checkoutUrl || null;

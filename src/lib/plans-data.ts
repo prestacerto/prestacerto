@@ -83,9 +83,9 @@ export const PLANS: PlanDefinition[] = [
 export function getCheckoutUrl(plan: PlanDefinition): string | null {
   const override =
     plan.id === "pro"
-      ? process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_PRO
+      ? process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_PRO
       : plan.id === "business"
-        ? process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_BUSINESS
+        ? process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_BUSINESS
         : undefined;
 
   return override?.trim() || plan.checkoutUrl || null;

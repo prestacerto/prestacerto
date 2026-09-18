@@ -38,7 +38,7 @@ export async function getUserPlan(userId: string) {
   try {
     // Roll out only after the reviewed lifecycle migration and cron are verified.
     // Keeping the default off lets unrelated releases precede the database work.
-    if (process.env.ASSINIFY_ACCESS_LIFECYCLE_ENABLED !== "true") {
+    if (process.env.ASSINY_ACCESS_LIFECYCLE_ENABLED !== "true") {
       const { data } = await supabase.from("profiles").select("plan").eq("id", userId).maybeSingle();
       return data?.plan === "pro" || data?.plan === "business" ? data.plan : "free";
     }

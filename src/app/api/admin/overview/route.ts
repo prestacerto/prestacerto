@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     recentProfiles: [], recentProjects: [],
     integrations: {
       database,
-      webhook: Boolean(process.env.ASSINIFY_WEBHOOK_SECRET || process.env.ASSINIFY_WEBHOOK_SECRET),
+      webhook: Boolean(process.env.ASSINY_WEBHOOK_SECRET || process.env.ASSINY_WEBHOOK_SECRET),
       checkout: isAssinyCheckoutReady(),
       analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GOOGLE_TAG_ID || process.env.NEXT_PUBLIC_GTM_ID),
       searchConsole: Boolean(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION),

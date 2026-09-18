@@ -47,7 +47,7 @@ export default function ProductsPage() {
         </p>
         <div className="flex gap-3">
           <a
-            href={process.env.NEXT_PUBLIC_ASSINIFY_CHECKOUT_CERTO_PREMIUM}
+            href={process.env.NEXT_PUBLIC_ASSINY_CHECKOUT_CERTO_PREMIUM}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg bg-pink-600 px-6 py-3 text-sm font-bold text-white hover:bg-pink-700 transition-colors"

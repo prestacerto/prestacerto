@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleAssinifyWebhook } from "@/lib/assinify/webhook-handler";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase/config";
 
-const ASSINIFY_WEBHOOK_SECRET = process.env.ASSINIFY_WEBHOOK_SECRET || "";
+const ASSINY_WEBHOOK_SECRET = process.env.ASSINY_WEBHOOK_SECRET || "";
 
 export async function POST(request: NextRequest) {
   try {
     const headerSecret = request.headers.get("x-assinify-signature");
-    if (headerSecret !== ASSINIFY_WEBHOOK_SECRET) {
+    if (headerSecret !== ASSINY_WEBHOOK_SECRET) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
