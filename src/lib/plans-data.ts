@@ -58,7 +58,7 @@ export const PLANS: PlanDefinition[] = [
   {
     id: "business",
     name: "Business",
-    priceMonthly: 99.9,
+    priceMonthly: 89.9,
     description: "Para quem usa o Certo AI com mais frequência",
     features: [
       "Tudo do Pro",
