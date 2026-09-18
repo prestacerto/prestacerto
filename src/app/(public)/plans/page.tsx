@@ -7,6 +7,7 @@ import { PlanCta } from "@/components/plan-cta";
 import { PLANS } from "@/lib/plans-data";
 import { StructuredData, getFAQSchema, getBreadcrumbSchema } from "@/components/structured-data";
 
+// Force Vercel rebuild: Business plan R$ 99,90/mês (updated 2026-09-18T12:30Z)
 export const metadata = getPageMetadata("Planos: Grátis, Pro e Business", "Compare os planos do PrestaCerto: grátis, Pro por R$ 59,90/mês e Business por R$ 99,90/mês. Escolha os recursos para seu trabalho e comece hoje.", "/plans");
 
 const faqs = [
