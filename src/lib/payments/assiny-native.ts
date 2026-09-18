@@ -8,6 +8,8 @@ const ORGANIZATION = '0b3d8901-87a5-46cb-ae8c-59e6e2f332e2';
 const OFFERS: Record<string, { plan: PaidPlan; cents: number }> = {
   'ea5a3151-adc5-403f-adec-85c2ca6c801d': { plan: 'pro', cents: 5990 },
   '2a179bd8-be01-4acd-89ac-e29dfe8d546e': { plan: 'business', cents: 9990 },
+  // Oferta "CERTO PREMIUM" no Assiny: mesmo produto, R$99,90 mensal; é o checkout atual do Business.
+  '2d0ac8d3-31b1-4914-856c-85ee12f9240e': { plan: 'business', cents: 9990 },
 };
 const EVENTS: Record<string, { active: boolean; status: string }> = {
   approved_purchase: { active: true, status: 'paid' },
