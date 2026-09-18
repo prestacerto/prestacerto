@@ -7,7 +7,7 @@ const PROJECT = 'bbfcef58-addc-46de-a50d-44c8b45ee2de';
 const ORGANIZATION = '0b3d8901-87a5-46cb-ae8c-59e6e2f332e2';
 const OFFERS: Record<string, { plan: PaidPlan; cents: number }> = {
   'ea5a3151-adc5-403f-adec-85c2ca6c801d': { plan: 'pro', cents: 5990 },
-  '2a179bd8-be01-4acd-89ac-e29dfe8d546e': { plan: 'business', cents: 13990 },
+  '2a179bd8-be01-4acd-89ac-e29dfe8d546e': { plan: 'business', cents: 9990 },
 };
 const EVENTS: Record<string, { active: boolean; status: string }> = {
   approved_purchase: { active: true, status: 'paid' },

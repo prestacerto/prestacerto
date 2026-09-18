@@ -7,7 +7,7 @@ import { PlanCta } from "@/components/plan-cta";
 import { PLANS } from "@/lib/plans-data";
 import { StructuredData, getFAQSchema, getBreadcrumbSchema } from "@/components/structured-data";
 
-export const metadata = getPageMetadata("Planos: Grátis, Pro e Business", "Compare os planos do PrestaCerto: grátis, Pro por R$ 59,90/mês e Business por R$ 139,90/mês. Escolha os recursos para seu trabalho e comece hoje.", "/plans");
+export const metadata = getPageMetadata("Planos: Grátis, Pro e Business", "Compare os planos do PrestaCerto: grátis, Pro por R$ 59,90/mês e Business por R$ 99,90/mês. Escolha os recursos para seu trabalho e comece hoje.", "/plans");
 
 const faqs = [
   { q: "Preciso pagar para usar o PrestaCerto?", a: "Não. O plano Grátis permite criar perfil, acessar projetos abertos e enviar até 3 propostas por mês. Os planos pagos são opcionais." },
