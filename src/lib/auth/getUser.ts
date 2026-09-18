@@ -48,7 +48,7 @@ export const getProfile = cache(async function getProfile() {
         ? user.user_metadata.role
         : "freelancer";
 
-    const plan = process.env.ASSINY_ACCESS_LIFECYCLE_ENABLED === "true"
+    const plan = process.env.ASSINIFY_ACCESS_LIFECYCLE_ENABLED === "true"
       ? await getUserPlan(user.id)
       : profile?.plan ?? "free";
     return profile ? { ...profile, plan } : {

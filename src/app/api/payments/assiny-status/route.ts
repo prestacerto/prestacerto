@@ -25,7 +25,7 @@ export async function GET(request: Request) {
       .select('last_event_id')
       .eq('mode', 'live').eq('user_id', user.id).eq('active', true).eq('plan', plan.id)
       .not('verified_at', 'is', null).gte('last_occurred_at', new Date(time).toISOString());
-    if (process.env.ASSINY_ACCESS_LIFECYCLE_ENABLED === 'true') {
+    if (process.env.ASSINIFY_ACCESS_LIFECYCLE_ENABLED === 'true') {
       query = query.gt('paid_through', new Date().toISOString()).is('revoked_at', null);
     }
     const { data, error } = await query.order('last_occurred_at', { ascending: false }).limit(1).maybeSingle();

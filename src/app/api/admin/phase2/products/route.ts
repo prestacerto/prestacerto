@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     const products = PHASE2_PRODUCTS.map((product) => ({
       ...product,
       checkoutUrl: getPhase2CheckoutUrl(product),
-      envVarName: `NEXT_PUBLIC_ASSINY_${product.id.toUpperCase().replace(/-/g, '_')}`,
-      envVarValue: process.env[`NEXT_PUBLIC_ASSINY_${product.id.toUpperCase().replace(/-/g, '_')}`],
+      envVarName: `NEXT_PUBLIC_ASSINIFY_${product.id.toUpperCase().replace(/-/g, '_')}`,
+      envVarValue: process.env[`NEXT_PUBLIC_ASSINIFY_${product.id.toUpperCase().replace(/-/g, '_')}`],
     }));
 
     return NextResponse.json({
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Retornar instruções para adicionar a env var
-    const envVarName = `NEXT_PUBLIC_ASSINY_${productId.toUpperCase().replace(/-/g, '_')}`;
+    const envVarName = `NEXT_PUBLIC_ASSINIFY_${productId.toUpperCase().replace(/-/g, '_')}`;
 
     return NextResponse.json({
       status: 'ok',

@@ -199,7 +199,7 @@ export function Phase2ProductsDashboard() {
           {products
             .map(
               (p) =>
-                `# ${p.name}\nNEXT_PUBLIC_ASSINY_${p.id.toUpperCase().replace(/-/g, '_')}=https://pay.assiny.com.br/ACCOUNT_ID/node/PRODUCT_ID`
+                `# ${p.name}\nNEXT_PUBLIC_ASSINIFY_${p.id.toUpperCase().replace(/-/g, '_')}=https://pay.assiny.com.br/ACCOUNT_ID/node/PRODUCT_ID`
             )
             .join('\n\n')}
         </pre>

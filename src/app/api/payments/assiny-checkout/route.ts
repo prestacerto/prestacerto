@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     if (!raw) throw new Error('Missing checkout');
     const url = new URL(raw);
     if (url.origin !== 'https://pay.assiny.com.br' || url.username || url.password) throw new Error('Invalid checkout');
-    const reference = createCheckoutReference(user.id, input.data.plan, (process.env.ASSINY_WEBHOOK_SECRET || process.env.ASSINIFY_WEBHOOK_SECRET)!);
+    const reference = createCheckoutReference(user.id, input.data.plan, (process.env.ASSINIFY_WEBHOOK_SECRET || process.env.ASSINIFY_WEBHOOK_SECRET)!);
     url.searchParams.set('utm_content', reference);
     return Response.json({ url: url.toString() }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch {

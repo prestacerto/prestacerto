@@ -73,7 +73,7 @@ async function grantReferralReward(referrerId: string): Promise<void> {
   if (!error) return;
   // Only PostgREST's exact missing-function response allows pre-migration
   // compatibility. Permission/network/SQL failures cannot masquerade as it.
-  if (process.env.ASSINY_ACCESS_LIFECYCLE_ENABLED === "true" || error.code !== "PGRST202") {
+  if (process.env.ASSINIFY_ACCESS_LIFECYCLE_ENABLED === "true" || error.code !== "PGRST202") {
     throw new Error("referral_plan_grant_failed");
   }
   const { data: profile } = await supabase.from("profiles").select("plan").eq("id", referrerId).single();

@@ -155,7 +155,7 @@ export const PHASE2_PRODUCTS: Phase2Product[] = [
  */
 export function getPhase2CheckoutUrl(product: Phase2Product): string | null {
   const override =
-    process.env[`NEXT_PUBLIC_ASSINY_${product.id.toUpperCase().replace(/-/g, '_')}`];
+    process.env[`NEXT_PUBLIC_ASSINIFY_${product.id.toUpperCase().replace(/-/g, '_')}`];
 
   return override?.trim() || product.checkoutUrl || null;
 }
