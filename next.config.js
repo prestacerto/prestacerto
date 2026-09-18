@@ -13,7 +13,9 @@ const nextConfig = {
 
   // Image optimization - AGGRESSIVE
   images: {
-    unoptimized: false, // Enable Next.js image optimization
+    // Avatares vêm do Supabase Storage / Google e não estão em remotePatterns;
+    // ligar a otimização quebraria essas páginas em runtime.
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.prestacerto.com' },
@@ -79,43 +81,6 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
-
-  // Webpack optimization - MÁXIMA PERFORMANCE
-  webpack: (config, { isServer }) => {
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          vendor: {
-            filename: 'chunks/vendor.js',
-            test: /node_modules/,
-            name: 'vendor',
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-          react: {
-            name: 'react-vendors',
-            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
-            priority: 20,
-            reuseExistingChunk: true,
-          },
-          common: {
-            minChunks: 2,
-            priority: 5,
-            reuseExistingChunk: true,
-          },
-        },
-      },
-      runtimeChunk: { name: 'runtime' },
-    };
-    return config;
-  },
-
-  // SWC minification
-  swcMinify: true,
 
   // Never ship a production build that hides type errors.
   typescript: {

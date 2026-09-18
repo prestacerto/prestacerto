@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/config";
-import { PRODUCTS } from "@/lib/products/product-config";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
+  const { productId } = await params;
   try {
     const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       cookies: {
@@ -33,7 +33,7 @@ export async function GET(
       .from("certo_subscriptions")
       .select("*")
       .eq("user_id", user.id)
-      .eq("product_id", params.productId)
+      .eq("product_id", productId)
       .single();
 
     if (error && error.code !== "PGRST116") {
@@ -69,8 +69,9 @@ export async function GET(
 // Webhook para processar eventos de pagamento do Assiny
 export async function POST(
   request: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
+  const { productId } = await params;
   try {
     const payload = await request.json();
     const authHeader = request.headers.get("x-assiny-signature");
@@ -96,16 +97,17 @@ export async function POST(
     const { email, event, subscriptionId, plan, active } = payload;
 
     // Buscar usuário pelo email
-    const { data: authUser, error: userError } = await supabase.auth.admin.listUsersByEmail(email);
+    const { data: authUser, error: userError } = await supabase.auth.admin.listUsers();
+    const matchedUser = authUser?.users.find((u) => u.email?.toLowerCase() === String(email).toLowerCase());
 
-    if (userError || !authUser || authUser.users.length === 0) {
+    if (userError || !matchedUser) {
       return NextResponse.json(
         { error: "Usuário não encontrado" },
         { status: 404 }
       );
     }
 
-    const userId = authUser.users[0].id;
+    const userId = matchedUser.id;
     const status = active ? "active" : "cancelled";
 
     // Atualizar ou criar subscription
@@ -114,7 +116,7 @@ export async function POST(
       .upsert(
         {
           user_id: userId,
-          product_id: params.productId,
+          product_id: productId,
           plan: plan === "monthly" ? "monthly" : "one-time",
           status,
           subscription_id: subscriptionId,
@@ -135,12 +137,12 @@ export async function POST(
       .from("certo_payment_events")
       .insert({
         user_id: userId,
-        product_id: params.productId,
+        product_id: productId,
         event_type: event,
         subscription_id: subscriptionId,
         payload: payload,
       })
-      .catch((err) => console.error("Error logging payment event:", err));
+      .then(({ error }) => { if (error) console.error("Error logging payment event:", error); });
 
     return NextResponse.json({
       success: true,

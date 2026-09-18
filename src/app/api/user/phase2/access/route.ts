@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getAuth } from '@/lib/auth/server';
+import { getAuthenticatedUser } from '@/lib/auth/getUser';
 import { createServiceClient } from '@/lib/supabase/service';
 import type { Phase2ProductId } from '@/lib/phase2-products';
 
@@ -9,9 +9,9 @@ import type { Phase2ProductId } from '@/lib/phase2-products';
  */
 export async function GET(request: NextRequest) {
   try {
-    const auth = await getAuth();
+    const user = await getAuthenticatedUser();
 
-    if (!auth.user) {
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     // Obter produtos FASE 2 do usuário
     const { data, error } = await client.rpc('list_phase2_access', {
-      user_id: auth.user.id,
+      user_id: user.id,
     });
 
     if (error) {
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       status: 'ok',
-      userId: auth.user.id,
+      userId: user.id,
       products,
       count: products.length,
       hasAccess: products.length > 0,

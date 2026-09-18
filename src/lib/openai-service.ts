@@ -11,7 +11,7 @@
 
 import { Anthropic } from "@anthropic-ai/sdk";
 import { Redis } from "@upstash/redis";
-import { Logger } from "winston";
+type Logger = { info: (msg: string) => void; warn: (msg: string) => void; error: (msg: string) => void };
 
 // ============================================================================
 // TYPES & INTERFACES

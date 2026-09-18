@@ -15,11 +15,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-<<<<<<< HEAD
   const key = (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY);
-=======
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
->>>>>>> a8ed36014a7494559268129c32c01bca01578764
   return url && key ? createClient(url, key) : null;
 }
 
@@ -69,11 +65,7 @@ async function insertProjectWithCompatibleStatus(
 
 export async function POST(req: NextRequest) {
   try {
-<<<<<<< HEAD
     const adminClient = (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY) ? createServiceClient() : null;
-=======
-    const adminClient = process.env.SUPABASE_SERVICE_ROLE_KEY ? createServiceClient() : null;
->>>>>>> a8ed36014a7494559268129c32c01bca01578764
     const supabase = adminClient ?? getSupabase();
     if (!supabase) return NextResponse.json({ error: "Supabase não configurado" }, { status: 503 });
     const user = await getAuthenticatedUser();
@@ -131,27 +123,17 @@ export async function POST(req: NextRequest) {
         .single();
 
       if (createProfileError) {
-<<<<<<< HEAD
         // Sem SUPABASE_SERVICE_ROLE_KEY o insert acima esbarra no RLS. Seguimos
         // com os dados do auth em vez de bloquear a publicação; o insert do
         // projeto continua protegido pelas policies normais.
         console.error("[CREATE PROJECT WITH OPTIONS] erro ao criar perfil ausente:", createProfileError.message);
       } else {
-=======
-        console.warn("[CREATE PROJECT WITH OPTIONS] aviso ao criar perfil ausente:", createProfileError.message);
-        // Não bloqueia — permite publicar com dados do auth.user_metadata
-      } else if (createdProfile) {
->>>>>>> a8ed36014a7494559268129c32c01bca01578764
         effectiveProfile = createdProfile;
       }
     }
 
-<<<<<<< HEAD
     const effectiveRole = effectiveProfile?.role ?? user.user_metadata?.role;
     if (effectiveRole !== "client" && effectiveRole !== "both") {
-=======
-    if (effectiveProfile?.role !== "client" && effectiveProfile?.role !== "both") {
->>>>>>> a8ed36014a7494559268129c32c01bca01578764
       return NextResponse.json(
         { error: "A publicação de projetos está disponível para contas de cliente." },
         { status: 403 }

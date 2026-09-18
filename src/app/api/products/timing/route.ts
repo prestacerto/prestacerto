@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
             recommendedHour: bestHour,
           },
         })
-        .catch((err) => console.error("Error logging usage:", err));
+        .then(({ error }) => { if (error) console.error("Error logging usage:", error); });
     }
 
     return NextResponse.json(

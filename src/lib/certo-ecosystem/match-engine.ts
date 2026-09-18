@@ -3,9 +3,11 @@
 
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openaiClient: OpenAI | null = null;
+function getOpenAI() {
+  openaiClient ??= new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return openaiClient;
+}
 
 export interface ProjectData {
   title: string;
@@ -184,7 +186,7 @@ Dê 3 insights práticos em português pra melhorar a chance de ganho.
 Responda em formato de lista (cada insight em uma linha).
     `;
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4-turbo',
       messages: [
         {

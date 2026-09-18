@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
             recommendedPrice,
           },
         })
-        .catch((err) => console.error("Error logging usage:", err));
+        .then(({ error }) => { if (error) console.error("Error logging usage:", error); });
     }
 
     return NextResponse.json(

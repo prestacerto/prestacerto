@@ -1,10 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { PHASE2_PRODUCTS, getPhase2CheckoutUrl } from '@/lib/phase2-products';
-import { requireAdminAuth } from '@/lib/auth/admin';
+import { requireAdmin } from '@/lib/auth/admin';
 
 export async function GET(request: NextRequest) {
   try {
-    await requireAdminAuth(request);
+    await requireAdmin();
 
     const products = PHASE2_PRODUCTS.map((product) => ({
       ...product,
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await requireAdminAuth(request);
+    await requireAdmin();
 
     const body = await request.json();
     const { productId, checkoutUrl } = body;

@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "Webhook processed",
-        action: result.action,
+        action: "action" in result ? result.action : undefined,
       },
       { status: 200 }
     );

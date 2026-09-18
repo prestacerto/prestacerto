@@ -1,20 +1,24 @@
 'use client';
 
 import { ProductCard } from '@/components/products/ProductCard';
-import { PRODUCTS } from '@/lib/products/product-config';
+import { CERTO_PRODUCTS, getProductBySlug } from '@/lib/certo-ecosystem/products-config';
 
 export default function ProductsPage() {
-  const products = Object.values(PRODUCTS);
+  const products = CERTO_PRODUCTS.filter((product) => product.pricingType !== 'free');
+
+  const subscribe = (slug: string) => {
+    const url = getProductBySlug(slug)?.assinifyUrl;
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
-      {/* Header */}
       <div>
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-blue-600">
           Produtos Premium
         </p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-          Ecosistema Certo
+          Ecossistema Certo
         </h1>
         <p className="mt-3 max-w-2xl leading-7 text-slate-600">
           Conheça nossos produtos com IA que potencializam sua presença e rentabilidade
@@ -22,18 +26,12 @@ export default function ProductsPage() {
         </p>
       </div>
 
-      {/* Products Grid */}
       <div className="grid gap-6 md:grid-cols-3">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            showDashboardLink
-          />
+          <ProductCard key={product.id} product={product} onSubscribe={subscribe} />
         ))}
       </div>
 
-      {/* Info Cards */}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
           <h3 className="text-lg font-bold text-slate-900 mb-2">Comece Agora</h3>
@@ -52,7 +50,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* FAQ */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-bold text-slate-900 mb-6">Perguntas Frequentes</h2>
         <div className="space-y-6">

@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
             matchScore: matchScore.overallScore,
           },
         })
-        .catch((err) => console.error("Error logging usage:", err));
+        .then(({ error }) => { if (error) console.error("Error logging usage:", error); });
     }
 
     return NextResponse.json(
