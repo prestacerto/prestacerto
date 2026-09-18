@@ -1,29 +1,9 @@
 {
-<<<<<<< HEAD
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "web": {
-      "root": ".",
-      "framework": "nextjs"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "web"
-      }
-    }
-  ]
-}
-{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
   "crons": [{
     "path": "/api/cron/email",
     "schedule": "0 * * * *"
   }]
-=======
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next"
->>>>>>> a8ed36014a7494559268129c32c01bca01578764
 }
