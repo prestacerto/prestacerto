@@ -7,7 +7,8 @@ import {
 } from "@/lib/email/queue";
 import { getEmailTemplate } from "@/lib/email/templates";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+const getResend = () => (resendClient ??= new Resend(process.env.RESEND_API_KEY));
 
 // Proteger rota com token secreto (Vercel Cron)
 function validateRequest(req: NextRequest) {
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
       try {
         const template = getEmailTemplate(entry.sequence, entry.step);
 
-        const result = await resend.emails.send({
+        const result = await getResend().emails.send({
           from: "PrestaCerto <noreply@prestacerto.com.br>",
           to: entry.email,
           subject: template.subject,

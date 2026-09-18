@@ -1,9 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { AiMeteringContext, anthropicUsage, recordAiUsage } from "@/lib/ai/metering";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+let anthropicClient: Anthropic | null = null;
+const getAnthropic = () => (anthropicClient ??= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }));
 
 interface ProposalAnalysis {
   original: string;
@@ -48,7 +47,7 @@ Retorne em JSON:
   "feedback": "resumo das principais mudanças"
 }`;
 
-    const message = await anthropic.messages.create({
+    const message = await getAnthropic().messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1024,
       messages: [
@@ -85,7 +84,7 @@ Retorne em JSON:
 }
 
 export async function generateProposalTips(metering?: Omit<AiMeteringContext, "product">): Promise<string[]> {
-  const message = await anthropic.messages.create({
+  const message = await getAnthropic().messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 500,
     messages: [
@@ -106,7 +105,7 @@ export async function generateProposalTips(metering?: Omit<AiMeteringContext, "p
 }
 
 export async function compareProposals(proposal1: string, proposal2: string, metering?: Omit<AiMeteringContext, "product">): Promise<{ winner: 1 | 2; reasoning: string; scores: { proposal1: number; proposal2: number } }> {
-  const message = await anthropic.messages.create({
+  const message = await getAnthropic().messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 500,
     messages: [

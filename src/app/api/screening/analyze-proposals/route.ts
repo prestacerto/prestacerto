@@ -3,9 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { anthropicUsage, recordAiUsage } from '@/lib/ai/metering';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+let anthropicClient: Anthropic | null = null;
+const getAnthropic = () => (anthropicClient ??= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }));
 
 type ScreeningProposal = {
   id?: string;
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest) {
     // Score cada proposta
     const scoredProposals = await Promise.all(
       proposals.map(async (proposal) => {
-        const message = await anthropic.messages.create({
+        const message = await getAnthropic().messages.create({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 500,
           system: `Você é um especialista em avaliar propostas de freelancers.

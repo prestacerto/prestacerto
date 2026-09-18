@@ -1,11 +1,12 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+const getResend = () => (resendClient ??= new Resend(process.env.RESEND_API_KEY));
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "https://prestacerto.com.br").replace(/\/$/, "");
 
 export const sendCertoAIWelcomeEmail = async (email: string, name: string) => {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'noreply@prestacerto.com.br',
       to: email,
       subject: '🎉 Bem-vindo ao Certo AI! Suas 3 otimizações grátis estão prontas',
@@ -50,7 +51,7 @@ export const sendCertoAIOptimizationSuccess = async (
 ) => {
   try {
     const improvement = newScore - oldScore;
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'noreply@prestacerto.com.br',
       to: email,
       subject: `🚀 Sua proposta subiu de ${oldScore} → ${newScore} pontos!`,
@@ -89,7 +90,7 @@ export const sendCertoAIOptimizationSuccess = async (
 
 export const sendUpgradePrompt = async (email: string, name: string) => {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'noreply@prestacerto.com.br',
       to: email,
       subject: '⚡ Upgrade Certo AI: Ilimitadas por R$ 19,90/mês',
@@ -137,7 +138,7 @@ export const sendUpgradePrompt = async (email: string, name: string) => {
 export const sendCertoAILaunchEmail = async (emails: string[]) => {
   try {
     for (const email of emails) {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'noreply@prestacerto.com.br',
         to: email,
         subject: '🎉 Certo AI está aqui! Otimize suas propostas com IA',

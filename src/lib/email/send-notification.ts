@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+const getResend = () => (resendClient ??= new Resend(process.env.RESEND_API_KEY));
 
 export async function sendProjectNotification(
   freelancerEmail: string,
@@ -9,7 +10,7 @@ export async function sendProjectNotification(
   projectLink: string
 ) {
   try {
-    const result = await resend.emails.send({
+    const result = await getResend().emails.send({
       from: "projetos@prestacerto.com",
       to: freelancerEmail,
       subject: `🎯 Novo projeto: ${projectTitle}`,
@@ -32,7 +33,7 @@ export async function sendProjectNotification(
 
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
-    return await resend.emails.send({
+    return await getResend().emails.send({
       from: "welcome@prestacerto.com",
       to: email,
       subject: "Bem-vindo ao PrestaCerto! 🚀",
