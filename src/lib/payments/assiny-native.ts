@@ -20,8 +20,10 @@ const NON_ENTITLEMENT_EVENTS = new Set([
   'refused', 'completed_purchase', 'bank_slip_generated',
   'pix_generated', 'pix_expired', 'abandoned_checkout', 'request_refund',
 ]);
-const id = z.string().uuid();
+const id = z.string().trim().min(1).max(200);
 const timestamp = z.iso.datetime({ offset: true });
+// O Assiny serializa sql.NullTime do Go: { Time, Valid } em vez de string.
+const nullableTime = z.union([timestamp, z.object({ Time: timestamp, Valid: z.boolean().optional() })]).transform((v) => (typeof v === 'string' ? v : v.Time));
 const schema = z.object({
   event: z.string(),
   data: z.object({
@@ -32,7 +34,7 @@ const schema = z.object({
     }),
     transaction: z.object({
       id, amount: z.number().int().positive(), currency: z.literal('BRL'),
-      status: z.string(), updated_at: timestamp,
+      status: z.string(), updated_at: nullableTime.optional(), created_at: nullableTime.optional(),
       payment_method: z.string().max(40).nullish(),
       project: z.object({ id, organization: z.object({ id }) }),
     }),
@@ -80,7 +82,9 @@ export function parseNativeAssinyEvent(payload: unknown): NativeAssinyResult {
     return { kind: 'invalid', reason: 'unexpected_assiny_amount' };
   }
   if (transaction.status !== transition.status) return { kind: 'invalid', reason: 'inconsistent_payment_status' };
-  const occurredAt = new Date(transaction.updated_at).toISOString();
+  const occurredAtRaw = transaction.updated_at ?? transaction.created_at;
+  if (!occurredAtRaw) return { kind: 'invalid', reason: 'missing_transaction_time' };
+  const occurredAt = new Date(occurredAtRaw).toISOString();
   if (Date.parse(occurredAt) > Date.now() + 300_000) return { kind: 'invalid', reason: 'future_event_timestamp' };
   if (transition.active && (!offer.subscription || offer.subscription.recurrence !== 'MONTHLY'
     || (offer.recurrence !== null && offer.recurrence !== 'MONTHLY'))) {
