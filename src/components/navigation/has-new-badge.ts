@@ -1,9 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+let supabaseClient: ReturnType<typeof createServiceClient> | null = null;
+const getSupabase = () => (supabaseClient ??= createServiceClient());
 
 /**
  * Check if a specific category has content (projects/services)
@@ -18,7 +16,7 @@ export async function shouldShowBadge(
   try {
     const table = type === "projects" ? "projects" : "services";
 
-    const { count, error } = await supabase
+    const { count, error } = await getSupabase()
       .from(table)
       .select("id", { count: "exact" })
       .eq("category_id", category)

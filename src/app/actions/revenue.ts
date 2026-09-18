@@ -1,18 +1,16 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 import { getAuthenticatedUser } from "@/lib/auth/getUser";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)!
-);
+let supabaseClient: ReturnType<typeof createServiceClient> | null = null;
+const getSupabase = () => (supabaseClient ??= createServiceClient());
 
 export async function getRevenueData() {
   const user = await getAuthenticatedUser();
   if (!user) throw new Error("Unauthorized");
 
-  const { data: transactions, error } = await supabase
+  const { data: transactions, error } = await getSupabase()
     .from("transactions")
     .select("*")
     .eq("user_id", user.id)

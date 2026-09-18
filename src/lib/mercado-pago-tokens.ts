@@ -1,9 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-);
+let supabaseClient: ReturnType<typeof createServiceClient> | null = null;
+const getSupabase = () => (supabaseClient ??= createServiceClient());
 
 interface MPToken {
   id: string;
@@ -28,7 +26,7 @@ export async function saveMPTokens(
 ) {
   const token_expiry = new Date(Date.now() + tokens.expires_in * 1000);
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("mercado_pago_tokens")
     .upsert(
       {
@@ -58,7 +56,7 @@ export async function getValidMPAccessToken(
   freelancer_id: string
 ): Promise<string> {
   // 1. Get stored token
-  const { data: tokenData, error: fetchError } = await supabase
+  const { data: tokenData, error: fetchError } = await getSupabase()
     .from("mercado_pago_tokens")
     .select("*")
     .eq("freelancer_id", freelancer_id)
@@ -121,7 +119,7 @@ export async function getValidMPAccessToken(
  * Check if freelancer is connected to Mercado Pago
  */
 export async function isMPConnected(freelancer_id: string): Promise<boolean> {
-  const { data } = await supabase
+  const { data } = await getSupabase()
     .from("mercado_pago_tokens")
     .select("id")
     .eq("freelancer_id", freelancer_id)
@@ -134,7 +132,7 @@ export async function isMPConnected(freelancer_id: string): Promise<boolean> {
  * Disconnect Mercado Pago (called when user revokes)
  */
 export async function disconnectMP(freelancer_id: string) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from("mercado_pago_tokens")
     .delete()
     .eq("freelancer_id", freelancer_id);

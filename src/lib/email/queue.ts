@@ -1,9 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let supabaseClient: ReturnType<typeof createServiceClient> | null = null;
+const getSupabase = () => (supabaseClient ??= createServiceClient());
 
 export type EmailSequence = "CLIENTE" | "PRESTADOR";
 
@@ -21,7 +19,7 @@ export type EmailQueueEntry = {
 
 // Criar tabela se não existir
 export async function ensureEmailQueueTable() {
-  const { error } = await supabase.rpc("ensure_email_queue_table", {});
+  const { error } = await getSupabase().rpc("ensure_email_queue_table", {});
   if (error) console.error("Failed to ensure email_queue table:", error);
 }
 
@@ -39,7 +37,7 @@ export async function createEmailQueue(
     send_at.setDate(send_at.getDate() + delays[i]);
     if (i > 0) send_at.setHours(9, 0, 0, 0); // 09:00 da manhã (menos o step 0 que é imediato)
 
-    await supabase.from("email_queue").insert({
+    await getSupabase().from("email_queue").insert({
       user_id,
       email,
       sequence,
@@ -52,7 +50,7 @@ export async function createEmailQueue(
 
 // Pegar e-mails pendentes pra enviar
 export async function getPendingEmails() {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("email_queue")
     .select("*")
     .eq("status", "pending")
@@ -65,7 +63,7 @@ export async function getPendingEmails() {
 
 // Marcar e-mail como enviado
 export async function markEmailAsSent(id: string) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from("email_queue")
     .update({ status: "sent", sent_at: new Date().toISOString() })
     .eq("id", id);
@@ -75,7 +73,7 @@ export async function markEmailAsSent(id: string) {
 
 // Marcar e-mail como erro
 export async function markEmailAsFailed(id: string) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from("email_queue")
     .update({ status: "failed" })
     .eq("id", id);
@@ -88,7 +86,7 @@ export async function cancelEmailSequence(
   user_id: string,
   sequence: EmailSequence
 ) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from("email_queue")
     .delete()
     .eq("user_id", user_id)
