@@ -31,7 +31,7 @@ async function loadBriefing() {
     count('proposals').gte('created_at', today),
     count('proposals').eq('status', 'accepted').gte('created_at', today),
     count('projects').gte('created_at', today),
-    count('projects').eq('status', 'open').or('urgency.ilike.urg%,deadline_days.lte.7'),
+    count('projects').eq('status', 'open').lte('deadline_days', 7),
     count('projects').eq('status', 'open'),
     count('profiles').in('role', ['freelancer', 'both']),
     count('profiles').in('role', ['client', 'both']),
@@ -55,7 +55,7 @@ async function loadBriefing() {
 const fmt = (v: number | null) => (v === null ? '—' : v.toLocaleString('pt-BR'));
 const brl = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-export async function TodayBriefing({ viewerName }: { viewerName: string }) {
+export async function TodayBriefing({ viewerName, viewerId }: { viewerName: string; viewerId?: string }) {
   if (!hasServiceCredentials()) {
     return (
       <div className="rounded-xl border border-red-800 bg-red-900/20 p-4 text-sm text-red-100">
@@ -64,9 +64,13 @@ export async function TodayBriefing({ viewerName }: { viewerName: string }) {
     );
   }
 
-  const b = await loadBriefing();
+  const [b, profile] = await Promise.all([
+    loadBriefing(),
+    viewerId ? createServiceClient().from('profiles').select('full_name').eq('id', viewerId).maybeSingle() : Promise.resolve({ data: null }),
+  ]);
   const helped = (b.proposalsToday ?? 0) + (b.projectsToday ?? 0);
-  const firstName = viewerName.split(/[@\s]/)[0].replace(/^\w/, (c) => c.toUpperCase());
+  const fullName = (profile.data as { full_name?: string } | null)?.full_name?.trim();
+  const firstName = (fullName ? fullName.split(/\s+/)[0] : viewerName.split(/[@\s]/)[0]).replace(/^\w/, (c) => c.toUpperCase());
 
   return (
     <section className="space-y-4">

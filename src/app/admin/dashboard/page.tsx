@@ -26,7 +26,7 @@ export default async function AdminRevenuePage() {
     <RevenueDashboard
       viewer={viewer}
       live={<AutoRefresh seconds={60} />}
-      briefing={<TodayBriefing viewerName={viewer} />}
+      briefing={<TodayBriefing viewerName={viewer} viewerId={admin.user.id} />}
     />
   );
 }
