@@ -459,7 +459,7 @@ export const CERTO_PRODUCTS: ProductConfig[] = [
     price: 29.9,
     currency: "BRL",
     mrr: 44850,
-    assinifyUrl: null,
+    assinifyUrl: "https://pay.assiny.com.br/-U2V3I/node/TRU4zl",
   },
 ];
 
