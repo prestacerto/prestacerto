@@ -1,0 +1,412 @@
+▲ Next.js 16.2.12 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  ✓ nextScriptWorkers
+  ✓ optimizeCss
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 12.1s
+  Running TypeScript ...
+  Finished TypeScript in 6.5s ...
+  Collecting page data using 9 workers ...
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+  Generating static pages using 9 workers (0/559) ...
+  Generating static pages using 9 workers (139/559) 
+  Generating static pages using 9 workers (279/559) 
+getAuthenticatedUser falhou: Error: Dynamic server usage: Route /publicar-projeto couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at n (.next/server/chunks/ssr/_1y4ig_s._.js:1:13059)
+    at t (.next/server/chunks/ssr/_1y4ig_s._.js:1:30605)
+    at <unknown> (.next/server/chunks/ssr/_0oyg2_5._.js:1:833)
+    at f (.next/server/chunks/ssr/[root-of-the-server]__1fi3o3m._.js:1:3362) {
+  description: "Route /publicar-projeto couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+getAuthenticatedUser falhou: Error: Dynamic server usage: Route /ferramentas/propostas couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at n (.next/server/chunks/ssr/_1y4ig_s._.js:1:13059)
+    at t (.next/server/chunks/ssr/_1y4ig_s._.js:1:30605)
+    at <unknown> (.next/server/chunks/ssr/[root-of-the-server]__1fi3o3m._.js:1:985)
+    at m (.next/server/chunks/ssr/[root-of-the-server]__207oizg._.js:1:6667) {
+  description: "Route /ferramentas/propostas couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+  Generating static pages using 9 workers (419/559) 
+getReferralLeaderboard falhou: Error: Dynamic server usage: Route /indicacoes couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at n (.next/server/chunks/ssr/_1y4ig_s._.js:1:13059)
+    at t (.next/server/chunks/ssr/_1y4ig_s._.js:1:30605)
+    at j (.next/server/chunks/ssr/[root-of-the-server]__05gi_fn._.js:1:9000)
+    at m (.next/server/chunks/ssr/[root-of-the-server]__05gi_fn._.js:1:9408)
+    at stringify (<anonymous>) {
+  description: "Route /indicacoes couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+getAuthenticatedUser falhou: Error: Dynamic server usage: Route /certo-ai couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at n (.next/server/chunks/ssr/_1y4ig_s._.js:1:13059)
+    at t (.next/server/chunks/ssr/_1y4ig_s._.js:1:30605)
+    at <unknown> (.next/server/chunks/ssr/[root-of-the-server]__1ysoyx7._.js:1:12157)
+    at <unknown> (.next/server/chunks/ssr/[root-of-the-server]__1ysoyx7._.js:1:12327)
+    at x (.next/server/chunks/ssr/[root-of-the-server]__17et12h._.js:1:19799) {
+  description: "Route /certo-ai couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+✓ Generating static pages using 9 workers (559/559) in 1206ms
+  Finalizing page optimization ...
+
+Route (app)                                                  Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ○ /admin/analytics
+├ ƒ /admin/dashboard
+├ ○ /admin/fase2/produtos
+├ ○ /admin/godmode
+├ ƒ /admin/leads
+├ ƒ /admin/referrals
+├ ○ /ajuda
+├ ƒ /api/academy/courses
+├ ƒ /api/admin/leads
+├ ƒ /api/admin/overview
+├ ƒ /api/admin/phase2/products
+├ ƒ /api/affiliate-deals
+├ ƒ /api/affiliate/generate-link
+├ ƒ /api/affiliate/track-click
+├ ƒ /api/ai-v2
+├ ƒ /api/ai/badge
+├ ƒ /api/ai/contrato
+├ ƒ /api/ai/improve-proposal
+├ ƒ /api/ai/insights
+├ ƒ /api/ai/optimize-proposal
+├ ƒ /api/ai/optimize-proposal-demo
+├ ƒ /api/ai/portfolio
+├ ƒ /api/ai/scope-project
+├ ƒ /api/analytics/revenue
+├ ƒ /api/arbitrage
+├ ƒ /api/auth/callback
+├ ƒ /api/auth/force-dashboard
+├ ƒ /api/auth/forgot-password
+├ ƒ /api/auth/linkedin/callback
+├ ƒ /api/auth/login
+├ ƒ /api/auth/login-and-redirect
+├ ƒ /api/auth/login-static
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/navigation
+├ ƒ /api/auth/register
+├ ƒ /api/auth/resend-confirmation
+├ ƒ /api/automation-studio
+├ ƒ /api/badges/calculate
+├ ƒ /api/benchmark
+├ ƒ /api/book-club
+├ ƒ /api/business-premium/subscribe
+├ ƒ /api/business/alerts
+├ ƒ /api/business/badges
+├ ƒ /api/business/consistency-badge
+├ ƒ /api/business/daily-project
+├ ƒ /api/business/leaderboard
+├ ƒ /api/business/monthly-history
+├ ƒ /api/business/price-comparison
+├ ƒ /api/business/proposals
+├ ƒ /api/business/push-notification
+├ ƒ /api/business/response-rate
+├ ƒ /api/business/revenue
+├ ƒ /api/business/stats
+├ ƒ /api/business/subscribe
+├ ƒ /api/business/transactions
+├ ƒ /api/business/visit-record
+├ ƒ /api/calculator/send-result
+├ ƒ /api/car-service
+├ ƒ /api/career-ladder
+├ ƒ /api/certo-ai/rewrite-proposal
+├ ƒ /api/certo-curriculo/checkout
+├ ƒ /api/chat
+├ ƒ /api/checkout
+├ ƒ /api/childcare
+├ ○ /api/client-products/list                                        1h      1y
+├ ƒ /api/community/polls
+├ ƒ /api/compliance-audit
+├ ƒ /api/conference
+├ ƒ /api/connects/buy
+├ ƒ /api/connects/check
+├ ƒ /api/connects/purchase
+├ ƒ /api/connects/quota
+├ ƒ /api/connects/spend
+├ ƒ /api/contact
+├ ƒ /api/content-library
+├ ƒ /api/contests/create
+├ ƒ /api/credit-building
+├ ƒ /api/cron/email
+├ ƒ /api/cron/payment-reminders
+├ ƒ /api/education-loans
+├ ƒ /api/equity-marketplace
+├ ƒ /api/escrow/lock
+├ ƒ /api/explore/swipe-projects
+├ ƒ /api/followup/schedule
+├ ƒ /api/freelancer/[id]/response-stats
+├ ƒ /api/gamification/daily-challenge
+├ ƒ /api/gamification/surprise-reward
+├ ƒ /api/ghost-team
+├ ƒ /api/hackathon
+├ ƒ /api/headhunter
+├ ƒ /api/health
+├ ƒ /api/health-insurance
+├ ƒ /api/housing
+├ ƒ /api/identity-protection
+├ ƒ /api/immortality
+├ ƒ /api/insights/market
+├ ƒ /api/insurance-crypto
+├ ƒ /api/integrations/google/callback
+├ ƒ /api/integrations/google/disconnect
+├ ƒ /api/integrations/google/start
+├ ƒ /api/integrations/linkedin
+├ ƒ /api/integrations/nuvemshop
+├ ƒ /api/integrations/nuvemshop/callback
+├ ƒ /api/integrations/nuvemshop/lgpd
+├ ƒ /api/integrations/nuvemshop/lgpd/customers-data-request
+├ ƒ /api/integrations/nuvemshop/lgpd/customers-redact
+├ ƒ /api/integrations/nuvemshop/lgpd/store-redact
+├ ƒ /api/integrations/nuvemshop/start
+├ ƒ /api/integrations/nuvemshop/webhook
+├ ƒ /api/internal-mobility
+├ ƒ /api/jobs/create
+├ ƒ /api/landing-leads
+├ ƒ /api/legacy-planning
+├ ƒ /api/license/marketplace
+├ ƒ /api/loan/request
+├ ƒ /api/market/skill-demand
+├ ƒ /api/market/skill-index
+├ ƒ /api/marketplace-vertical
+├ ƒ /api/match/score
+├ ƒ /api/mentorship
+├ ƒ /api/mercadopago/checkout
+├ ƒ /api/mercadopago/oauth/callback
+├ ƒ /api/mercadopago/oauth/start
+├ ƒ /api/mercadopago/webhook
+├ ƒ /api/messages
+├ ƒ /api/milestones/release
+├ ƒ /api/monetization/activate-plan
+├ ƒ /api/monetization/all-features
+├ ƒ /api/monetization/api-keys/create
+├ ƒ /api/monetization/dashboard/revenue
+├ ƒ /api/monetization/early-payment
+├ ƒ /api/monetization/featured-projects/activate
+├ ƒ /api/monetization/featured-projects/checkout
+├ ƒ /api/monetization/highlight
+├ ƒ /api/monetization/payments/initiate
+├ ƒ /api/monetization/payments/saved-cards
+├ ƒ /api/monetization/portfolio-premium/checkout
+├ ƒ /api/monetization/portfolio-premium/subscribe
+├ ƒ /api/monetization/priority-support/subscribe
+├ ƒ /api/monetization/verified-badge/checkout
+├ ƒ /api/monetization/verified-badge/subscribe
+├ ƒ /api/monetization/verify
+├ ƒ /api/newsletter-sponsorships
+├ ƒ /api/notifications/email/send-event
+├ ƒ /api/notifications/push
+├ ƒ /api/notifications/send-message-notification
+├ ƒ /api/notifications/send-proposal-notification
+├ ƒ /api/notifications/subscribe
+├ ƒ /api/opportunities/alerts
+├ ƒ /api/opportunity-alerts
+├ ƒ /api/partners/register
+├ ƒ /api/payment-router
+├ ƒ /api/payment/mercadopago/create
+├ ƒ /api/payments/assiny-checkout
+├ ƒ /api/payments/assiny-status
+├ ƒ /api/payments/checkout
+├ ƒ /api/payments/client-checkout
+├ ƒ /api/performance-agency
+├ ƒ /api/plan-interest
+├ ƒ /api/podcast-sponsorships
+├ ƒ /api/portfolio-items
+├ ƒ /api/portfolio-showcase
+├ ƒ /api/portfolio/generate
+├ ƒ /api/pricing/recommend
+├ ƒ /api/priority-queue/activate
+├ ƒ /api/priority-queue/purchase
+├ ƒ /api/priority-queue/status
+├ ƒ /api/products
+├ ƒ /api/products/match
+├ ƒ /api/products/phase2
+├ ƒ /api/products/preço
+├ ƒ /api/products/timing
+├ ƒ /api/profile
+├ ƒ /api/profile/[id]/view
+├ ƒ /api/project-contact/[projectId]
+├ ƒ /api/projects/[id]/complete
+├ ƒ /api/projects/create
+├ ƒ /api/projects/create-with-options
+├ ƒ /api/projects/daily-match
+├ ƒ /api/projects/interest
+├ ƒ /api/projects/list
+├ ƒ /api/projects/urgent
+├ ƒ /api/proposals
+├ ƒ /api/proposals/[id]
+├ ƒ /api/proposals/[id]/accept
+├ ƒ /api/proposals/[id]/messages
+├ ƒ /api/proposals/submit
+├ ƒ /api/push-notifications/send
+├ ƒ /api/push-notifications/subscribe
+├ ƒ /api/push-notifications/unsubscribe
+├ ƒ /api/rate-negotiation
+├ ƒ /api/real-estate
+├ ƒ /api/referral/generate
+├ ƒ /api/referral/generate-code
+├ ƒ /api/referral/generate-link
+├ ƒ /api/referral/track-conversion
+├ ƒ /api/referrals/claim-bonus
+├ ƒ /api/referrals/generate-code
+├ ƒ /api/remote-collab-spaces
+├ ƒ /api/reseller
+├ ƒ /api/reviews
+├ ƒ /api/scale/hiring
+├ ƒ /api/screening/analyze-proposals
+├ ƒ /api/security-audit
+├ ƒ /api/signal/detect
+├ ƒ /api/skill-certification
+├ ƒ /api/skills-marketplace
+├ ƒ /api/social-proof
+├ ƒ /api/stripe/certo-curriculo-webhook
+├ ƒ /api/subscriptions/[productId]
+├ ƒ /api/support/chat
+├ ƒ /api/support/engine
+├ ƒ /api/support/handoff
+├ ƒ /api/swat/teams
+├ ƒ /api/tax/calculate
+├ ƒ /api/taxes-global
+├ ƒ /api/team
+├ ƒ /api/team/invites
+├ ƒ /api/team/invites/[id]
+├ ƒ /api/team/invites/[id]/accept
+├ ƒ /api/timing/optimal
+├ ƒ /api/tools/proposal-pdf
+├ ƒ /api/travel-concierge
+├ ƒ /api/trending/alerts
+├ ƒ /api/upskill-scholarships
+├ ƒ /api/user/phase2/access
+├ ƒ /api/user/streak
+├ ƒ /api/v1/engine/chat
+├ ƒ /api/venture
+├ ƒ /api/vpn-suite
+├ ƒ /api/webhooks/assinify
+├ ƒ /api/webhooks/assiny
+├ ƒ /api/wellness-retreat
+├ ƒ /api/whatsapp/redirect-profile
+├ ƒ /api/whatsapp/webhook
+├ ○ /aprenda
+├ ● /aprenda/[slug]
+│ ├ /aprenda/preco-hora-real
+│ ├ /aprenda/desconto-perigoso
+│ ├ /aprenda/preco-valor
+│ └ [+14 more paths]
+├ ○ /aprenda/historias
+├ ○ /calculator/pricing
+├ ƒ /callback
+├ ƒ /certo-ai
+├ ○ /certo-ai/pricing
+├ ○ /checkout
+├ ○ /checkout/addons
+├ ○ /client-dashboard/curriculo
+├ ○ /client-products
+├ ○ /community
+├ ○ /como-funciona
+├ ○ /contato
+├ ○ /contratar
+├ ● /contratar/[categoria]
+│ ├ /contratar/desenvolvimento-web
+│ ├ /contratar/mobile
+│ ├ /contratar/design-grafico
+│ └ [+5 more paths]
+├ ƒ /contratar/[categoria]/[cidade]
+├ ƒ /dashboard
+├ ○ /dashboard/academy
+├ ○ /dashboard/candidato
+├ ƒ /dashboard/certo-curriculo
+├ ƒ /dashboard/certo-curriculo/sucesso
+├ ○ /dashboard/certo-premium
+├ ○ /dashboard/cold-email
+├ ○ /dashboard/destaque
+├ ƒ /dashboard/insights
+├ ƒ /dashboard/integrations
+├ ƒ /dashboard/integrations/nuvemshop
+├ ○ /dashboard/invoice
+├ ƒ /dashboard/match
+├ ƒ /dashboard/messages
+├ ƒ /dashboard/messages/[proposalId]
+├ ƒ /dashboard/portfolio
+├ ○ /dashboard/premium
+├ ƒ /dashboard/pricing
+├ ƒ /dashboard/products
+├ ƒ /dashboard/products/match
+├ ○ /dashboard/products/match-dashboard
+├ ƒ /dashboard/products/preço
+├ ○ /dashboard/products/preco-dashboard
+├ ƒ /dashboard/products/timing
+├ ○ /dashboard/products/timing-dashboard
+├ ƒ /dashboard/profile
+├ ƒ /dashboard/projects/[id]
+├ ƒ /dashboard/projects/new
+├ ƒ /dashboard/proposals
+├ ƒ /dashboard/referral
+├ ƒ /dashboard/services
+├ ƒ /dashboard/services/[id]/edit
+├ ƒ /dashboard/services/new
+├ ○ /dashboard/tax
+├ ○ /dashboard/templates
+├ ƒ /dashboard/timing
+├ ƒ /dashboard/trending
+├ ○ /ecossistema
+├ ○ /ferramentas/benchmark
+├ ○ /ferramentas/calculadora
+├ ƒ /ferramentas/propostas
+├ ƒ /forgot-password
+├ ƒ /indicacoes
+├ ƒ /invite/[token]
+├ ○ /leaderboard/weekly
+├ ƒ /login
+├ ○ /login-direct
+├ ○ /market/dashboard
+├ ○ /market/skill-index
+├ ○ /mercado                                                         1h      1y
+├ ƒ /mercado/[categoria]/[cidade]
+├ ○ /para-clientes                                                   5m      1y
+├ ○ /para-prestadores                                                5m      1y
+├ ○ /parceiros
+├ ƒ /perfil/[handle]
+├ ○ /planos
+├ ƒ /plans
+├ ƒ /portfolio/[handle]
+├ ● /prestadores/[cidade]
+│ ├ /prestadores/sao-paulo
+│ ├ /prestadores/rio-de-janeiro
+│ ├ /prestadores/belo-horizonte
+│ └ [+12 more paths]
+├ ○ /privacidade
+├ ○ /privacy
+├ ○ /products
+├ ● /products/[slug]
+│ ├ /products/academy
+│ ├ /products/templates
+│ ├ /products/invoice
+│ └ [+5 more paths]
+├ ƒ /profile/[id]
+├ ƒ /projects
+├ ƒ /projects/[id]
+├ ƒ /publicar-projeto
+├ ƒ /register
+├ ƒ /reset-password
+├ ○ /robots.txt
+├ ƒ /services
+├ ƒ /services/[id]
+├ ○ /setup
+├ ƒ /sitemap.xml
+├ ○ /termos
+├ ○ /termos-indicacoes
+└ ○ /vagas
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+EXIT=0

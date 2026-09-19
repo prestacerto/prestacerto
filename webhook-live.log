@@ -1,0 +1,21 @@
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 58.9.1 (Node.js 24.18.0)
+    at process.<anonymous> (/Users/cadusima/Downloads/prestacerto-projeto-2026-09-14-full/node_modules/vercel/dist/get-latest-worker.cjs:124:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Resolving deployment "prestacerto-1wns25a6d-prestacerto1.vercel.app"
+Fetching project "prj_GeYa7YEVGRKAc4MHI4QBUavbH7oR"
+Fetching logs...
+TIME         HOST                LEVEL                                
+20:13:29.24  prestacerto.com.br  info   λ POST /api/webhooks/assiny   
+
+20:13:17.60  prestacerto.com.br  info     POST /api/webhooks/assiny   
+
+20:10:01.05  prestacerto.com.br  info     GET /service-worker.js      
+
+20:09:58.50  prestacerto.com.br  info     GET /api/auth/navigation    
+
+20:09:56.74  prestacerto.com.br  info     GET /manifest.json          
+
+20:09:51.79  prestacerto.com.br  info     GET /admin/dashboard        
+
+Fetched 6 logs for prestacerto1/prestacerto

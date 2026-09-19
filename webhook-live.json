@@ -1,0 +1,8 @@
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+    at process.<anonymous> (/Users/cadusima/Downloads/prestacerto-projeto-2026-09-14-full/node_modules/vercel/dist/get-latest-worker.cjs:124:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Resolving deployment "prestacerto-pbyo0i1ko-prestacerto1.vercel.app"
+Fetching project "prj_GeYa7YEVGRKAc4MHI4QBUavbH7oR"
+Fetching logs...
+{"id":"nrdtr-1789773436427-8f23ff4f493b","timestamp":1789773436427,"deploymentId":"dpl_4aF36UqYFugXYxvaJ9564xduNxid","projectId":"prj_GeYa7YEVGRKAc4MHI4QBUavbH7oR","level":"info","message":"","source":"serverless","domain":"prestacerto.com.br","requestMethod":"POST","requestPath":"/api/webhooks/assiny","responseStatusCode":401,"environment":"production","branch":"main","cache":"MISS","cacheReason":"","pprState":"","traceId":"","logs":[]}
+EXIT=0

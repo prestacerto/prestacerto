@@ -9,6 +9,23 @@ export const dynamic = "force-dynamic";
 const json = (body: Record<string, unknown>, status = 200) =>
   NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
+async function logConversion(event: NativeAssinyEvent) {
+  if (event.event !== "approved_purchase" || !event.active) return;
+
+  const gadsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "18356029745";
+  const conversionLabel = process.env.GOOGLE_ADS_CONVERSION_LABEL || "YlFdCOv6oYoYEK-ywO0o";
+  const gtagId = process.env.NEXT_PUBLIC_GTAG_ID || "G-385KRF0T8H";
+
+  console.info("[CONVERSION] Google Ads", {
+    gadsId,
+    conversionLabel,
+    plan: event.plan,
+    value: (event.amountCents / 100).toFixed(2),
+    currency: "BRL",
+    email: event.email,
+  });
+}
+
 function providedToken(request: NextRequest) {
   return (
     request.headers.get("x-assiny-token") ??
@@ -122,6 +139,9 @@ export async function POST(request: NextRequest) {
       if (bindError) console.error("[ASSINY] bind_verified_assiny_subscription falhou", bindError.message);
     }
   }
+
+  // Log conversão pro Google Ads
+  await logConversion(event);
 
   console.info("[ASSINY] processado", { event: event.event, plan: event.plan, active: event.active, outcome, binding });
   return json({ outcome, binding, eventId: event.eventId });
