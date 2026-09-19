@@ -48,7 +48,6 @@ export function EnhancedReviews() {
       (Object.values(ratings).reduce((a, b) => a + b, 0) / 5) | 0;
 
     // TODO: Submit to /api/reviews
-    console.log("Review submitted:", {
       ratings,
       comment,
       photoUrl,

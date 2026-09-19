@@ -13,7 +13,6 @@ export async function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     try {
       await navigator.serviceWorker.register("/sw.js");
-      console.log("Service Worker registered");
     } catch (error) {
       console.error("Service Worker registration failed:", error);
     }
@@ -39,7 +38,6 @@ export async function requestNotificationPermission() {
 
 export async function subscribeToPushNotifications() {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    console.log("Push notifications not supported");
     return null;
   }
 

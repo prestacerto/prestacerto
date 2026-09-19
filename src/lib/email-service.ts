@@ -185,9 +185,6 @@ export async function sendEmail(payload: EmailPayload) {
 
     // TODO: Integrate with email service (Resend, SendGrid)
     // For now, log the notification
-    console.log(`[EMAIL] To: ${payload.email}`);
-    console.log(`[EMAIL] Subject: ${subject}`);
-    console.log(`[EMAIL] Template: ${payload.template}`);
 
     return {
       success: true,
@@ -207,5 +204,4 @@ export async function sendEmail(payload: EmailPayload) {
 export async function queueNotification(payload: EmailPayload) {
   // TODO: Use job queue (Bull, Inngest, etc)
   const scheduledTime = payload.sendAt || new Date();
-  console.log(`[QUEUE] Notification scheduled for ${scheduledTime.toISOString()}`);
 }

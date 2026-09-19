@@ -78,7 +78,6 @@ export async function getValidMPAccessToken(
   }
 
   // 3. Token expired or expiring soon - refresh it
-  console.log(`🔄 Refreshing MP token for freelancer ${freelancer_id}`);
 
   const refreshResponse = await fetch(
     "https://api.mercadopago.com/oauth/token",
@@ -110,7 +109,6 @@ export async function getValidMPAccessToken(
     expires_in: newTokens.expires_in,
   });
 
-  console.log(`✅ MP token refreshed for ${freelancer_id}`);
 
   return newTokens.access_token;
 }

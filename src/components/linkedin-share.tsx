@@ -30,7 +30,6 @@ export function LinkedInShareButton({
           url,
         });
       } catch (err) {
-        console.log("Share cancelled");
       }
     } else {
       // Fallback: abrir em popup
