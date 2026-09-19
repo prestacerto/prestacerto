@@ -31,6 +31,7 @@ export function FacebookPixel() {
       />
       <noscript>
         <img
+          alt="Facebook Pixel tracking"
           height="1"
           width="1"
           style={{ display: "none" }}

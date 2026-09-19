@@ -47,6 +47,9 @@ export async function loadRevenue(): Promise<RevenueSnapshot> {
   const events = (eventsRes.error ? [] : (eventsRes.data ?? [])) as LedgerRow[];
   const payments = paymentsRes.error ? null : ((paymentsRes.data ?? []) as PaymentRow[]);
   const activeSubs = subsRes.error ? [] : (subsRes.data ?? []) as { plan: 'pro' | 'business' }[];
+  if (eventsRes.error) console.warn("[REVENUE] assiny_events query failed", eventsRes.error);
+  if (subsRes.error) console.warn("[REVENUE] assiny_subscriptions query failed", subsRes.error);
+  if (paymentsRes.error) console.warn("[REVENUE] assiny_payments query failed", paymentsRes.error);
 
   // Valor real quando a tabela de pagamentos existir; senão, preço de tabela do plano.
   const amountByEvent = new Map<string, number>();
