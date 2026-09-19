@@ -83,9 +83,11 @@ export function PlansSection({ focusPaidPlans = false }: { focusPaidPlans?: bool
           </ul>
 
           <PlanCta plan={plan} checkoutEnabled={checkoutEnabled} wrapperClassName="mt-6" />
-          <p className={cn("mt-3 text-center text-xs leading-5", plan.popular ? "text-white" : "text-slate-500")}>
-            {plan.id === 'free' ? 'Sem cartão de crédito.' : 'Assinatura mensal. Confira as condições no checkout.'}
-          </p>
+          <div className={cn("mt-4 space-y-1 text-center text-xs leading-5", plan.popular ? "text-blue-100" : "text-slate-500")}>
+            <p>{plan.id === 'free' ? '✓ Sem cartão de crédito' : '✓ Seguro com Assiny'}</p>
+            <p>✓ Cancela quando quiser</p>
+            {plan.id !== 'free' && <p>✓ Suporte 24h</p>}
+          </div>
         </div>
       ))}
     </div>

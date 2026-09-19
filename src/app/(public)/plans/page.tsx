@@ -23,6 +23,20 @@ export default async function PlansPage({ searchParams }: { searchParams: Promis
   const checkoutEnabled = isAssinyCheckoutReady();
   const { plan } = await searchParams;
   const selectedPlan = PLANS.find(item => item.id !== 'free' && item.id === plan);
+
+  // Schema for Product (for paid plans)
+  const productSchemas = PLANS.filter(p => p.id !== "free").map(p => ({
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": `${p.name} - PrestaCerto`,
+    "description": p.description,
+    "offers": {
+      "@type": "Offer",
+      "price": p.priceMonthly.toString(),
+      "priceCurrency": "BRL",
+      "availability": "https://schema.org/InStock"
+    }
+  }));
   return <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
     <StructuredData type="FAQPage" data={getFAQSchema(faqs.map(faq => ({ question: faq.q, answer: faq.a })))} />
     <StructuredData type="BreadcrumbList" data={getBreadcrumbSchema([{ name: 'Início', url: 'https://prestacerto.com.br' }, { name: 'Planos', url: 'https://prestacerto.com.br/plans' }])} />
