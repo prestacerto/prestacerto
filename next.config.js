@@ -69,6 +69,7 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(), camera=()' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://tagmanager.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' https:; connect-src 'self' https://*.supabase.co https://*.googletagmanager.com https://www.facebook.com; frame-src 'self' https://www.facebook.com https://tagmanager.google.com; object-src 'none'; base-uri 'self';" },
         ],
       },
     ];
