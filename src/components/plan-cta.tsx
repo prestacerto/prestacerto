@@ -26,13 +26,13 @@ export function PlanCta({
   const [done, setDone] = useState(false);
 
   const solidButtonClass = plan.popular
-    ? "bg-white text-blue-700 hover:bg-blue-50"
-    : "bg-slate-900 text-white hover:bg-slate-800";
+    ? "bg-white text-blue-700 hover:bg-blue-50 font-bold shadow-lg"
+    : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 font-bold shadow-lg";
 
   if (plan.id === "free") {
     return (
-      <LinkButton href="/register" className={cn(wrapperClassName, "min-h-11 w-full", solidButtonClass)}>
-        Começar grátis
+      <LinkButton href="/register" className={cn(wrapperClassName, "min-h-12 w-full text-base", solidButtonClass)}>
+        Começar grátis agora
       </LinkButton>
     );
   }
@@ -49,7 +49,7 @@ export function PlanCta({
   const checkoutUrl = getCheckoutUrl(plan);
   if (checkoutUrl) {
     return (
-      <Button disabled={loading} className={cn(wrapperClassName, "min-h-11 w-full", solidButtonClass)}
+      <Button disabled={loading} className={cn(wrapperClassName, "min-h-12 w-full text-base", solidButtonClass)}
         onClick={async () => {
           setLoading(true);
           try { trackAnalyticsEvent('select_plan', { plan: plan.id, currency: 'BRL', value: plan.priceMonthly }); } catch { /* Tracking must never block checkout. */ }
@@ -66,7 +66,7 @@ export function PlanCta({
           } catch (error) { toast.error(error instanceof Error ? error.message : 'Tente novamente em instantes.'); }
           finally { setLoading(false); }
         }}>
-        {loading ? 'Abrindo assinatura...' : `Assinar ${plan.name}`}
+        {loading ? 'Processando...' : `Assinar agora →`}
       </Button>
     );
   }
