@@ -1,4 +1,5 @@
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { ArrowRight, Zap, BarChart3, MessageSquare, Target } from 'lucide-react';
 import Link from 'next/link';
 import { SalesAgentDemo } from '@/components/sales-agent/demo';
@@ -31,14 +32,14 @@ export default function SalesAgentLanding() {
           </h1>
 
           <p className="mb-10 text-xl text-slate-300 max-w-2xl mx-auto">
-            Agente de vendas IA que prospeita, qualifica e segue leads 24/7. Aumenta conversão, reduz custo por venda e não dorme.
+            Agente de vendas IA que prospecta, qualifica e segue leads 24/7. Aumenta conversão, reduz custo por venda e não dorme.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link href="/dashboard/sales-agent" className={`${buttonVariants({ size: 'lg' })} bg-emerald-500 hover:bg-emerald-600 text-white`}>
+            <Link href="/dashboard/sales-agent" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white')}>
               Começar agora <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-            <a href="#demo" className={`${buttonVariants({ size: 'lg', variant: 'outline' })} border-slate-600 text-white hover:bg-slate-800`}>
+            <a href="#demo" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 border border-slate-600 bg-transparent text-white hover:bg-slate-800')}>
               Ver demo ao vivo
             </a>
           </div>
@@ -50,8 +51,8 @@ export default function SalesAgentLanding() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             { label: '24/7', desc: 'Prospecção contínua' },
-            { label: '10x', desc: 'Mais leads qualificados' },
-            { label: '-70%', desc: 'Custo por venda' },
+            { label: '0–100', desc: 'Score de cada lead' },
+            { label: 'Email + WhatsApp', desc: 'Mensagens personalizadas' },
           ].map((stat) => (
             <div key={stat.label} className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 text-center">
               <div className="text-4xl font-bold text-emerald-400 mb-2">{stat.label}</div>
@@ -125,20 +126,20 @@ export default function SalesAgentLanding() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             {
-              name: 'Startup',
-              price: '$99',
-              features: ['1 agente', '100 leads/mês', 'Email & Whatsapp', 'Suporte por email'],
+              name: 'Starter',
+              price: 'R$ 299',
+              features: ['Até 3 assentos', 'Até 10 prospects/dia por assento', 'Email e WhatsApp', 'Análise básica'],
             },
             {
-              name: 'Growth',
-              price: '$299',
-              features: ['3 agentes', '1000 leads/mês', 'Email, Whatsapp, LinkedIn', 'Prioridade', 'Dashboard completo'],
+              name: 'Professional',
+              price: 'R$ 699',
+              features: ['Até 10 assentos', 'Até 30 prospects/dia por assento', 'Email, WhatsApp e LinkedIn', 'Análise completa'],
               popular: true,
             },
             {
               name: 'Enterprise',
-              price: 'Custom',
-              features: ['Agentes ilimitados', 'Leads ilimitados', 'Todas as integrações', 'Suporte 24/7', 'API custom'],
+              price: 'R$ 1.999',
+              features: ['Assentos ilimitados', 'Prospects ilimitados', 'Integrações customizadas', 'Suporte prioritário'],
             },
           ].map((plan) => (
             <div
@@ -150,7 +151,10 @@ export default function SalesAgentLanding() {
               }`}
             >
               <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-              <div className="text-3xl font-bold text-emerald-400 mb-6">{plan.price}</div>
+              <div className="text-3xl font-bold text-emerald-400 mb-6">
+                {plan.price}
+                <span className="text-sm font-normal text-slate-400">/mês</span>
+              </div>
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-slate-300">
@@ -161,11 +165,13 @@ export default function SalesAgentLanding() {
               </ul>
               <Link
                 href="/dashboard/sales-agent"
-                className={`w-full ${buttonVariants({ variant: plan.popular ? 'default' : 'outline' })} ${
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'h-11 w-full',
                   plan.popular
                     ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                    : 'border-slate-600 text-white hover:bg-slate-800'
-                }`}
+                    : 'border border-slate-600 bg-transparent text-white hover:bg-slate-800'
+                )}
               >
                 Começar
               </Link>
@@ -180,10 +186,10 @@ export default function SalesAgentLanding() {
           Pronto para vender mais?
         </h2>
         <p className="text-xl text-slate-400 mb-10">
-          Seus primeiros 10 leads qualificados saem hoje.
+          Configure seu agente em minutos e veja os primeiros leads analisados.
         </p>
-        <Link href="/dashboard/sales-agent" className={`${buttonVariants({ size: 'lg' })} bg-emerald-500 hover:bg-emerald-600 text-white`}>
-          Começar 7 dias grátis <ArrowRight className="ml-2 h-4 w-4" />
+        <Link href="/dashboard/sales-agent" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white')}>
+          Começar agora <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       </section>
     </div>
