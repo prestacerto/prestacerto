@@ -47,12 +47,8 @@ export function EnhancedReviews() {
     const avgRating =
       (Object.values(ratings).reduce((a, b) => a + b, 0) / 5) | 0;
 
-    // TODO: Submit to /api/reviews
-      ratings,
-      comment,
-      photoUrl,
-      avgRating,
-    });
+    // TODO: Submit to /api/reviews with { ratings, comment, photoUrl, avgRating }
+    void avgRating;
 
     setSubmitted(true);
     setTimeout(() => {
