@@ -21,7 +21,8 @@ export async function sendEmail(
   try {
     // Using SendGrid API if available
     if (process.env.SENDGRID_API_KEY) {
-      const fromEmail = options?.from || process.env.SENDGRID_FROM_EMAIL || 'noreply@prestacerto.com';
+      const fromEmail = options?.from || process.env.SENDGRID_FROM_EMAIL;
+      if (!fromEmail) throw new Error('SENDGRID_FROM_EMAIL não configurado');
       const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
         method: 'POST',
         headers: {
@@ -50,6 +51,8 @@ export async function sendEmail(
 
     // Fallback to Resend API
     if (process.env.RESEND_API_KEY) {
+      const fromAddress = options?.from || process.env.RESEND_FROM_EMAIL;
+      if (!fromAddress) throw new Error('RESEND_FROM_EMAIL não configurado');
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -57,7 +60,7 @@ export async function sendEmail(
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: options?.from || process.env.RESEND_FROM_EMAIL || 'noreply@prestacerto.com',
+          from: fromAddress,
           to,
           subject,
           html: body,
@@ -177,15 +180,13 @@ export const DEFAULT_TEMPLATES: MessageTemplate[] = [
     subject: 'Oportunidade de Crescimento para {{company}}',
     body: `Olá {{name}},
 
-Percebi que {{company}} está crescendo no segmento de {{industry}}.
+Trabalhamos com [o que sua empresa oferece] e acredito que pode ajudar a {{company}} com [resultado principal].
 
-Temos ajudado empresas como a sua a aumentar sua geração de leads em até 40% através de nosso agente de vendas IA.
+Podemos conversar 15 minutos esta semana?
 
-Gostaria de conversar sobre como isso poderia beneficiar sua equipe?
-
-Melhor atenciosamente,
-Equipe Prestacerto`,
-    variables: ['name', 'company', 'industry'],
+Atenciosamente,
+[Seu nome] — [Sua empresa]`,
+    variables: ['name', 'company'],
   },
   {
     id: 'whatsapp_introduction',
@@ -193,9 +194,9 @@ Equipe Prestacerto`,
     channel: 'whatsapp',
     body: `Oi {{name}}, tudo bem?
 
-Vi que você trabalha com {{company}}. Estamos ajudando empresas a automatizar sua prospecção com IA. Seria legal conversar sobre como isso pode ajudar a sua equipe?
+Vi que você está na {{company}}. Trabalho com [o que sua empresa oferece] e acho que pode ajudar vocês com [resultado principal]. Faz sentido conversarmos?
 
-Prestacerto 🚀`,
+[Seu nome] — [Sua empresa]`,
     variables: ['name', 'company'],
   },
   {
@@ -207,9 +208,9 @@ Prestacerto 🚀`,
 
 Acho que você não viu meu email anterior (sem problema!).
 
-Deixei uma proposta que pode gerar mais leads qualificados para sua equipe. Qual seria o melhor dia para uma breve conversa?
+Queria entender se [resultado principal] é prioridade para a {{company}} agora. Qual seria o melhor dia para uma conversa rápida?
 
-Prestacerto`,
+[Seu nome] — [Sua empresa]`,
     variables: ['name', 'company'],
   },
 ];

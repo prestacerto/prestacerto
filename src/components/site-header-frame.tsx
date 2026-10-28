@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { trackLandingEvent } from '@/lib/landing-tracking';
+import { isProductRoute } from '@/lib/product-routes';
 
 export function SiteHeaderFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  if (isProductRoute(pathname)) return null;
   if (pathname !== '/para-clientes' && pathname !== '/para-prestadores') return children;
   const client = pathname === '/para-clientes';
   const journey = client ? 'client' : 'provider';

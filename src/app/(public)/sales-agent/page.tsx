@@ -2,6 +2,13 @@ import { buttonVariants } from '@/components/ui/button';
 import { ArrowRight, Zap, BarChart3, MessageSquare, Target } from 'lucide-react';
 import Link from 'next/link';
 import { SalesAgentDemo } from '@/components/sales-agent/demo';
+import { productMetadata } from '@/components/product-landing/metadata';
+
+export const metadata = productMetadata(
+  'Agente de Vendas IA — Prospecção B2B automática',
+  'Agente de vendas com IA que prospecta, qualifica e acompanha leads B2B 24/7.',
+  '#10b981'
+);
 
 export default function SalesAgentLanding() {
   return (

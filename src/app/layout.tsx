@@ -3,6 +3,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteHeaderFrame } from '@/components/site-header-frame';
 import { SiteFooter } from "@/components/site-footer";
+import { HideOnProductRoutes } from "@/components/hide-on-product-routes";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
@@ -62,7 +63,7 @@ export default function RootLayout({
             <SiteHeaderFrame><SiteHeader /></SiteHeaderFrame>
             <a href="#conteudo-principal" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[120] focus:rounded-lg focus:bg-white focus:px-5 focus:py-3 focus:text-blue-700 focus:shadow-lg">Pular para o conteúdo</a>
             <main id="conteudo-principal" className="flex flex-1 flex-col">{children}</main>
-            <SiteFooter />
+            <HideOnProductRoutes><SiteFooter /></HideOnProductRoutes>
           </AuthNavigationProvider>
           <Toaster />
           <Analytics />

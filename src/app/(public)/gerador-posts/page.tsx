@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
 import { ProductLanding } from '@/components/product-landing/product-landing';
+import { productMetadata } from '@/components/product-landing/metadata';
 
-export const metadata: Metadata = {
-  title: 'Gerador de Posts com IA — LinkedIn, Instagram e TikTok',
-  description: 'Descreva o tema e receba posts prontos para suas redes, com agenda de publicação.',
-};
+export const metadata = productMetadata(
+  'Gerador de Posts com IA — LinkedIn, Instagram e TikTok',
+  'Descreva o tema e receba posts prontos para suas redes, com agenda de publicação.',
+  '#9333ea'
+);
 
 export default function GeradorPostsPage() {
   return (

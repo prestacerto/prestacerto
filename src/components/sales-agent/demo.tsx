@@ -14,7 +14,7 @@ export function SalesAgentDemo() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'agent',
-      content: 'Oi! Sou o agente de vendas IA da PrestaCerto. Teste-me! Descreva um prospecto que você quer abordar.',
+      content: 'Oi! Sou um agente de vendas com IA. Descreva um prospect que você quer abordar e eu monto a estratégia.',
       timestamp: new Date(),
     },
   ]);

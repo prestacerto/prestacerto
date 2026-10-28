@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
 import { ProductLanding } from '@/components/product-landing/product-landing';
+import { productMetadata } from '@/components/product-landing/metadata';
 
-export const metadata: Metadata = {
-  title: 'Email Marketing simples para PMEs',
-  description: 'Crie, envie e acompanhe campanhas de email sem curva de aprendizado.',
-};
+export const metadata = productMetadata(
+  'Email Marketing simples para PMEs',
+  'Crie, envie e acompanhe campanhas de email sem curva de aprendizado.',
+  '#2563eb'
+);
 
 export default function EmailMarketingPage() {
   return (

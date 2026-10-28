@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
 import { ProductLanding } from '@/components/product-landing/product-landing';
+import { productMetadata } from '@/components/product-landing/metadata';
 
-export const metadata: Metadata = {
-  title: 'WhatsApp Marketing — Automação de mensagens para PMEs',
-  description: 'Envie campanhas, agende mensagens e responda clientes no WhatsApp sem digitar uma por uma.',
-};
+export const metadata = productMetadata(
+  'WhatsApp Marketing — Automação de mensagens para PMEs',
+  'Envie campanhas, agende mensagens e responda clientes no WhatsApp sem digitar uma por uma.',
+  '#16a34a'
+);
 
 export default function WhatsAppMarketingPage() {
   return (

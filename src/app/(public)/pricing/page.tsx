@@ -1,13 +1,15 @@
 import { createServiceClient } from '@/lib/supabase/service';
 import { PricingPlans } from '@/components/sales-agent/pricing-plans';
+import { productMetadata } from '@/components/product-landing/metadata';
 import { getAuthenticatedUser } from '@/lib/auth/getUser';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Planos de Preço - Agente de Vendas SDR',
-  description: 'Escolha o plano ideal para sua equipe de vendas B2B',
-};
+export const metadata = productMetadata(
+  'Planos — Agente de Vendas IA',
+  'Escolha o plano ideal para sua equipe de vendas B2B.',
+  '#10b981'
+);
 
 export default async function PricingPage() {
   const user = await getAuthenticatedUser();

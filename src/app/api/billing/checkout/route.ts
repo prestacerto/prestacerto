@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       const stripeCustomer = await stripe.customers.create({
-        email: userData?.email || `user-${userId}@prestacerto.com`,
+        email: userData?.email || undefined,
         metadata: { user_id: userId },
       });
 
