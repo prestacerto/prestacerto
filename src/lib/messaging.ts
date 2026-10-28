@@ -21,20 +21,29 @@ export async function sendEmail(
   try {
     // Using SendGrid API if available
     if (process.env.SENDGRID_API_KEY) {
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-      await sgMail.send({
-        to,
-        from: options?.from || process.env.SENDGRID_FROM_EMAIL || 'noreply@prestacerto.com',
-        replyTo: options?.replyTo,
-        subject,
-        html: body,
-        trackingSettings: {
-          openTracking: { enable: true },
-          clickTracking: { enable: true },
+      const fromEmail = options?.from || process.env.SENDGRID_FROM_EMAIL || 'noreply@prestacerto.com';
+      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
         },
+        body: JSON.stringify({
+          personalizations: [{ to: [{ email: to }] }],
+          from: { email: fromEmail },
+          ...(options?.replyTo ? { reply_to: { email: options.replyTo } } : {}),
+          subject,
+          content: [{ type: 'text/html', value: body }],
+          tracking_settings: {
+            open_tracking: { enable: true },
+            click_tracking: { enable: true },
+          },
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`SendGrid error ${response.status}`);
+      }
 
       return true;
     }
@@ -78,14 +87,24 @@ export async function sendWhatsApp(
   try {
     // Using Twilio WhatsApp API
     if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_WHATSAPP_NUMBER) {
-      const twilio = require('twilio');
-      const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
-      await client.messages.create({
-        from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to: `whatsapp:${phoneNumber}`,
-        body: message,
+      const sid = process.env.TWILIO_ACCOUNT_SID;
+      const auth = Buffer.from(`${sid}:${process.env.TWILIO_AUTH_TOKEN}`).toString('base64');
+      const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${auth}`,
+        },
+        body: new URLSearchParams({
+          From: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+          To: `whatsapp:${phoneNumber}`,
+          Body: message,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Twilio error ${response.status}`);
+      }
 
       return true;
     }

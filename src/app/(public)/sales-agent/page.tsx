@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { ArrowRight, Zap, BarChart3, MessageSquare, Target } from 'lucide-react';
 import Link from 'next/link';
 import { SalesAgentDemo } from '@/components/sales-agent/demo';
@@ -28,12 +28,12 @@ export default function SalesAgentLanding() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-white">
+            <Link href="/dashboard/sales-agent" className={`${buttonVariants({ size: 'lg' })} bg-emerald-500 hover:bg-emerald-600 text-white`}>
               Começar agora <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-800">
+            </Link>
+            <a href="#demo" className={`${buttonVariants({ size: 'lg', variant: 'outline' })} border-slate-600 text-white hover:bg-slate-800`}>
               Ver demo ao vivo
-            </Button>
+            </a>
           </div>
         </div>
       </section>
@@ -102,7 +102,7 @@ export default function SalesAgentLanding() {
       </section>
 
       {/* Demo Live */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
+      <section id="demo" className="mx-auto max-w-6xl px-6 py-20 scroll-mt-10">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
           Veja o agente em ação
         </h2>
@@ -152,16 +152,16 @@ export default function SalesAgentLanding() {
                   </li>
                 ))}
               </ul>
-              <Button
-                className={`w-full ${
+              <Link
+                href="/dashboard/sales-agent"
+                className={`w-full ${buttonVariants({ variant: plan.popular ? 'default' : 'outline' })} ${
                   plan.popular
                     ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
                     : 'border-slate-600 text-white hover:bg-slate-800'
                 }`}
-                variant={plan.popular ? 'default' : 'outline'}
               >
                 Começar
-              </Button>
+              </Link>
             </div>
           ))}
         </div>
@@ -175,9 +175,9 @@ export default function SalesAgentLanding() {
         <p className="text-xl text-slate-400 mb-10">
           Seus primeiros 10 leads qualificados saem hoje.
         </p>
-        <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-white">
+        <Link href="/dashboard/sales-agent" className={`${buttonVariants({ size: 'lg' })} bg-emerald-500 hover:bg-emerald-600 text-white`}>
           Começar 7 dias grátis <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        </Link>
       </section>
     </div>
   );

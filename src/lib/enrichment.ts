@@ -1,5 +1,11 @@
 // Lead enrichment utilities - fetch company data from public sources
-import axios from 'axios';
+
+async function getJson(url: string, params?: Record<string, string | number>, headers?: Record<string, string>) {
+  const qs = params ? `?${new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]))}` : '';
+  const res = await fetch(`${url}${qs}`, { headers });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  return { data: await res.json() };
+}
 
 export interface EnrichedData {
   company_size?: string;
@@ -24,13 +30,11 @@ async function enrichFromWebSearch(company: string, context?: string): Promise<E
     // Google Custom Search API - requires GOOGLE_SEARCH_API_KEY
     if (process.env.GOOGLE_SEARCH_API_KEY && process.env.GOOGLE_SEARCH_ENGINE_ID) {
       const searchQuery = `${company} company information ${context || ''}`;
-      const response = await axios.get('https://www.googleapis.com/customsearch/v1', {
-        params: {
-          q: searchQuery,
-          key: process.env.GOOGLE_SEARCH_API_KEY,
-          cx: process.env.GOOGLE_SEARCH_ENGINE_ID,
-          num: 5,
-        },
+      const response = await getJson('https://www.googleapis.com/customsearch/v1', {
+        q: searchQuery,
+        key: process.env.GOOGLE_SEARCH_API_KEY,
+        cx: process.env.GOOGLE_SEARCH_ENGINE_ID,
+        num: 5,
       });
 
       if (response.data.items && response.data.items.length > 0) {
@@ -73,10 +77,11 @@ async function enrichFromClearbit(company: string, email?: string): Promise<Enri
     // Clearbit API - free tier includes company and person enrichment
     if (process.env.CLEARBIT_API_KEY) {
       // Company enrichment
-      const companyResponse = await axios.get(`https://company.clearbit.com/v1/domains/find`, {
-        params: { name: company },
-        headers: { Authorization: `Bearer ${process.env.CLEARBIT_API_KEY}` },
-      });
+      const companyResponse = await getJson(
+        'https://company.clearbit.com/v1/domains/find',
+        { name: company },
+        { Authorization: `Bearer ${process.env.CLEARBIT_API_KEY}` }
+      );
 
       if (companyResponse.data) {
         const clearbitData = companyResponse.data;
@@ -88,9 +93,11 @@ async function enrichFromClearbit(company: string, email?: string): Promise<Enri
       // Company details
       if (data.website) {
         const domain = new URL(data.website).hostname;
-        const detailsResponse = await axios.get(`https://company.clearbit.com/v2/companies/domains/${domain}`, {
-          headers: { Authorization: `Bearer ${process.env.CLEARBIT_API_KEY}` },
-        });
+        const detailsResponse = await getJson(
+          `https://company.clearbit.com/v2/companies/domains/${domain}`,
+          undefined,
+          { Authorization: `Bearer ${process.env.CLEARBIT_API_KEY}` }
+        );
 
         if (detailsResponse.data) {
           const details = detailsResponse.data;
