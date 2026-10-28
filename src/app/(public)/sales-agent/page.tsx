@@ -1,0 +1,197 @@
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ArrowRight, Zap, BarChart3, MessageSquare, Target } from 'lucide-react';
+import Link from 'next/link';
+import { SalesAgentDemo } from '@/components/sales-agent/demo';
+import { productMetadata } from '@/components/product-landing/metadata';
+
+export const metadata = productMetadata(
+  'Agente de Vendas IA — Prospecção B2B automática',
+  'Agente de vendas com IA que prospecta, qualifica e acompanha leads B2B 24/7.',
+  '#10b981'
+);
+
+export default function SalesAgentLanding() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Hero */}
+      <section className="relative overflow-hidden pt-20 pb-32">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+
+        <div className="relative mx-auto max-w-4xl px-6 text-center">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2">
+            <Zap className="h-4 w-4 text-emerald-400" />
+            <span className="text-sm text-emerald-200">IA que vende enquanto você dorme</span>
+          </div>
+
+          <h1 className="mb-6 text-5xl md:text-7xl font-bold text-white tracking-tight">
+            Seu time de vendas
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+              automatizado
+            </span>
+          </h1>
+
+          <p className="mb-10 text-xl text-slate-300 max-w-2xl mx-auto">
+            Agente de vendas IA que prospecta, qualifica e segue leads 24/7. Aumenta conversão, reduz custo por venda e não dorme.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link href="/dashboard/sales-agent" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white')}>
+              Começar agora <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+            <a href="#demo" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 border border-slate-600 bg-transparent text-white hover:bg-slate-800')}>
+              Ver demo ao vivo
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { label: '24/7', desc: 'Prospecção contínua' },
+            { label: '0–100', desc: 'Score de cada lead' },
+            { label: 'Email + WhatsApp', desc: 'Mensagens personalizadas' },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-lg border border-slate-700 bg-slate-800/50 p-6 text-center">
+              <div className="text-4xl font-bold text-emerald-400 mb-2">{stat.label}</div>
+              <div className="text-slate-300">{stat.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-16 text-center">
+          O que o agente faz
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {[
+            {
+              icon: Target,
+              title: 'Prospecção Automática',
+              desc: 'Busca prospects no setor, analisa site, LinkedIn, histórico de negócios',
+            },
+            {
+              icon: MessageSquare,
+              title: 'Mensagens Personalizadas',
+              desc: 'Gera outreach por email/whatsapp com valor específico por prospect',
+            },
+            {
+              icon: BarChart3,
+              title: 'Scoring Inteligente',
+              desc: 'Qualifica leads automaticamente: hot/warm/cold em tempo real',
+            },
+            {
+              icon: Zap,
+              title: 'Follow-up 24/7',
+              desc: 'Segue leads sem resposta, ajusta tom, tira objeções com IA',
+            },
+          ].map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <div key={feature.title} className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-bold text-white mb-2">{feature.title}</h3>
+                  <p className="text-slate-400">{feature.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Demo Live */}
+      <section id="demo" className="mx-auto max-w-6xl px-6 py-20 scroll-mt-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">
+          Veja o agente em ação
+        </h2>
+        <SalesAgentDemo />
+      </section>
+
+      {/* Pricing */}
+      <section className="mx-auto max-w-4xl px-6 py-20">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-16 text-center">
+          Simples. Transparente. Escalável.
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              name: 'Starter',
+              price: 'R$ 299',
+              features: ['Até 3 assentos', 'Até 10 prospects/dia por assento', 'Email e WhatsApp', 'Análise básica'],
+            },
+            {
+              name: 'Professional',
+              price: 'R$ 699',
+              features: ['Até 10 assentos', 'Até 30 prospects/dia por assento', 'Email, WhatsApp e LinkedIn', 'Análise completa'],
+              popular: true,
+            },
+            {
+              name: 'Enterprise',
+              price: 'R$ 1.999',
+              features: ['Assentos ilimitados', 'Prospects ilimitados', 'Integrações customizadas', 'Suporte prioritário'],
+            },
+          ].map((plan) => (
+            <div
+              key={plan.name}
+              className={`rounded-lg border p-8 ${
+                plan.popular
+                  ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/50'
+                  : 'border-slate-700 bg-slate-800/50'
+              }`}
+            >
+              <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
+              <div className="text-3xl font-bold text-emerald-400 mb-6">
+                {plan.price}
+                <span className="text-sm font-normal text-slate-400">/mês</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2 text-slate-300">
+                    <div className="h-2 w-2 rounded-full bg-emerald-400" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/dashboard/sales-agent"
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'h-11 w-full',
+                  plan.popular
+                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                    : 'border border-slate-600 bg-transparent text-white hover:bg-slate-800'
+                )}
+              >
+                Começar
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          Pronto para vender mais?
+        </h2>
+        <p className="text-xl text-slate-400 mb-10">
+          Configure seu agente em minutos e veja os primeiros leads analisados.
+        </p>
+        <Link href="/dashboard/sales-agent" className={cn(buttonVariants({ size: 'lg' }), 'h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white')}>
+          Começar agora <ArrowRight className="ml-2 h-4 w-4" />
+        </Link>
+      </section>
+    </div>
+  );
+}
