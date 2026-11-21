@@ -44,15 +44,7 @@ export function EnhancedReviews() {
   };
 
   const handleSubmit = async () => {
-    const avgRating =
-      (Object.values(ratings).reduce((a, b) => a + b, 0) / 5) | 0;
-
-    // TODO: Submit to /api/reviews
-      ratings,
-      comment,
-      photoUrl,
-      avgRating,
-    });
+    // TODO: Submit { ratings, comment, photoUrl } to /api/reviews
 
     setSubmitted(true);
     setTimeout(() => {
